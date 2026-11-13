@@ -1,10 +1,13 @@
+/** Lightweight stand-in used while 3D loads, on weak devices, or when reduced motion is requested. */
 export function SceneFallback() {
   return (
     <div aria-hidden className="relative flex h-full w-full items-center justify-center overflow-hidden">
-      <div className="absolute h-56 w-56 rounded-full bg-volt/25 blur-[70px]" />
-      <div className="glass absolute h-40 w-56 -rotate-6 animate-drift border-volt/30" />
-      <div className="glass absolute h-36 w-48 translate-x-10 translate-y-8 rotate-6 animate-drift border-white/10" style={{ animationDelay: "-3s" }} />
-      <div className="absolute h-28 w-28 rotate-45 rounded-2xl border border-volt-400/60 bg-gradient-to-br from-volt/40 to-transparent" />
+      <div className="absolute h-64 w-64 rounded-full bg-cobalt/25 blur-[80px]" />
+      <div className="absolute h-72 w-72 rounded-full border-[14px] border-ivory/30" />
+      <div className="absolute h-48 w-48 rounded-full border border-white/30 bg-white/10 backdrop-blur-md" />
+      <div className="absolute h-16 w-16 rounded-full bg-cobalt" />
+      <div className="absolute right-[18%] top-[18%] h-10 w-10 rotate-12 rounded-md border border-white/30 bg-ivory/30" />
+      <div className="absolute bottom-[20%] left-[16%] h-8 w-8 -rotate-12 rounded-md bg-cobalt/80" />
     </div>
   );
 }

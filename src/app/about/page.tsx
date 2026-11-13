@@ -1,96 +1,119 @@
-import { Compass, Eye, Handshake, Lightbulb, ShieldCheck, Zap } from "lucide-react";
-import { AboutScene } from "@/components/three/lazy";
-import { CTASection, LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
-import { TECH } from "@/lib/site";
+import { CTASection, LinkButton, Reveal, SectionHead } from "@/components/ui";
+import { Breadcrumb } from "@/components/ui";
 import { pageMeta } from "@/lib/utils";
 
-export const metadata = pageMeta("About Ragophala Digital", "Learn how Ragophala Digital approaches websites, web applications and AI automation for South African businesses.", "/about");
+export const metadata = pageMeta("About", "Ragophala Digital is a South African digital studio building websites, web applications, AI agents and business automation.", "/about");
 
-const VALUES = [
-  { icon: Handshake, title: "Honest partnership", text: "Plain-language advice, transparent quotations and realistic timelines." },
-  { icon: ShieldCheck, title: "Reliability", text: "We build carefully, test properly and communicate clearly so you know where your project stands." },
-  { icon: Lightbulb, title: "Practical innovation", text: "We use modern technology where it solves a real business problem, not for its own sake." },
-  { icon: Zap, title: "Performance", text: "Fast, accessible and secure by default, especially on mobile devices and local networks." },
+const BELIEFS = [
+  ["Start with the business problem.", "Technology is only useful when it solves something real. We begin with your customers, your goals and your constraints."],
+  ["Simple beats clever.", "The best solution is usually the simplest one that does the job well and can be maintained."],
+  ["Design and engineering belong together.", "How something looks and how it works are the same decision. We treat them that way."],
+  ["Clear communication builds trust.", "Plain language, written quotations and honest timelines make projects easier for everyone."],
+  ["Launch is the beginning.", "A website or system keeps working for you after launch, so we plan for support and growth."],
 ];
+
+const COMMITMENTS = ["Clear, written quotations before work begins", "Honest advice, including when a simpler option is better", "Plain language instead of technical jargon", "Revisions and scope agreed up front", "Ownership of the agreed deliverables after full payment"];
+
+function BrandGraphic() {
+  return (
+    <svg viewBox="0 0 400 400" className="w-full max-w-md" role="img" aria-label="Abstract geometric brand graphic">
+      <defs>
+        <linearGradient id="ag" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stopColor="#8FA5FF" /><stop offset="1" stopColor="#315BFA" /></linearGradient>
+      </defs>
+      {[170, 130, 90].map((r, i) => (<circle key={r} cx="200" cy="200" r={r} fill="none" stroke="#101827" strokeOpacity={0.18 - i * 0.03} />))}
+      <g stroke="#101827" strokeOpacity=".14">
+        {Array.from({ length: 9 }).map((_, i) => (<line key={i} x1={40 + i * 40} y1="30" x2={40 + i * 40} y2="370" />))}
+        {Array.from({ length: 9 }).map((_, i) => (<line key={`h${i}`} x1="30" y1={40 + i * 40} x2="370" y2={40 + i * 40} />))}
+      </g>
+      <rect x="120" y="120" width="160" height="160" rx="14" fill="#101827" transform="rotate(12 200 200)" />
+      <rect x="150" y="150" width="100" height="100" rx="10" fill="#DCE5FF" transform="rotate(12 200 200)" />
+      <circle cx="200" cy="200" r="34" fill="url(#ag)" />
+      <circle cx="318" cy="96" r="12" fill="#315BFA" />
+      <circle cx="76" cy="312" r="7" fill="#101827" />
+    </svg>
+  );
+}
 
 export default function About() {
   return (
     <>
-      <PageHero
-        eyebrow="About us"
-        title={<>A digital agency focused on <span className="text-volt-400">practical results</span></>}
-        text="Ragophala Digital helps South African businesses get online, work smarter and grow, with websites, custom web applications and AI-powered automation built to a professional standard."
-        scene={<AboutScene />}
-        actions={<LinkButton href="/contact">Talk to us</LinkButton>}
-      />
-
-      <section className="section">
-        <div className="container-x grid gap-6 md:grid-cols-2">
-          <Reveal>
-            <div className="glass h-full p-8">
-              <Compass className="text-volt-400" aria-hidden />
-              <h2 className="mt-4 font-display text-2xl">Our mission</h2>
-              <p className="mt-3 text-slate-400">To give South African businesses of every size access to high-quality digital tools, delivered with clear communication, fair pricing and measurable benefit to the business.</p>
-            </div>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="glass h-full p-8">
-              <Eye className="text-volt-400" aria-hidden />
-              <h2 className="mt-4 font-display text-2xl">Our vision</h2>
-              <p className="mt-3 text-slate-400">A South African business landscape where well-built websites, smart software and automation are standard tools for growth, not luxuries reserved for large companies.</p>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      <section className="section light-section">
-        <div className="container-x">
-          <SectionHead eyebrow="Our values" title="What guides the work we do" />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {VALUES.map((v, i) => (
-              <Reveal key={v.title} delay={i * 0.08}>
-                <div className="h-full rounded-2xl border border-navy-900/10 bg-white p-6">
-                  <v.icon className="text-volt-600" aria-hidden />
-                  <h3 className="mt-4 font-display text-lg">{v.title}</h3>
-                  <p className="mt-2 text-sm text-slate-600">{v.text}</p>
-                </div>
-              </Reveal>
-            ))}
+      <section className="relative overflow-hidden pb-16 pt-32 sm:pt-40 lg:pb-24">
+        <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
+        <div className="container-x relative">
+          <Breadcrumb items={[{ label: "About" }]} />
+          <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
+            <Reveal>
+              <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />About Ragophala Digital</p>
+              <h1 className="display-lg">A digital studio that cares about the business behind the screen.</h1>
+              <p className="body-lg mt-6">We help South African businesses get online properly, work more efficiently and grow with technology that is built to last.</p>
+            </Reveal>
+            <Reveal delay={0.15} className="justify-self-center"><BrandGraphic /></Reveal>
           </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container-x grid items-start gap-12 lg:grid-cols-2">
-          <Reveal>
-            <p className="eyebrow">Our approach</p>
-            <h2 className="h-section">We start with the business problem, not the technology</h2>
-            <p className="lead mt-4">Every project begins with questions: who are your customers, where do you lose time or leads, and what would success look like in six months? The answers shape the solution.</p>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <ol className="space-y-4">
-              {["Understand your goals, customers and constraints.", "Recommend the simplest solution that meets the need.", "Build in stages and show progress early.", "Measure, refine and support after launch."].map((t, i) => (
-                <li key={t} className="glass flex items-start gap-4 p-5">
-                  <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-volt font-display text-sm text-white">{i + 1}</span>
-                  <span className="text-slate-300">{t}</span>
-                </li>
-              ))}
-            </ol>
+      <section className="section pt-4">
+        <div className="container-x grid gap-10 lg:grid-cols-12">
+          <Reveal className="lg:col-span-4"><p className="label flex items-center gap-3"><span className="text-accent">01</span><span aria-hidden className="h-px w-8 bg-current opacity-40" />Who we are</p></Reveal>
+          <Reveal delay={0.08} className="lg:col-span-8">
+            <p className="display-md max-w-[26ch]">Ragophala Digital designs and builds websites, web applications and AI-powered solutions for businesses.</p>
+            <div className="mt-8 grid gap-6 text-[15px] leading-relaxed text-muted sm:grid-cols-2">
+              <p>We work with small businesses, entrepreneurs, startups and growing organisations who need digital tools that look credible and work reliably.</p>
+              <p>Our focus is practical: understand the business, recommend the simplest approach that works, build it carefully and support it after launch.</p>
+            </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="section pt-0">
+      <section className="theme-dark bg-navy">
+        <div className="container-x section">
+          <SectionHead index="02" label="What we believe" title="Five principles behind our work" />
+          <ol className="border-t border-line">
+            {BELIEFS.map(([t, d], i) => (
+              <Reveal key={t}>
+                <li className="grid gap-3 border-b border-line py-8 lg:grid-cols-[70px_1.2fr_1fr] lg:gap-8">
+                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
+                  <h3 className="display-md">{t}</h3>
+                  <p className="text-[15px] leading-relaxed text-muted">{d}</p>
+                </li>
+              </Reveal>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container-x grid gap-12 lg:grid-cols-2">
+          <Reveal>
+            <p className="label mb-5 flex items-center gap-3"><span className="text-accent">03</span><span aria-hidden className="h-px w-8 bg-current opacity-40" />Our approach to technology</p>
+            <h2 className="display-md">Modern tools, chosen for speed, security and longevity.</h2>
+            <p className="body-lg mt-5">We build with proven, widely supported technology so your solution is fast today and maintainable tomorrow. Where it genuinely helps, we add rich interaction, 3D visuals, AI assistants and automation.</p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <p className="label mb-5 flex items-center gap-3"><span className="text-accent">04</span><span aria-hidden className="h-px w-8 bg-current opacity-40" />Our approach to business problems</p>
+            <h2 className="display-md">Questions before solutions.</h2>
+            <p className="body-lg mt-5">Who are your customers? Where do you lose time or leads? What would success look like in six months? The answers shape the solution, the scope and the price.</p>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="theme-soft bg-softblue">
+        <div className="container-x section grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <SectionHead index="05" label="Our commitment to clients" title="What you can expect from us" className="mb-0 lg:mb-0" />
+          <ul className="border-t border-line">
+            {COMMITMENTS.map((c, i) => (
+              <li key={c} className="flex gap-4 border-b border-line py-5 text-[15px]"><span className="font-mono text-xs text-accent">0{i + 1}</span>{c}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="section">
         <div className="container-x">
           <Reveal>
-            <div className="glass p-8 sm:p-12">
-              <p className="eyebrow">Technology and innovation</p>
-              <h2 className="h-section max-w-2xl">Modern tools, chosen for speed, security and longevity</h2>
-              <p className="lead mt-4 max-w-2xl">We build with proven open technologies so your solution is fast today and maintainable tomorrow. Where it adds value, we add 3D visuals, AI assistants and automation.</p>
-              <ul className="mt-6 flex flex-wrap gap-2">
-                {TECH.map((t) => (<li key={t} className="rounded-full border border-volt/30 bg-volt/10 px-4 py-1.5 text-sm text-volt-300">{t}</li>))}
-              </ul>
-            </div>
+            <p className="label mb-5">What makes our work different</p>
+            <p className="display-md max-w-[30ch]">We build real products and business solutions, not just attractive pages.</p>
+            <div className="mt-9 flex flex-wrap gap-3"><LinkButton href="/process">See how we work</LinkButton><LinkButton href="/services" variant="line" arrow={false}>Our services</LinkButton></div>
           </Reveal>
         </div>
       </section>

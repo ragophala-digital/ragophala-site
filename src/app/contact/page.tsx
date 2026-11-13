@@ -1,57 +1,52 @@
 import { Suspense } from "react";
-import { Clock, Mail, MapPin, MessageCircle } from "lucide-react";
-import { ContactScene } from "@/components/three/lazy";
+import { Mail, MessageCircle } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
-import { LinkButton } from "@/components/ui";
+import { Breadcrumb, LinkButton, Reveal } from "@/components/ui";
 import { SITE } from "@/lib/site";
 import { mailtoUrl, pageMeta, whatsappUrl } from "@/lib/utils";
 
-export const metadata = pageMeta("Contact and Quotations", "Request a quotation or send an enquiry to Ragophala Digital for websites, web applications and AI automation.", "/contact");
+export const metadata = pageMeta("Start a Project", "Request a quotation or tell Ragophala Digital about your website, web application, AI agent or automation project.", "/contact");
+
+const NEXT_STEPS = ["We review your enquiry.", "We may ask a few clarifying questions.", "You receive a written quotation with scope, price and deliverables."];
 
 export default function Contact() {
   const wa = whatsappUrl("Hi Ragophala Digital, I would like to request a quotation.");
-  const mail = mailtoUrl("Quotation request");
+  const mail = mailtoUrl("Project enquiry");
   return (
-    <>
-      <section className="relative overflow-hidden pb-6 pt-32 sm:pt-40">
-        <div aria-hidden className="grid-bg absolute inset-0" />
-        <div className="container-x relative grid items-center gap-6 lg:grid-cols-[1.2fr_1fr]">
-          <div>
-            <p className="eyebrow">Contact us</p>
-            <h1 className="h-display">Let&apos;s talk about your project</h1>
-            <p className="lead mt-5 max-w-xl">Send us the details below for a written quotation, or reach out directly. We usually reply within one to two working days.</p>
-          </div>
-          <div className="relative hidden h-[260px] lg:block"><ContactScene /></div>
-        </div>
-      </section>
-
-      <section className="section pt-8">
-        <div className="container-x grid items-start gap-8 lg:grid-cols-[1.4fr_1fr]">
-          <Suspense fallback={<div className="glass h-96 animate-pulse" aria-busy="true" />}>
-            <ContactForm />
-          </Suspense>
-          <aside className="space-y-4" aria-label="Other ways to contact us">
-            <div className="glass p-6">
-              <h2 className="font-display text-lg">Prefer to chat?</h2>
-              <ul className="mt-4 space-y-4 text-sm text-slate-300">
-                {wa && (<li className="flex items-center gap-3"><MessageCircle className="text-volt-400" size={18} aria-hidden /><a href={wa} target="_blank" rel="noopener noreferrer" className="underline-offset-4 hover:underline">Message us on WhatsApp</a></li>)}
-                {mail && (<li className="flex items-center gap-3"><Mail className="text-volt-400" size={18} aria-hidden /><a href={mail} className="underline-offset-4 hover:underline">{SITE.email}</a></li>)}
-                <li className="flex items-center gap-3"><MapPin className="text-volt-400" size={18} aria-hidden />Serving businesses across {SITE.location}</li>
-                <li className="flex items-center gap-3"><Clock className="text-volt-400" size={18} aria-hidden />Replies within 1–2 working days</li>
-              </ul>
-            </div>
-            <div className="glass p-6">
-              <h2 className="font-display text-lg">What happens next?</h2>
-              <ol className="mt-4 space-y-3 text-sm text-slate-300">
-                <li>1. We review your enquiry.</li>
-                <li>2. We may ask a few clarifying questions.</li>
-                <li>3. You receive a written quotation.</li>
+    <section className="relative overflow-hidden pb-24 pt-32 sm:pt-40">
+      <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
+      <div className="container-x relative">
+        <Breadcrumb items={[{ label: "Start a project" }]} />
+        <div className="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr]">
+          <Reveal>
+            <div className="theme-dark rounded-2xl bg-navy p-8 sm:p-10 lg:sticky lg:top-28">
+              <p className="label mb-6">Start a project</p>
+              <h1 className="display-md">Tell us what you want to build.</h1>
+              <p className="mt-5 text-[15px] leading-relaxed text-muted">Share a few details and we will reply with next steps and a written quotation, usually within one to two working days.</p>
+              <h2 className="label mb-3 mt-10">What happens next</h2>
+              <ol className="border-t border-line">
+                {NEXT_STEPS.map((s, i) => (<li key={s} className="flex gap-4 border-b border-line py-3.5 text-sm"><span className="font-mono text-xs text-accent">0{i + 1}</span>{s}</li>))}
               </ol>
-              <div className="mt-5"><LinkButton href="/pricing" variant="ghost">View pricing</LinkButton></div>
+              {(wa || mail) && (
+                <>
+                  <h2 className="label mb-3 mt-10">Prefer to reach out directly?</h2>
+                  <ul className="space-y-3 text-sm">
+                    {wa && <li><a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2.5 text-fg transition hover:text-cobalt-300"><MessageCircle size={16} aria-hidden /> Message us on WhatsApp</a></li>}
+                    {mail && <li><a href={mail} className="inline-flex items-center gap-2.5 text-fg transition hover:text-cobalt-300"><Mail size={16} aria-hidden /> {SITE.email}</a></li>}
+                  </ul>
+                </>
+              )}
+              <p className="mt-10 text-xs text-muted">Serving businesses across {SITE.location}.</p>
+              <div className="mt-6"><LinkButton href="/pricing" variant="line">View pricing</LinkButton></div>
             </div>
-          </aside>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <Suspense fallback={<div className="h-[520px] animate-pulse rounded-2xl border border-line bg-card" aria-busy="true" />}>
+              <ContactForm />
+            </Suspense>
+          </Reveal>
         </div>
-      </section>
-    </>
+      </div>
+    </section>
   );
 }

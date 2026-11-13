@@ -69,8 +69,8 @@ export async function POST(req: Request) {
       to: CONTACT_TO_EMAIL,
       replyTo: d.email,
       subject: `New enquiry: ${serviceLabel} – ${d.name}`,
-      text: `Name: ${d.name}\nBusiness: ${d.business || "-"}\nEmail: ${d.email}\nPhone: ${d.phone || "-"}\nService: ${serviceLabel}\nBudget: ${d.budget}\n\n${d.message}`,
-      html: `<h2>New website enquiry</h2><p><b>Name:</b> ${esc(d.name)}<br><b>Business:</b> ${esc(d.business || "-")}<br><b>Email:</b> ${esc(d.email)}<br><b>Phone:</b> ${esc(d.phone || "-")}<br><b>Service:</b> ${esc(serviceLabel)}<br><b>Budget:</b> ${esc(d.budget)}</p><p>${esc(d.message).replace(/\n/g, "<br>")}</p>`,
+      text: `Name: ${d.name}\nBusiness: ${d.business || "-"}\nEmail: ${d.email}\nPhone: ${d.phone || "-"}\nService: ${serviceLabel}\nBudget: ${d.budget}\n\n${d.message}${d.extra ? `\n\nAdditional information:\n${d.extra}` : ""}`,
+      html: `<h2>New website enquiry</h2><p><b>Name:</b> ${esc(d.name)}<br><b>Business:</b> ${esc(d.business || "-")}<br><b>Email:</b> ${esc(d.email)}<br><b>Phone:</b> ${esc(d.phone || "-")}<br><b>Service:</b> ${esc(serviceLabel)}<br><b>Budget:</b> ${esc(d.budget)}</p><p>${esc(d.message).replace(/\n/g, "<br>")}</p>${d.extra ? `<p><b>Additional information:</b><br>${esc(d.extra).replace(/\n/g, "<br>")}</p>` : ""}`,
     });
     return NextResponse.json({ ok: true });
   } catch (err) {

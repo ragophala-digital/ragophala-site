@@ -18,6 +18,7 @@ export const contactSchema = z.object({
   service: z.enum(serviceValues, { message: "Please choose a service." }),
   budget: z.enum(budgetValues, { message: "Please choose a budget range." }),
   message: z.string().trim().min(20, "Please describe your project in at least 20 characters.").max(3000),
+  extra: z.string().trim().max(1500).optional().default(""),
   website: z.string().max(0).optional().default(""), // honeypot
   startedAt: z.number().optional(),
 });

@@ -1,87 +1,97 @@
-import { BadgeCheck, Building2, CalendarCheck, FileText, Palette, Rocket, Search, ShoppingCart, Smartphone, Zap, type LucideIcon } from "lucide-react";
-import { WebScene } from "@/components/three/lazy";
-import { CTASection, LinkButton, PageHero, Reveal, SectionHead, TiltCard } from "@/components/ui";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+import { CTASection, LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
+import { BrowserFrame, MockCaption, PhoneFrame, PhoneSite, SiteMock } from "@/components/mockups-web";
 import { PACKAGES, formatZAR } from "@/lib/site";
-import { pageMeta } from "@/lib/utils";
+import { cn, pageMeta } from "@/lib/utils";
 
-export const metadata = pageMeta("Website Development", "Business websites, landing pages, e-commerce and booking websites built for speed, search visibility and conversions.", "/web-development");
+export const metadata = pageMeta("Website Development", "Business websites, landing pages, corporate sites, e-commerce, booking websites and redesigns, built for speed, search visibility and enquiries.", "/web-development");
 
-const TYPES: { icon: LucideIcon; title: string; text: string }[] = [
-  { icon: Building2, title: "Business websites", text: "Present your services, build trust and make it easy for customers to contact you." },
-  { icon: BadgeCheck, title: "Corporate websites", text: "Structured, professional sites for established companies with multiple divisions." },
-  { icon: Rocket, title: "Landing pages", text: "Single focused pages for campaigns, launches and lead generation." },
-  { icon: ShoppingCart, title: "E-commerce websites", text: "Online shops with product catalogues, secure checkout and order notifications." },
-  { icon: Palette, title: "Portfolio websites", text: "Showcase creative work, projects or case studies in a polished, fast gallery." },
-  { icon: CalendarCheck, title: "Booking websites", text: "Let customers request or book appointments, rooms or services online." },
-  { icon: FileText, title: "Website redesigns", text: "Modernise an ageing site with better design, structure, speed and SEO." },
+const TYPES = [
+  { title: "Business websites", text: "Present your services, build trust and make it easy for customers to contact you.", span: "lg:col-span-5", tone: "bg-card" },
+  { title: "Landing pages", text: "A single focused page for a campaign, launch or lead-generation offer.", span: "lg:col-span-7", tone: "bg-softblue" },
+  { title: "Corporate websites", text: "Structured sites for established companies with several divisions.", span: "lg:col-span-4", tone: "theme-dark bg-navy" },
+  { title: "E-commerce websites", text: "Online stores with catalogues, secure checkout and order notifications.", span: "lg:col-span-4", tone: "bg-card" },
+  { title: "Booking websites", text: "Let customers request or book appointments, rooms and services online.", span: "lg:col-span-4", tone: "bg-softblue" },
+  { title: "Portfolio websites", text: "Show creative work, projects and case studies in a polished gallery.", span: "lg:col-span-6", tone: "bg-card" },
+  { title: "Website redesigns", text: "Modernise an ageing site with better design, structure, speed and search visibility.", span: "lg:col-span-6", tone: "theme-dark bg-navy" },
 ];
+
+const DELIVERABLES = ["Custom visual design", "Responsive layouts for phone, tablet and desktop", "Contact and lead-capture forms", "WhatsApp and Google Maps integration where scoped", "On-page SEO foundations and metadata", "Analytics integration", "Performance-conscious build", "Handover of agreed files and access"];
 
 export default function WebDevelopment() {
   return (
     <>
       <PageHero
-        eyebrow="Website development"
-        title={<>Websites that look <span className="text-volt-400">professional</span> and bring in enquiries</>}
-        text="From a single landing page to a full corporate website, we design and build fast, mobile-first sites that are easy to find on Google and easy to use."
-        scene={<WebScene />}
-        actions={<><LinkButton href="/contact?service=web">Request a website quotation</LinkButton><LinkButton href="/pricing" variant="ghost">View packages</LinkButton></>}
-      />
+        crumbs={[{ label: "Services", href: "/services" }, { label: "Website development" }]}
+        label="Service 01 · Website development"
+        title={<>Websites that look credible and bring in enquiries.</>}
+        text="From a single landing page to a full corporate website, we design and build fast, mobile-first sites that are easy to find and easy to use."
+        actions={<><LinkButton href="/contact?service=web">Request a website quotation</LinkButton><LinkButton href="/pricing#websites" variant="line" arrow={false}>View packages</LinkButton></>}
+      >
+        <Reveal className="mt-16" delay={0.15}>
+          <div className="grid items-end gap-5 md:grid-cols-[1.5fr_1fr_0.45fr]">
+            <BrowserFrame url="studio.co.za"><SiteMock variant="studio" /></BrowserFrame>
+            <BrowserFrame url="shop.co.za" className="hidden md:block"><SiteMock variant="shop" /></BrowserFrame>
+            <PhoneFrame className="hidden w-[120px] md:block"><PhoneSite /></PhoneFrame>
+          </div>
+          <MockCaption>Illustrative website previews</MockCaption>
+        </Reveal>
+      </PageHero>
 
-      <section className="section">
+      <section className="section pt-8">
         <div className="container-x">
-          <SectionHead eyebrow="What we build" title="A website for every type of business" />
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          <SectionHead index="01" label="What we build" title="A website for every kind of business" />
+          <div className="grid gap-4 lg:grid-cols-12">
             {TYPES.map((t, i) => (
-              <Reveal key={t.title} delay={(i % 3) * 0.08}>
-                <TiltCard className="glass h-full p-6">
-                  <t.icon className="text-volt-400" aria-hidden />
-                  <h3 className="mt-4 font-display text-lg">{t.title}</h3>
-                  <p className="mt-2 text-sm text-slate-400">{t.text}</p>
-                </TiltCard>
+              <Reveal key={t.title} delay={(i % 3) * 0.06} className={cn(t.span)}>
+                <article className={cn("flex h-full min-h-[190px] flex-col justify-between rounded-2xl border border-line p-6 transition duration-300 hover:-translate-y-1", t.tone)}>
+                  <p className="font-mono text-xs text-accent">0{i + 1}</p>
+                  <div className="mt-10">
+                    <h3 className="font-display text-xl font-semibold tracking-tight">{t.title}</h3>
+                    <p className="mt-2 max-w-[40ch] text-sm leading-relaxed text-muted">{t.text}</p>
+                  </div>
+                </article>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      <section className="section light-section">
-        <div className="container-x grid gap-12 lg:grid-cols-2">
-          <Reveal>
-            <p className="eyebrow">Our website process</p>
-            <h2 className="h-section">From brief to launch in clear stages</h2>
-            <ol className="mt-8 space-y-5">
-              {[["Brief and quotation", "We discuss your goals and send a written scope, timeline and price."], ["Structure and design", "We map the pages and design the look before any development starts."], ["Development and content", "We build the site, add your content and test across devices."], ["Review and launch", "You review, we refine within the agreed revision rounds, then publish."]].map(([t, d], i) => (
-                <li key={t} className="flex gap-4"><span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-navy-900 font-display text-sm text-white">{i + 1}</span><div><h3 className="font-display text-lg">{t}</h3><p className="text-sm text-slate-600">{d}</p></div></li>
-              ))}
-            </ol>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {[[Smartphone, "Mobile-first", "Designed for phones first, then scaled up."], [Search, "SEO foundations", "Clean structure, metadata and sitemaps."], [Zap, "Fast loading", "Optimised images and lightweight code."], [BadgeCheck, "Accessible", "Keyboard-friendly with readable contrast."]].map(([Icon, t, d]) => {
-                const I = Icon as LucideIcon;
-                return (<div key={t as string} className="rounded-2xl border border-navy-900/10 bg-white p-5"><I className="text-volt-600" aria-hidden /><h3 className="mt-3 font-display">{t as string}</h3><p className="mt-1 text-sm text-slate-600">{d as string}</p></div>);
-              })}
-            </div>
-          </Reveal>
+      <section className="theme-soft section bg-softblue">
+        <div className="container-x grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
+          <SectionHead index="02" label="Deliverables" title="What a typical website project includes" text="Exact inclusions depend on your package. Your written quotation confirms scope and deliverables." className="mb-0 lg:mb-0" />
+          <ul className="grid border-t border-line sm:grid-cols-2">
+            {DELIVERABLES.map((d, i) => (
+              <li key={d} className="flex gap-3 border-b border-line py-5 pr-4 text-[15px] sm:odd:border-r sm:odd:pr-6 sm:even:pl-6">
+                <span className="font-mono text-xs text-accent">0{i + 1}</span>{d}
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
       <section className="section">
         <div className="container-x">
-          <SectionHead eyebrow="Packages" title={`Website packages from ${formatZAR(PACKAGES[0].price)}`} text="Starting prices in rand. Your written quotation confirms scope, timeline and anything that costs extra." />
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {PACKAGES.map((p) => (
-              <div key={p.id} className="glass flex items-center justify-between gap-3 p-5">
-                <div><h3 className="font-display">{p.name}</h3><p className="text-sm text-slate-400">{p.timeline}</p></div>
-                <span className="font-display text-xl text-volt-300">{formatZAR(p.price)}</span>
-              </div>
-            ))}
+          <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
+            <SectionHead index="03" label="Pricing preview" title="Website packages, once-off" text="Starting prices in South African rand. Domain and hosting are quoted separately unless included." className="mb-0 lg:mb-0" />
+            <LinkButton href="/pricing#websites" variant="line">Full pricing</LinkButton>
           </div>
-          <div className="mt-8"><LinkButton href="/pricing">Compare all packages</LinkButton></div>
+          <ul className="border-t border-line">
+            {PACKAGES.map((p) => (
+              <li key={p.id} className="border-b border-line">
+                <Link href={`/contact?package=${p.id}`} className="group grid items-center gap-2 px-2 py-6 transition-all duration-300 hover:bg-softblue/60 sm:grid-cols-[1.2fr_1fr_auto] sm:gap-8 sm:px-4">
+                  <h3 className="font-display text-lg font-semibold tracking-tight">{p.name}</h3>
+                  <p className="text-sm text-muted">{p.blurb}</p>
+                  <span className="flex items-center gap-3 font-display text-xl font-semibold">{formatZAR(p.price)}<ArrowUpRight size={18} className="text-muted transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-cobalt" aria-hidden /></span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      <CTASection service="web" title="Request your website quotation" text="Tell us about your business and the pages you need, and we will respond with a clear, written quotation." />
+      <CTASection service="web" title="Request your website quotation" text="Tell us about your business and the pages you need. We will reply with a clear, written quotation." />
     </>
   );
 }

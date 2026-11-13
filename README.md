@@ -35,9 +35,17 @@ Until SMTP is configured, the contact form validates input and then shows an hon
 
 Zod validation on client and server, honeypot field, minimum time-to-submit check, same-origin check, payload size limit, and an in-memory rate limit (5 per 10 minutes per IP). For multi-instance deployments, replace the rate limiter with a shared store such as Upstash Redis.
 
+## Design system
+
+Palette: Midnight Navy `#101827`, Warm Ivory `#F5F3EF`, Electric Blue `#315BFA`, Soft Blue `#DCE5FF`, Charcoal `#242B39`, Slate `#A7B1C2` (tokens in `tailwind.config.ts` and `src/app/globals.css`). Fonts: Sora (headings), Inter (body), JetBrains Mono (labels). Sections switch theme with `theme-dark` / `theme-soft` classes that remap the `--fg`, `--muted` and `--line` variables.
+
 ## 3D and performance
 
-3D scenes (`src/components/three/scenes.tsx`) are code-split and loaded client-side only. They pause when off-screen, use a lower pixel ratio and fewer objects on small or low-core devices, and fall back to a lightweight CSS illustration when WebGL is unavailable or `prefers-reduced-motion` is set.
+3D is used only on the home hero (`src/components/three/scenes.tsx`): a chrome ring, glass sphere and geometric cubes. It is code-split, pauses off-screen, uses a lighter version on phones and low-core devices, and falls back to a CSS composition when WebGL is unavailable or reduced motion is requested. Other pages use HTML/CSS interface mockups (`mockups-*.tsx`), which are labelled as illustrative.
+
+## Pages
+
+Home, Services, Website Development, Web Applications, AI Agents and Automation, Pricing, About, Our Process, Contact, FAQ, plus Selected Concepts (`/portfolio`).
 
 ## Deploy to Vercel
 

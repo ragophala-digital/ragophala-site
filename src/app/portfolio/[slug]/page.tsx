@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Check } from "lucide-react";
+import { Breadcrumb, CTASection, LinkButton } from "@/components/ui";
 import { ProjectVisual } from "@/components/ProjectVisual";
-import { CTASection, LinkButton } from "@/components/ui";
 import { PROJECTS } from "@/lib/site";
 import { pageMeta } from "@/lib/utils";
 
@@ -14,7 +13,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const p = PROJECTS.find((x) => x.slug === slug);
   if (!p) return {};
-  return pageMeta(`${p.title} (demo project)`, p.summary, `/portfolio/${p.slug}`);
+  return pageMeta(`${p.title} (concept)`, p.summary, `/portfolio/${p.slug}`);
+}
+
+function ListBlock({ title, items }: { title: string; items: string[] }) {
+  return (
+    <div>
+      <h2 className="label mb-4">{title}</h2>
+      <ul className="border-t border-line">
+        {items.map((t) => (<li key={t} className="border-b border-line py-3.5 text-[15px]">{t}</li>))}
+      </ul>
+    </div>
+  );
 }
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
@@ -26,36 +36,41 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
 
   return (
     <>
-      <section className="pb-10 pt-32 sm:pt-40">
+      <section className="pb-12 pt-32 sm:pt-40">
         <div className="container-x">
-          <Link href="/portfolio" className="mb-6 inline-flex items-center gap-2 text-sm text-slate-400 hover:text-white"><ArrowLeft size={16} aria-hidden /> All projects</Link>
-          <div className="grid items-center gap-10 lg:grid-cols-2">
+          <Breadcrumb items={[{ label: "Selected concepts", href: "/portfolio" }, { label: p.title }]} />
+          <div className="grid items-center gap-12 lg:grid-cols-2">
             <div>
-              <p className="eyebrow">{p.category} · Demonstration project</p>
-              <h1 className="h-display">{p.title}</h1>
-              <p className="lead mt-5">{p.description}</p>
-              <p className="mt-4 rounded-xl border border-white/10 px-4 py-3 text-sm text-slate-400">This is a concept created by Ragophala Digital to demonstrate capability. It is not a real client project.</p>
-              <div className="mt-6 flex flex-wrap gap-3"><LinkButton href={`/contact?service=${service}`}>Request something similar</LinkButton></div>
+              <p className="label mb-5">{p.category} · Concept project</p>
+              <h1 className="display-lg">{p.title}</h1>
+              <p className="body-lg mt-6">{p.description}</p>
+              <p className="mt-6 rounded-xl border border-line bg-card p-4 text-sm text-muted">This is a concept created by Ragophala Digital to demonstrate capability. It is not a real client project.</p>
+              <div className="mt-8"><LinkButton href={`/contact?service=${service}&item=${encodeURIComponent(p.title)}`}>Request something similar</LinkButton></div>
             </div>
-            <div className="glass overflow-hidden p-2"><ProjectVisual project={p} className="aspect-[16/10] w-full rounded-xl" /></div>
+            <div className="overflow-hidden rounded-2xl border border-line"><ProjectVisual project={p} className="aspect-[16/10] w-full" /></div>
           </div>
         </div>
       </section>
 
       <section className="section pt-8">
-        <div className="container-x grid gap-6 md:grid-cols-3">
-          <div className="glass p-6"><h2 className="font-display text-lg">Technology</h2><ul className="mt-4 flex flex-wrap gap-2">{p.tech.map((t) => (<li key={t} className="rounded-full border border-volt/30 bg-volt/10 px-3 py-1 text-sm text-volt-300">{t}</li>))}</ul></div>
-          <div className="glass p-6"><h2 className="font-display text-lg">Key features</h2><ul className="mt-4 space-y-2 text-sm text-slate-300">{p.features.map((t) => (<li key={t} className="flex gap-2"><Check size={16} className="mt-0.5 shrink-0 text-volt-400" aria-hidden />{t}</li>))}</ul></div>
-          <div className="glass p-6"><h2 className="font-display text-lg">Design goals</h2><ul className="mt-4 space-y-2 text-sm text-slate-300">{p.goals.map((t) => (<li key={t} className="flex gap-2"><Check size={16} className="mt-0.5 shrink-0 text-volt-400" aria-hidden />{t}</li>))}</ul></div>
+        <div className="container-x grid gap-10 md:grid-cols-3">
+          <ListBlock title="Technology" items={p.tech} />
+          <ListBlock title="Key features" items={p.features} />
+          <ListBlock title="Design goals" items={p.goals} />
         </div>
       </section>
 
       {related.length > 0 && (
-        <section className="pb-6">
+        <section className="pb-20">
           <div className="container-x">
-            <h2 className="mb-5 font-display text-2xl">More {p.category.toLowerCase()} demos</h2>
+            <h2 className="label mb-5">More {p.category.toLowerCase()} concepts</h2>
             <div className="grid gap-5 sm:grid-cols-2">
-              {related.map((r) => (<Link key={r.slug} href={`/portfolio/${r.slug}`} className="glass block p-5 transition hover:border-volt-400"><h3 className="font-display text-lg">{r.title}</h3><p className="mt-1 text-sm text-slate-400">{r.summary}</p></Link>))}
+              {related.map((r) => (
+                <Link key={r.slug} href={`/portfolio/${r.slug}`} className="block rounded-2xl border border-line bg-card p-6 transition hover:border-cobalt">
+                  <h3 className="font-display text-lg font-semibold tracking-tight">{r.title}</h3>
+                  <p className="mt-1 text-sm text-muted">{r.summary}</p>
+                </Link>
+              ))}
             </div>
           </div>
         </section>

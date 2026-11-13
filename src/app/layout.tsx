@@ -1,13 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Inter, JetBrains_Mono, Sora } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
 import { SITE } from "@/lib/site";
 
-const display = Space_Grotesk({ subsets: ["latin"], variable: "--font-display", display: "swap" });
+const display = Sora({ subsets: ["latin"], variable: "--font-display", display: "swap" });
 const body = Inter({ subsets: ["latin"], variable: "--font-body", display: "swap" });
+const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", display: "swap" });
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -17,7 +18,7 @@ export const metadata: Metadata = {
   twitter: { card: "summary_large_image" },
 };
 
-export const viewport: Viewport = { themeColor: "#02050f", width: "device-width", initialScale: 1 };
+export const viewport: Viewport = { themeColor: "#F5F3EF", width: "device-width", initialScale: 1 };
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -30,9 +31,9 @@ const jsonLd = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en-ZA" className={`${display.variable} ${body.variable}`}>
+    <html lang="en-ZA" className={`${display.variable} ${body.variable} ${mono.variable}`}>
       <body>
-        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-volt focus:px-4 focus:py-2 focus:text-white">
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-cobalt focus:px-4 focus:py-2 focus:text-white">
           Skip to content
         </a>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
