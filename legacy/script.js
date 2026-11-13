@@ -1,0 +1,50 @@
+(function(){
+const LOGO=`<svg viewBox="0 0 64 64"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3da5ff"/><stop offset="1" stop-color="#1f4de0"/></linearGradient></defs><path d="M8 8h26c12 0 20 6 20 16 0 8-5 13-13 15l14 17H41L28 40h-8v16H8z M20 18v14h13c5 0 8-2 8-7s-3-7-8-7z" fill="url(#lg)" fill-rule="evenodd"/><path d="M22 56l8-10h10l8 10" fill="none" stroke="#3da5ff" stroke-width="3" opacity=".6"/></svg>`;
+const pages=[['index.html','Home'],['services.html','Services'],['portfolio.html','Portfolio'],['about.html','About'],['faq.html','FAQ']];
+const cur=document.body.dataset.page||'index.html';
+const hdr=`<header class="site-header"><div class="container nav">
+<a class="logo" href="index.html">${LOGO}<span>Ragophala <b>Digital</b><small>DIGITAL SOLUTIONS. REAL RESULTS.</small></span></a>
+<button class="menu-btn" aria-label="Menu">☰</button>
+<ul>${pages.map(p=>`<li><a href="${p[0]}" class="${p[0]===cur?'active':''}">${p[1]}</a></li>`).join('')}
+<li><a class="btn btn-primary btn-sm" href="contact.html">Get a Quote</a></li></ul></div></header>`;
+const ftr=`<footer><div class="container"><div class="foot-grid">
+<div><a class="logo" href="index.html">${LOGO}<span>Ragophala <b>Digital</b></span></a><p style="margin-top:12px">Digital Solutions. Real Results.<br>A South African digital agency building modern, reliable and affordable solutions.</p></div>
+<div><h4>Company</h4><a href="index.html">Home</a><a href="about.html">About</a><a href="portfolio.html">Portfolio</a><a href="faq.html">FAQ</a></div>
+<div><h4>Services</h4><a href="web-development.html">Web Development</a><a href="services.html">AI &amp; Automation</a><a href="services.html">Mobile Apps</a><a href="pricing.html">Pricing</a></div>
+<div><h4>Contact</h4><p>+27 11 224 567</p><p>hello@ragophala.digital</p><p>Cape Town, SA</p></div>
+</div><div class="copy">© ${new Date().getFullYear()} Ragophala Digital. All rights reserved.</div></div></footer><div class="bot" title="Chat with us" onclick="location.href='contact.html'">🤖</div>`;
+document.body.insertAdjacentHTML('afterbegin',hdr);
+document.body.insertAdjacentHTML('beforeend',ftr);
+document.querySelector('.menu-btn').onclick=()=>document.querySelector('.nav ul').classList.toggle('open');
+
+// illustrations
+const defs=`<defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3da5ff"/><stop offset="1" stop-color="#1f4de0"/></linearGradient><linearGradient id="g2" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#16307f"/><stop offset="1" stop-color="#081445"/></linearGradient></defs>`;
+const laptop=(x,y,s)=>`<g transform="translate(${x},${y}) scale(${s})"><rect x="0" y="0" width="300" height="180" rx="10" fill="url(#g2)" stroke="#3da5ff" stroke-width="2"/><rect x="14" y="14" width="272" height="152" rx="4" fill="#0a1a55"/><rect x="30" y="34" width="110" height="10" rx="5" fill="#3da5ff"/><rect x="30" y="56" width="170" height="7" rx="3" fill="#4a6fd0"/><rect x="30" y="72" width="140" height="7" rx="3" fill="#4a6fd0"/><rect x="30" y="100" width="70" height="24" rx="6" fill="#2b6cff"/><rect x="200" y="90" width="70" height="60" rx="6" fill="#16307f" stroke="#3da5ff"/><path d="M-30 190h360l-30 22H0z" fill="#12266e" stroke="#3da5ff" stroke-width="2"/></g>`;
+const ART={
+rocket:`<svg viewBox="0 0 560 420">${defs}${laptop(150,190,1.05)}<g class="float"><path d="M330 40c40 30 55 90 30 150h-60c-25-60-10-120 30-150z" fill="#eaf0ff"/><path d="M300 190l-30 40 40-12zM360 190l30 40-40-12z" fill="#2b6cff"/><circle cx="330" cy="105" r="22" fill="url(#g1)" stroke="#3da5ff" stroke-width="4"/><path d="M310 190c0 40 20 70 20 70s20-30 20-70z" fill="#ff9a3d"/><path d="M318 190c0 25 12 45 12 45s12-20 12-45z" fill="#ffe27a"/></g><ellipse cx="330" cy="285" rx="70" ry="20" fill="#cfe0ff" opacity=".5"/></svg>`,
+building:`<svg viewBox="0 0 520 380">${defs}<rect x="70" y="120" width="380" height="220" fill="url(#g2)" stroke="#3da5ff" stroke-width="2"/><rect x="170" y="60" width="180" height="280" fill="#0c1d5c" stroke="#3da5ff" stroke-width="2"/>${Array.from({length:6},(_,r)=>Array.from({length:4},(_,c)=>`<rect x="${185+c*40}" y="${80+r*40}" width="28" height="26" fill="${(r+c)%3?'#2b6cff':'#9fd0ff'}" opacity=".8"/>`).join('')).join('')}<rect x="90" y="170" width="70" height="170" fill="#0c1d5c"/><rect x="360" y="170" width="70" height="170" fill="#0c1d5c"/><text x="260" y="365" text-anchor="middle" fill="#3da5ff" font-size="22" font-weight="700">R</text><path d="M20 340h480" stroke="#3da5ff" stroke-width="3"/></svg>`,
+devices:`<svg viewBox="0 0 560 400">${defs}<rect x="150" y="40" width="330" height="210" rx="12" fill="url(#g2)" stroke="#3da5ff" stroke-width="3"/><rect x="166" y="56" width="298" height="178" fill="#091a55"/><rect x="180" y="72" width="120" height="12" rx="6" fill="#3da5ff"/><rect x="180" y="96" width="200" height="8" rx="4" fill="#4a6fd0"/><rect x="180" y="112" width="170" height="8" rx="4" fill="#4a6fd0"/><rect x="180" y="140" width="80" height="26" rx="6" fill="#2b6cff"/><rect x="390" y="76" width="60" height="140" rx="6" fill="#16307f"/><path d="M290 250h-30l-20 40h150l-20-40z" fill="#12266e"/><rect x="60" y="150" width="130" height="190" rx="12" fill="url(#g2)" stroke="#3da5ff" stroke-width="3"/><rect x="72" y="166" width="106" height="150" fill="#091a55"/><rect x="82" y="180" width="60" height="8" rx="4" fill="#3da5ff"/><rect x="82" y="200" width="86" height="40" rx="6" fill="#16307f"/><rect x="420" y="200" width="100" height="140" rx="10" fill="url(#g2)" stroke="#3da5ff" stroke-width="3"/><rect x="430" y="214" width="80" height="100" fill="#091a55"/><circle cx="470" cy="260" r="22" fill="#2b6cff"/></svg>`,
+tag:`<svg viewBox="0 0 300 260">${defs}<g class="float"><path d="M110 40l140 80-60 110-140-80z" fill="url(#g1)" stroke="#9fd0ff" stroke-width="3"/><circle cx="140" cy="70" r="12" fill="#081445"/><text x="150" y="150" font-size="60" font-weight="800" fill="#fff" transform="rotate(30 170 140)">%</text></g></svg>`,
+question:`<svg viewBox="0 0 300 300">${defs}<g class="float"><text x="150" y="230" text-anchor="middle" font-size="260" font-weight="800" fill="url(#g1)" stroke="#9fd0ff" stroke-width="3">?</text></g><path d="M40 270c60-30 160-30 220 0v10H40z" fill="#16307f" stroke="#3da5ff"/></svg>`,
+pin:`<svg viewBox="0 0 120 140">${defs}<g class="float"><path d="M60 8c28 0 46 20 46 44 0 30-46 80-46 80S14 82 14 52C14 28 32 8 60 8z" fill="url(#g1)" stroke="#9fd0ff" stroke-width="3"/><circle cx="60" cy="52" r="17" fill="#081445"/></g></svg>`,
+robot:`<svg viewBox="0 0 200 260">${defs}<g class="float"><ellipse cx="100" cy="245" rx="55" ry="8" fill="#2b6cff" opacity=".4"/><rect x="50" y="20" width="100" height="85" rx="34" fill="#eaf0ff"/><rect x="62" y="36" width="76" height="52" rx="22" fill="#061040" stroke="#3da5ff" stroke-width="3"/><path d="M78 62q8 10 16 0M106 62q8 10 16 0" stroke="#3da5ff" stroke-width="5" fill="none" stroke-linecap="round"/><rect x="62" y="108" width="76" height="80" rx="26" fill="#eaf0ff"/><circle cx="100" cy="148" r="14" fill="url(#g1)"/><rect x="36" y="118" width="20" height="50" rx="10" fill="#eaf0ff"/><rect x="144" y="108" width="20" height="50" rx="10" fill="#eaf0ff" transform="rotate(-35 154 112)"/><rect x="70" y="190" width="22" height="42" rx="10" fill="#eaf0ff"/><rect x="108" y="190" width="22" height="42" rx="10" fill="#eaf0ff"/></g></svg>`,
+chart:`<svg viewBox="0 0 260 200">${defs}<rect x="30" y="130" width="34" height="50" fill="url(#g1)"/><rect x="82" y="100" width="34" height="80" fill="url(#g1)"/><rect x="134" y="70" width="34" height="110" fill="url(#g1)"/><rect x="186" y="40" width="34" height="140" fill="url(#g1)"/><path d="M30 110L100 80 150 50 230 15" stroke="#9fd0ff" stroke-width="5" fill="none"/><path d="M215 12l20 3-8 18z" fill="#9fd0ff"/></svg>`,
+cloud:`<svg viewBox="0 0 240 180">${defs}<g class="float"><path d="M60 140a40 40 0 0 1 4-80 55 55 0 0 1 104 8 36 36 0 0 1 8 72z" fill="url(#g1)" stroke="#9fd0ff" stroke-width="3"/><path d="M96 110l24-22 24 22M120 90v44" stroke="#fff" stroke-width="7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg>`
+};
+['rocket','building','robot','cloud','stack','chart','devices','tag','question','pin','globe','code1','code2','cloudicon','globe2'].forEach(k=>{ART[k]=`<img class="art3d" src="assets/${k}.png" alt="" loading="lazy">`});
+const hues=['#2b6cff','#3da5ff','#6a5cff','#22c7d6','#4a8bff','#8a63ff'];
+function thumb(i){const c=hues[i%hues.length];return `<svg viewBox="0 0 300 170" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="t${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c}" stop-opacity=".5"/><stop offset="1" stop-color="#050c2a"/></linearGradient></defs><rect width="300" height="170" fill="url(#t${i})"/><rect x="40" y="26" width="220" height="120" rx="8" fill="#071342" stroke="${c}" stroke-width="2"/><rect x="40" y="26" width="220" height="16" rx="8" fill="${c}" opacity=".6"/><rect x="56" y="58" width="90" height="10" rx="5" fill="#fff" opacity=".85"/><rect x="56" y="76" width="130" height="6" rx="3" fill="#8fa6e8"/><rect x="56" y="90" width="110" height="6" rx="3" fill="#8fa6e8"/><rect x="56" y="108" width="50" height="18" rx="5" fill="${c}"/><circle cx="215" cy="98" r="30" fill="${c}" opacity=".35"/></svg>`}
+document.querySelectorAll('[data-art]').forEach(e=>{e.innerHTML=ART[e.dataset.art]||''});
+document.querySelectorAll('[data-thumb]').forEach(e=>{e.innerHTML=thumb(+e.dataset.thumb)});
+
+// faq
+document.querySelectorAll('.faq-q').forEach(b=>b.onclick=()=>b.parentElement.classList.toggle('open'));
+// portfolio filter
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  const f=t.dataset.f;document.querySelectorAll('.work').forEach(w=>w.classList.toggle('hide',f!=='all'&&w.dataset.c!==f));
+});
+// contact form
+const form=document.querySelector('form[data-contact]');
+if(form)form.onsubmit=e=>{e.preventDefault();form.querySelector('.form-ok').style.display='block';form.reset();};
+})();
