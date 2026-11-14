@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CTASection, LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
-import { AUTOMATION_FLOW, ChatMock, WhatsAppMock, WorkflowDiagram } from "@/components/mockups-ai";
-import { MockCaption } from "@/components/mockups-web";
+import { LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
+import { AutomationFlow } from "@/components/demos-ai";
+import { DemoCentre } from "@/components/ai/DemoCentre";
 import { AI_MONTHLY, AI_SOLUTIONS } from "@/lib/pricing";
 import { pageMeta } from "@/lib/utils";
 
@@ -18,12 +18,6 @@ const USE_CASES = [
   ["Custom AI assistants", "Purpose-built assistants for your own processes and data."],
 ];
 
-const HOW = [
-  ["Your content", "We set up the assistant using your approved information, tone and rules."],
-  ["The conversation", "Customers ask questions and the assistant answers within those boundaries."],
-  ["The hand-over", "When it cannot help, or the customer wants a person, the conversation passes to your team."],
-];
-
 export default function AIAutomation() {
   return (
     <>
@@ -33,30 +27,16 @@ export default function AIAutomation() {
         title={<>Practical AI that answers, qualifies and follows up.</>}
         text="We build AI assistants and automated workflows that save time, respond faster and keep repetitive work moving, with a person always in the loop where it matters."
         actions={<><LinkButton href="/contact?service=ai">Discuss an AI agent</LinkButton><LinkButton href="#automation" variant="line" arrow={false}>Business automation</LinkButton></>}
-      >
-        <Reveal className="mt-16" delay={0.15}>
-          <WorkflowDiagram />
-          <MockCaption>How an enquiry moves through an AI-assisted workflow</MockCaption>
-        </Reveal>
-      </PageHero>
+      />
 
-      <section className="section">
-        <div className="container-x grid items-center gap-14 lg:grid-cols-[0.9fr_1.1fr]">
-          <div>
-            <SectionHead index="01" label="How an AI agent works" title="See what actually happens in a conversation" text="No mystery. The assistant works from content you approve, follows rules you set and hands over when a person is needed." className="mb-10 lg:mb-10" />
-            <ol className="border-t border-line">
-              {HOW.map(([t, d], i) => (
-                <li key={t} className="grid gap-2 border-b border-line py-5 sm:grid-cols-[40px_1fr]"><span className="font-mono text-xs text-accent">0{i + 1}</span><div><h3 className="font-display text-lg font-semibold tracking-tight">{t}</h3><p className="mt-1 text-sm leading-relaxed text-muted">{d}</p></div></li>
-              ))}
-            </ol>
+      <section id="demo" className="scroll-mt-24 pb-20 sm:pb-28">
+        <div className="container-x">
+          <SectionHead index="01" label="Demonstration centre" title="Experience intelligent business solutions." text="Try a working AI assistant, watch an enquiry being qualified, and see the automation behind it. Demonstrations use clearly labelled sample data." />
+          <Reveal><DemoCentre /></Reveal>
+          <div className="mt-8 flex flex-wrap items-center gap-4 rounded-2xl border border-line bg-card p-6">
+            <p className="max-w-xl text-[15px] text-muted">Want to see it work on your own idea? <span className="text-heading">Smart Intake</span> turns a plain-language description into a project brief with recommended services and indicative pricing.</p>
+            <LinkButton href="/smart-intake" variant="dark" className="ml-auto">Try Smart Intake</LinkButton>
           </div>
-          <Reveal>
-            <div className="relative sm:pr-24">
-              <ChatMock />
-              <WhatsAppMock className="mt-6 sm:absolute sm:-right-1 sm:top-12 sm:mt-0 sm:w-[170px]" />
-            </div>
-            <MockCaption>Illustrative conversations</MockCaption>
-          </Reveal>
         </div>
       </section>
 
@@ -75,11 +55,10 @@ export default function AIAutomation() {
         </div>
       </section>
 
-      <section id="automation" className="theme-soft section bg-softblue">
+      <section id="automation" className="theme-soft section scroll-mt-16 bg-softblue">
         <div className="container-x">
-          <SectionHead index="03" label="Business automation" title="Connect the tools you already use" text="Automation moves information between your forms, messages, documents and systems, so fewer tasks depend on someone remembering to do them." />
-          <Reveal><WorkflowDiagram steps={AUTOMATION_FLOW} /></Reveal>
-          <MockCaption>Example: lead routing and follow-up workflow</MockCaption>
+          <SectionHead index="03" label="Business automation" title="Connect the tools you already use" text="Automation moves information between your forms, messages, documents and systems, so fewer tasks depend on someone remembering to do them. Watch an example workflow run." />
+          <Reveal><AutomationFlow /></Reveal>
         </div>
       </section>
 
@@ -119,8 +98,6 @@ export default function AIAutomation() {
           </div>
         </div>
       </section>
-
-      <CTASection service="ai" title="Find out what could be automated" text="Describe a process that takes up your time. We will suggest where AI and automation can help." />
     </>
   );
 }

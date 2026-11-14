@@ -1,5 +1,5 @@
 import { Faq } from "@/components/Faq";
-import { CTASection, PageHero, Reveal } from "@/components/ui";
+import { PageHero, Reveal } from "@/components/ui";
 import { FAQS } from "@/lib/site";
 import { pageMeta } from "@/lib/utils";
 
@@ -34,7 +34,6 @@ export default function FaqPage() {
           </div>
         </div>
       </section>
-      <CTASection title="Still have a question?" text="Send us your question through the project form and we will get back to you." />
     </>
   );
 }

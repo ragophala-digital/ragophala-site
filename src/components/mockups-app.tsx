@@ -35,10 +35,10 @@ export function StatusPill({ status }: { status: string }) {
   return <span className={cn("rounded-full px-2 py-0.5 text-[10px] font-medium", PILL[status] ?? "bg-softblue text-navy")}>{status}</span>;
 }
 
-export function DashboardMock({ className }: { className?: string }) {
+export function DashboardMock({ className, wide }: { className?: string; wide?: boolean }) {
   return (
     <div className={cn("grid grid-cols-[132px_1fr] overflow-hidden rounded-xl border border-white/15 bg-ivory text-navy shadow-[0_50px_90px_-40px_rgba(0,0,0,.8)]", className)}>
-      <aside className="hidden bg-navy-800 p-4 sm:block" aria-hidden>
+      <aside className={cn("bg-navy-800 p-4", wide ? "block" : "hidden sm:block")} aria-hidden>
         <p className="font-display text-xs font-bold text-ivory">ops<span className="text-cobalt-300">.</span></p>
         <ul className="mt-6 space-y-1">
           {NAV_ITEMS.map((n, i) => (
@@ -48,12 +48,12 @@ export function DashboardMock({ className }: { className?: string }) {
           ))}
         </ul>
       </aside>
-      <div className="col-span-2 p-4 sm:col-span-1 sm:p-5">
+      <div className={cn("p-4 sm:p-5", !wide && "col-span-2 sm:col-span-1")}>
         <div className="flex items-center justify-between">
           <p className="font-display text-sm font-semibold">Overview</p>
           <span className="flex items-center gap-2"><i className="block h-6 w-28 rounded-md bg-white" /><i className="block h-6 w-6 rounded-full bg-cobalt" /></span>
         </div>
-        <div className="mt-4 grid grid-cols-2 gap-2.5 lg:grid-cols-4">
+        <div className={cn("mt-4 grid gap-2.5", wide ? "grid-cols-4" : "grid-cols-2 lg:grid-cols-4")}>
           {KPIS.map(([l, v, d]) => (
             <div key={l} className="rounded-lg bg-white p-3">
               <p className="text-[10px] text-muted">{l}</p>
@@ -62,7 +62,7 @@ export function DashboardMock({ className }: { className?: string }) {
             </div>
           ))}
         </div>
-        <div className="mt-2.5 grid gap-2.5 lg:grid-cols-[1.4fr_1fr]">
+        <div className={cn("mt-2.5 grid gap-2.5", wide ? "grid-cols-[1.4fr_1fr]" : "lg:grid-cols-[1.4fr_1fr]")}>
           <div className="rounded-lg bg-white p-3">
             <p className="text-[10px] text-muted">Monthly activity</p>
             <div className="mt-3 flex h-24 items-end gap-1.5">
@@ -153,6 +153,28 @@ export function PortalMock({ className }: { className?: string }) {
             <li key={s} className="flex items-center gap-2"><span className={cn("grid h-4 w-4 place-items-center rounded-full text-[8px]", i < 2 ? "bg-cobalt text-white" : "border border-navy/25 text-muted")}>{i + 1}</span>{s}</li>
           ))}
         </ol>
+      </div>
+    </div>
+  );
+}
+
+export function ReportMock({ className }: { className?: string }) {
+  const series = [40, 52, 47, 64, 58, 72, 66, 81];
+  return (
+    <div className={cn("overflow-hidden rounded-xl border border-navy/15 bg-white p-5 text-navy shadow-[0_30px_60px_-40px_rgba(16,24,39,.5)]", className)}>
+      <div className="flex items-center justify-between"><p className="font-display text-sm font-semibold">Quarterly report</p><span className="rounded-md bg-softblue px-2.5 py-1 font-mono text-[9px] uppercase tracking-wider">Export PDF</span></div>
+      <div className="mt-4 grid grid-cols-[1.5fr_1fr] gap-4">
+        <div>
+          <div className="flex h-36 items-end gap-2">
+            {series.map((h, i) => (<span key={i} className={cn("flex-1 rounded-t", i === series.length - 1 ? "bg-cobalt" : "bg-softblue")} style={{ height: `${h}%` }} />))}
+          </div>
+          <div className="mt-2 flex justify-between font-mono text-[9px] text-muted"><span>Jan</span><span>Mar</span><span>May</span><span>Jul</span></div>
+        </div>
+        <ul className="space-y-3 text-[11px]">
+          {[["Jobs completed", 82], ["Quotes accepted", 64], ["Repeat clients", 47]].map(([l, v]) => (
+            <li key={l as string}><div className="flex justify-between"><span>{l}</span><span className="font-mono text-muted">{v}%</span></div><span className="mt-1.5 block h-1.5 rounded-full bg-softblue"><i className="block h-1.5 rounded-full bg-cobalt" style={{ width: `${v}%` }} /></span></li>
+          ))}
+        </ul>
       </div>
     </div>
   );

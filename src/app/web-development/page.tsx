@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { CTASection, LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
-import { BrowserFrame, MockCaption, PhoneFrame, PhoneSite, SiteMock } from "@/components/mockups-web";
+import { LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
+import { BeforeAfter, DeviceShowcase } from "@/components/demos-web";
 import { PACKAGES, formatZAR } from "@/lib/site";
 import { cn, pageMeta } from "@/lib/utils";
 
@@ -29,14 +29,7 @@ export default function WebDevelopment() {
         text="From a single landing page to a full corporate website, we design and build fast, mobile-first sites that are easy to find and easy to use."
         actions={<><LinkButton href="/contact?service=web">Request a website quotation</LinkButton><LinkButton href="/pricing#websites" variant="line" arrow={false}>View packages</LinkButton></>}
       >
-        <Reveal className="mt-16" delay={0.15}>
-          <div className="grid items-end gap-5 md:grid-cols-[1.5fr_1fr_0.45fr]">
-            <BrowserFrame url="studio.co.za"><SiteMock variant="studio" /></BrowserFrame>
-            <BrowserFrame url="shop.co.za" className="hidden md:block"><SiteMock variant="shop" /></BrowserFrame>
-            <PhoneFrame className="hidden w-[120px] md:block"><PhoneSite /></PhoneFrame>
-          </div>
-          <MockCaption>Illustrative website previews</MockCaption>
-        </Reveal>
+        <Reveal className="mt-14" delay={0.15}><div id="devices" className="scroll-mt-28"><DeviceShowcase className="mx-auto max-w-4xl" /></div></Reveal>
       </PageHero>
 
       <section className="section pt-8">
@@ -58,9 +51,19 @@ export default function WebDevelopment() {
         </div>
       </section>
 
+      <section className="section pt-0">
+        <div className="container-x grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr]">
+          <div>
+            <SectionHead index="02" label="Website redesigns" title="From outdated to outstanding" text="A redesign keeps what works, then improves structure, clarity, speed and search visibility. Drag the handle to compare." className="mb-6 lg:mb-6" />
+            <LinkButton href="/contact?service=web&item=Website%20redesign" variant="line">Ask about a redesign</LinkButton>
+          </div>
+          <Reveal><BeforeAfter /></Reveal>
+        </div>
+      </section>
+
       <section className="theme-soft section bg-softblue">
         <div className="container-x grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
-          <SectionHead index="02" label="Deliverables" title="What a typical website project includes" text="Exact inclusions depend on your package. Your written quotation confirms scope and deliverables." className="mb-0 lg:mb-0" />
+          <SectionHead index="03" label="Deliverables" title="What a typical website project includes" text="Exact inclusions depend on your package. Your written quotation confirms scope and deliverables." className="mb-0 lg:mb-0" />
           <ul className="grid border-t border-line sm:grid-cols-2">
             {DELIVERABLES.map((d, i) => (
               <li key={d} className="flex gap-3 border-b border-line py-5 pr-4 text-[15px] sm:odd:border-r sm:odd:pr-6 sm:even:pl-6">
@@ -74,7 +77,7 @@ export default function WebDevelopment() {
       <section className="section">
         <div className="container-x">
           <div className="mb-12 flex flex-wrap items-end justify-between gap-6">
-            <SectionHead index="03" label="Pricing preview" title="Website packages, once-off" text="Starting prices in South African rand. Domain and hosting are quoted separately unless included." className="mb-0 lg:mb-0" />
+            <SectionHead index="04" label="Pricing preview" title="Website packages, once-off" text="Starting prices in South African rand. Domain and hosting are quoted separately unless included." className="mb-0 lg:mb-0" />
             <LinkButton href="/pricing#websites" variant="line">Full pricing</LinkButton>
           </div>
           <ul className="border-t border-line">
@@ -90,8 +93,6 @@ export default function WebDevelopment() {
           </ul>
         </div>
       </section>
-
-      <CTASection service="web" title="Request your website quotation" text="Tell us about your business and the pages you need. We will reply with a clear, written quotation." />
     </>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { CheckCircle2, Loader2, TriangleAlert } from "lucide-react";
+import { motion } from "framer-motion";
+import { Loader2, TriangleAlert } from "lucide-react";
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { contactSchema } from "@/lib/contact";
 import { BUDGETS, PACKAGES, SERVICE_OPTIONS } from "@/lib/site";
@@ -33,12 +35,13 @@ export function ContactForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [serverMsg, setServerMsg] = useState("");
   const [waLink, setWaLink] = useState<string | null>(null);
+  const [notified, setNotified] = useState(false);
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
     const raw = Object.fromEntries(new FormData(form).entries()) as Record<string, string>;
-    const parsed = contactSchema.safeParse({ ...raw, startedAt: startedAt.current });
+    const parsed = contactSchema.safeParse({ ...raw, consent: raw.consent === "on", startedAt: startedAt.current });
     if (!parsed.success) {
       const next: Errors = {};
       for (const issue of parsed.error.issues) next[String(issue.path[0])] ??= issue.message;
@@ -52,7 +55,7 @@ export function ContactForm() {
     setServerMsg("");
     try {
       const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data) });
-      const data = (await res.json().catch(() => ({}))) as { error?: string; fieldErrors?: Errors };
+      const data = (await res.json().catch(() => ({}))) as { error?: string; fieldErrors?: Errors; notified?: boolean };
       if (!res.ok) {
         if (data.fieldErrors) setErrors(data.fieldErrors);
         setServerMsg(data.error ?? "Something went wrong. Please try again.");
@@ -60,6 +63,7 @@ export function ContactForm() {
         setWaLink(whatsappUrl(`Hi Ragophala Digital, I tried to send an enquiry on your website. ${parsed.data.message}`));
         return;
       }
+      setNotified(Boolean(data.notified));
       setStatus("success");
       form.reset();
     } catch {
@@ -71,9 +75,12 @@ export function ContactForm() {
   if (status === "success") {
     return (
       <div className="rounded-2xl border border-line bg-card p-8 text-center sm:p-12" role="status">
-        <CheckCircle2 className="mx-auto text-cobalt" size={44} aria-hidden />
+        <svg viewBox="0 0 52 52" className="mx-auto h-14 w-14" aria-hidden>
+          <motion.circle cx="26" cy="26" r="23" fill="none" stroke="#315BFA" strokeWidth="2.5" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ duration: 0.6 }} />
+          <motion.path d="M15 27l8 8 14-16" fill="none" stroke="#315BFA" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" initial={{ pathLength: 0 }} animate={{ pathLength: 1 }} transition={{ delay: 0.5, duration: 0.4 }} />
+        </svg>
         <h2 className="display-md mt-5">Thank you. We have your enquiry.</h2>
-        <p className="mx-auto mt-3 max-w-md text-muted">We will review the details and reply with next steps and a written quotation, usually within one to two working days.</p>
+        <p className="mx-auto mt-3 max-w-md text-muted">{notified ? "Our team has been notified. We will review the details and reply with next steps and a written quotation, usually within one to two working days." : "Your enquiry has been saved for our team to review. We could not confirm an email notification, but it is recorded and we will reply, usually within one to two working days."}</p>
         <button type="button" onClick={() => setStatus("idle")} className="btn btn-line mt-8">Send another enquiry</button>
       </div>
     );
@@ -112,6 +119,13 @@ export function ContactForm() {
       <Field id="extra" label="Additional information" optional error={errors.extra}>
         <textarea id="extra" rows={3} placeholder="Deadlines, existing website, examples you like…" {...field("extra")} />
       </Field>
+      <div>
+        <label className="flex cursor-pointer items-start gap-3 text-sm">
+          <input type="checkbox" name="consent" className="mt-1 h-4 w-4 accent-[#315BFA]" aria-invalid={errors.consent ? true : undefined} aria-describedby={errors.consent ? "consent-err" : undefined} />
+          <span>I agree that Ragophala Digital may save my details so they can reply to my enquiry. I have read the <Link href="/privacy" target="_blank" className="font-medium text-cobalt underline">privacy information</Link>.</span>
+        </label>
+        {errors.consent && <p id="consent-err" className="mt-1.5 text-xs font-medium text-red-600">{errors.consent}</p>}
+      </div>
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
         <label>Leave this field empty<input type="text" name="website" tabIndex={-1} autoComplete="off" /></label>
       </div>

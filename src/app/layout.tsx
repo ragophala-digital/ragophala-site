@@ -4,6 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
+import { AiAssistant } from "@/components/ai/AiAssistant";
 import { SITE } from "@/lib/site";
 
 const display = Sora({ subsets: ["latin"], variable: "--font-display", display: "swap" });
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <FloatingWhatsApp />
+        <AiAssistant />
       </body>
     </html>
   );

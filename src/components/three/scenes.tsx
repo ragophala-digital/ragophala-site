@@ -1,125 +1,40 @@
 "use client";
 
-import { Canvas, useFrame } from "@react-three/fiber";
-import { Environment, Float, Lightformer, MeshTransmissionMaterial, RoundedBox, Sparkles } from "@react-three/drei";
-import { useEffect, useRef, useState, type ReactNode } from "react";
-import * as THREE from "three";
-import { SceneFallback } from "./Fallback";
+import { Float, MeshTransmissionMaterial, Sparkles } from "@react-three/drei";
+import { CHROME, COBALT, Cube, Plate, Rig, SOFT, SceneFrame, Spin } from "./shared";
 
-/* ---------- environment / performance helpers ---------- */
-
-function useCapability() {
-  const [state, setState] = useState<{ ok: boolean; low: boolean }>({ ok: false, low: false });
-  useEffect(() => {
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let webgl = false;
-    try {
-      const c = document.createElement("canvas");
-      webgl = !!(c.getContext("webgl2") || c.getContext("webgl"));
-    } catch {
-      webgl = false;
-    }
-    const cores = navigator.hardwareConcurrency ?? 4;
-    setState({ ok: webgl && !reduce, low: window.innerWidth < 768 || cores <= 4 });
-  }, []);
-  return state;
-}
-
-function useInView<T extends HTMLElement>() {
-  const ref = useRef<T>(null);
-  const [visible, setVisible] = useState(true);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const io = new IntersectionObserver(([e]) => setVisible(e.isIntersecting), { rootMargin: "120px" });
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-  return { ref, visible };
-}
-
-function SceneFrame({ children, camera = [0, 0, 9] }: { children: (low: boolean) => ReactNode; camera?: [number, number, number] }) {
-  const { ok, low } = useCapability();
-  const { ref, visible } = useInView<HTMLDivElement>();
-  return (
-    <div ref={ref} className="h-full w-full" role="img" aria-label="Three-dimensional composition of chrome and glass geometric objects">
-      {ok ? (
-        <Canvas dpr={low ? 1 : [1, 1.75]} frameloop={visible ? "always" : "never"} camera={{ position: camera, fov: 40 }} gl={{ antialias: !low, alpha: true, powerPreference: "high-performance" }}>
-          <fog attach="fog" args={["#101827", 10, 22]} />
-          <ambientLight intensity={0.5} />
-          <directionalLight position={[5, 6, 5]} intensity={2.4} color="#ffffff" />
-          <pointLight position={[-6, -2, 3]} intensity={50} color="#315BFA" />
-          <Environment resolution={low ? 64 : 128} frames={1}>
-            <color attach="background" args={["#5f7098"]} />
-            <Lightformer form="rect" intensity={5} color="#ffffff" position={[0, 6, 3]} scale={[12, 3, 1]} />
-            <Lightformer form="rect" intensity={3} color="#8FA5FF" position={[-7, 1, 2]} rotation-y={Math.PI / 2} scale={[8, 5, 1]} />
-            <Lightformer form="rect" intensity={2.5} color="#315BFA" position={[7, 0, -2]} rotation-y={-Math.PI / 2} scale={[8, 5, 1]} />
-            <Lightformer form="circle" intensity={3} color="#ffffff" position={[0, -4, 4]} scale={4} />
-          </Environment>
-          {children(low)}
-        </Canvas>
-      ) : (
-        <SceneFallback />
-      )}
-    </div>
-  );
-}
-
-/** Eases the composition toward the pointer and turns it gently with scroll. */
-function Rig({ children }: { children: ReactNode }) {
-  const g = useRef<THREE.Group>(null);
-  useFrame((s, dt) => {
-    if (!g.current) return;
-    const scroll = Math.min(window.scrollY, 800) / 800;
-    g.current.rotation.y = THREE.MathUtils.damp(g.current.rotation.y, s.pointer.x * 0.5 + scroll * 0.8, 3, dt);
-    g.current.rotation.x = THREE.MathUtils.damp(g.current.rotation.x, -s.pointer.y * 0.25 + scroll * 0.2, 3, dt);
-  });
-  return <group ref={g}>{children}</group>;
-}
-
-function Spin({ children, speed = 0.15, axis = "y" }: { children: ReactNode; speed?: number; axis?: "x" | "y" | "z" }) {
-  const g = useRef<THREE.Group>(null);
-  useFrame((_, dt) => {
-    if (g.current) g.current.rotation[axis] += dt * speed;
-  });
-  return <group ref={g}>{children}</group>;
-}
-
-const CHROME = { color: "#eef1f8", metalness: 1, roughness: 0.1, envMapIntensity: 1.7 } as const;
-
-function Cube({ position, size = 0.5, kind }: { position: [number, number, number]; size?: number; kind: "chrome" | "cobalt" | "glass" }) {
-  return (
-    <Float speed={1.4} floatIntensity={1.1} rotationIntensity={1.2}>
-      <RoundedBox args={[size, size, size]} radius={size * 0.14} smoothness={4} position={position} rotation={[0.5, 0.7, 0.1]}>
-        {kind === "chrome" && <meshPhysicalMaterial {...CHROME} />}
-        {kind === "cobalt" && <meshPhysicalMaterial color="#315BFA" metalness={0.5} roughness={0.15} clearcoat={1} envMapIntensity={1.4} />}
-        {kind === "glass" && <meshPhysicalMaterial color="#dce5ff" transmission={0.9} thickness={0.8} roughness={0.05} ior={1.4} clearcoat={1} transparent />}
-      </RoundedBox>
-    </Float>
-  );
-}
-
+/** Signature sculpture: a gyroscope of chrome rings around a glass sphere, set against layered glass plates. */
 export function HeroScene() {
   return (
-    <SceneFrame>
+    <SceneFrame fit={5.2} label="Three-dimensional chrome and glass sculpture">
       {(low) => (
         <Rig>
-          {/* architectural chrome ring */}
+          {/* layered architectural plates for depth */}
+          <Plate position={[0.4, 0.1, -1.6]} rotation={[0, -0.35, 0.04]} size={[4.4, 2.8]} opacity={0.16} />
+          <Plate position={[0.9, -0.2, -2.3]} rotation={[0, -0.35, -0.05]} size={[5.2, 3.2]} opacity={0.1} />
+
+          {/* gyroscope rings */}
           <Spin speed={0.12} axis="z">
             <mesh rotation={[1.15, 0.25, 0]}>
               <torusGeometry args={[2.35, 0.26, 48, 180]} />
               <meshPhysicalMaterial {...CHROME} />
             </mesh>
           </Spin>
-          {/* thin outer ring */}
+          <Spin speed={-0.2} axis="x">
+            <mesh rotation={[0.2, 0.6, 1.1]}>
+              <torusGeometry args={[1.75, 0.1, 32, 160]} />
+              <meshPhysicalMaterial {...CHROME} />
+            </mesh>
+          </Spin>
           <Spin speed={-0.08} axis="y">
             <mesh rotation={[0.35, 0, 0.5]}>
               <torusGeometry args={[3.3, 0.012, 8, 220]} />
-              <meshBasicMaterial color="#8FA5FF" transparent opacity={0.55} />
+              <meshBasicMaterial color={SOFT} transparent opacity={0.55} />
             </mesh>
           </Spin>
-          {/* glass sphere with a cobalt core */}
-          <Float speed={1.1} floatIntensity={0.5}>
+
+          {/* glass sphere with cobalt core */}
+          <Float speed={1} floatIntensity={0.4}>
             <mesh>
               <sphereGeometry args={[1.2, low ? 40 : 72, low ? 40 : 72]} />
               {low ? (
@@ -130,17 +45,60 @@ export function HeroScene() {
             </mesh>
             <mesh>
               <icosahedronGeometry args={[0.46, 3]} />
-              <meshPhysicalMaterial color="#315BFA" emissive="#315BFA" emissiveIntensity={0.9} roughness={0.2} />
+              <meshPhysicalMaterial color={COBALT} emissive={COBALT} emissiveIntensity={0.9} roughness={0.2} />
             </mesh>
           </Float>
-          {/* modular cubes */}
+
+          {/* modular cubes and orbiting spheres */}
           <Cube position={[2.9, 1.5, 0.6]} size={0.62} kind="chrome" />
           <Cube position={[-2.8, -1.4, 0.8]} size={0.5} kind="cobalt" />
           <Cube position={[-2.4, 1.9, -0.4]} size={0.42} kind="glass" />
           <Cube position={[2.4, -1.9, 0.4]} size={0.36} kind="glass" />
           {!low && <Cube position={[3.4, -0.2, -0.8]} size={0.3} kind="cobalt" />}
-          <Sparkles count={low ? 16 : 36} scale={[10, 6, 5]} size={1.6} speed={0.25} opacity={0.55} color="#8FA5FF" />
+          <Float speed={2} floatIntensity={1.4}>
+            <mesh position={[-3.2, 0.2, 0.2]}>
+              <sphereGeometry args={[0.22, 40, 40]} />
+              <meshPhysicalMaterial {...CHROME} />
+            </mesh>
+          </Float>
+          <Sparkles count={low ? 14 : 34} scale={[10, 6, 5]} size={1.6} speed={0.25} opacity={0.5} color={SOFT} />
         </Rig>
+      )}
+    </SceneFrame>
+  );
+}
+
+/** Lighter floating composition used as the backdrop of the full-screen mobile menu. */
+export function MenuScene() {
+  return (
+    <SceneFrame camera={[0, 0, 8.5]} fit={3.6} label="Floating chrome and glass objects">
+      {(low) => (
+        <group>
+          <Float speed={1.2} floatIntensity={0.8} rotationIntensity={0.4}>
+            <Spin speed={0.18} axis="z">
+              <mesh rotation={[1.1, 0.3, 0]}>
+                <torusGeometry args={[2.6, 0.3, 40, 140]} />
+                <meshPhysicalMaterial {...CHROME} />
+              </mesh>
+            </Spin>
+            <mesh>
+              <sphereGeometry args={[1.2, 48, 48]} />
+              {low ? (
+                <meshPhysicalMaterial color="#dce5ff" transparent opacity={0.4} roughness={0.05} clearcoat={1} />
+              ) : (
+                <MeshTransmissionMaterial samples={4} resolution={384} thickness={1.2} roughness={0.04} ior={1.35} chromaticAberration={0.04} color="#dbe4ff" backside={false} />
+              )}
+            </mesh>
+            <mesh>
+              <icosahedronGeometry args={[0.46, 3]} />
+              <meshPhysicalMaterial color={COBALT} emissive={COBALT} emissiveIntensity={0.9} roughness={0.2} />
+            </mesh>
+          </Float>
+          <Cube position={[2.6, 2.3, 0]} size={0.55} kind="chrome" />
+          <Cube position={[-2.5, -2.4, 0.4]} size={0.45} kind="cobalt" />
+          <Cube position={[-2.4, 2.4, -0.5]} size={0.35} kind="glass" />
+          <Sparkles count={low ? 12 : 26} scale={[8, 10, 4]} size={1.5} speed={0.25} opacity={0.5} color={SOFT} />
+        </group>
       )}
     </SceneFrame>
   );

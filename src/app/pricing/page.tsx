@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowUpRight, Check } from "lucide-react";
 import { Faq } from "@/components/Faq";
-import { CTASection, LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
+import { PackageCompare } from "@/components/PackageCompare";
+import { LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
 import { FAQS } from "@/lib/site";
 import {
   ADDONS,
@@ -107,6 +108,7 @@ export default function Pricing() {
               </Reveal>
             ))}
           </ul>
+          <div className="mt-16"><h3 className="display-md mb-6">Compare two packages</h3><PackageCompare /></div>
         </div>
       </section>
 
@@ -244,8 +246,6 @@ export default function Pricing() {
           <Faq items={FAQS.filter((f) => ["Pricing", "Payments", "Domains and hosting", "Third-party costs"].includes(f.category))} />
         </div>
       </section>
-
-      <CTASection />
     </>
   );
 }

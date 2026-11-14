@@ -1,4 +1,4 @@
-import { CTASection, LinkButton, Reveal, SectionHead } from "@/components/ui";
+import { LinkButton, Reveal, SectionHead } from "@/components/ui";
 import { Breadcrumb } from "@/components/ui";
 import { pageMeta } from "@/lib/utils";
 
@@ -117,8 +117,6 @@ export default function About() {
           </Reveal>
         </div>
       </section>
-
-      <CTASection />
     </>
   );
 }

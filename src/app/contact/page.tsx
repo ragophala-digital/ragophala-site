@@ -37,7 +37,7 @@ export default function Contact() {
                 </>
               )}
               <p className="mt-10 text-xs text-muted">Serving businesses across {SITE.location}.</p>
-              <div className="mt-6"><LinkButton href="/pricing" variant="line">View pricing</LinkButton></div>
+              <div className="mt-6 flex flex-wrap gap-3"><LinkButton href="/smart-intake" variant="primary">Try Smart Intake</LinkButton><LinkButton href="/pricing" variant="line">View pricing</LinkButton></div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>

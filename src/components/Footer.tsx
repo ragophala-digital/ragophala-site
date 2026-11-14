@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
-import { Mail, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Mail, MessageCircle } from "lucide-react";
 import { SERVICES, SITE } from "@/lib/site";
 import { mailtoUrl, whatsappUrl } from "@/lib/utils";
+import { CursorGlow, Magnetic } from "./ui-motion";
 
 const STUDIO = [
   ["/about", "About"],
@@ -9,50 +12,82 @@ const STUDIO = [
   ["/pricing", "Pricing"],
   ["/portfolio", "Selected concepts"],
   ["/faq", "FAQ"],
-  ["/contact", "Start a project"],
+  ["/smart-intake", "Smart Intake"],
+  ["/privacy", "Privacy"],
+  ["/contact", "Contact"],
 ];
+
+const SOCIALS = [
+  ["LinkedIn", process.env.NEXT_PUBLIC_LINKEDIN_URL],
+  ["Instagram", process.env.NEXT_PUBLIC_INSTAGRAM_URL],
+  ["Facebook", process.env.NEXT_PUBLIC_FACEBOOK_URL],
+].filter((s): s is [string, string] => Boolean(s[1]));
 
 export function Footer() {
   const wa = whatsappUrl("Hi Ragophala Digital, I would like to find out more about your services.");
   const mail = mailtoUrl("Enquiry from the Ragophala Digital website");
   return (
-    <footer className="theme-dark bg-navy text-fg">
-      <div className="container-x pt-20">
-        <div className="grid gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="theme-dark relative overflow-hidden bg-navy text-fg">
+      <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
+      <div aria-hidden className="absolute -left-24 top-10 h-[26rem] w-[26rem] animate-drift rounded-full bg-cobalt/25 blur-[130px]" />
+      <div aria-hidden className="absolute -right-24 bottom-24 h-[22rem] w-[22rem] animate-drift rounded-full bg-cobalt-300/15 blur-[120px] [animation-delay:-4s]" />
+      <CursorGlow />
+      <div className="container-x relative pt-24 lg:pt-32">
+        <div className="grid items-end gap-10 lg:grid-cols-[1.5fr_1fr]">
           <div>
-            <p className="font-display text-[clamp(2.4rem,6vw,4.4rem)] font-bold leading-none tracking-[-0.05em] text-ivory">
-              RAGOPHALA<span className="text-cobalt-300">.</span>
-            </p>
-            <p className="mt-3 font-mono text-[11px] uppercase tracking-[.42em] text-slate">Digital</p>
-            <p className="mt-6 max-w-sm text-[15px] leading-relaxed text-muted">{SITE.tagline} Websites, web applications, AI agents and business automation for South African businesses.</p>
+            <p className="label mb-6">Start a project</p>
+            <h2 className="display-lg max-w-[14ch]">Let&apos;s build something remarkable.</h2>
           </div>
+          <div>
+            <p className="body-lg">Tell us what you need and we will reply with a clear, written quotation.</p>
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Magnetic strength={0.25}>
+                <Link href="/contact" className="btn btn-primary group">
+                  Start a project <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                </Link>
+              </Magnetic>
+              {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className="btn btn-line"><MessageCircle size={16} aria-hidden /> WhatsApp</a>}
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-20 grid gap-10 border-t border-line pt-12 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <h3 className="label mb-5">Services</h3>
             <ul className="space-y-3 text-[15px]">
-              {SERVICES.map((s) => (
-                <li key={s.key}><Link href={s.href} className="text-fg transition hover:text-cobalt-300">{s.title}</Link></li>
-              ))}
+              {SERVICES.map((s) => (<li key={s.key}><Link href={s.href} className="link-underline text-fg">{s.title}</Link></li>))}
             </ul>
           </div>
           <div>
             <h3 className="label mb-5">Studio</h3>
             <ul className="space-y-3 text-[15px]">
-              {STUDIO.map(([h, l]) => (
-                <li key={h}><Link href={h} className="text-fg transition hover:text-cobalt-300">{l}</Link></li>
-              ))}
+              {STUDIO.map(([h, l]) => (<li key={h}><Link href={h} className="link-underline text-fg">{l}</Link></li>))}
             </ul>
           </div>
           <div>
             <h3 className="label mb-5">Contact</h3>
             <ul className="space-y-3 text-[15px]">
-              <li><Link href="/contact" className="text-fg transition hover:text-cobalt-300">Project enquiry form</Link></li>
-              {wa && <li><a href={wa} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 text-fg transition hover:text-cobalt-300"><MessageCircle size={15} aria-hidden /> WhatsApp</a></li>}
-              {mail && <li><a href={mail} className="inline-flex items-center gap-2 text-fg transition hover:text-cobalt-300"><Mail size={15} aria-hidden /> {SITE.email}</a></li>}
+              <li><Link href="/contact" className="link-underline text-fg">Project enquiry form</Link></li>
+              {wa && <li><a href={wa} target="_blank" rel="noopener noreferrer" className="link-underline inline-flex items-center gap-2 text-fg"><MessageCircle size={15} aria-hidden /> WhatsApp</a></li>}
+              {mail && <li><a href={mail} className="link-underline inline-flex items-center gap-2 text-fg"><Mail size={15} aria-hidden /> {SITE.email}</a></li>}
               <li className="text-muted">{SITE.location}</li>
             </ul>
           </div>
+          {SOCIALS.length > 0 && (
+            <div>
+              <h3 className="label mb-5">Follow</h3>
+              <ul className="space-y-3 text-[15px]">
+                {SOCIALS.map(([name, href]) => (<li key={name}><a href={href} target="_blank" rel="noopener noreferrer" className="link-underline text-fg">{name}</a></li>))}
+              </ul>
+            </div>
+          )}
         </div>
-        <div className="mt-16 flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 font-mono text-[11px] uppercase tracking-[.14em] text-muted">
+
+        <p aria-hidden className="pointer-events-none mt-16 select-none whitespace-nowrap bg-gradient-to-b from-ivory/90 to-ivory/0 bg-clip-text text-center font-display text-[clamp(3.4rem,15.5vw,14rem)] font-bold leading-[0.85] tracking-[-0.06em] text-transparent">
+          RAGOPHALA
+        </p>
+
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 font-mono text-[11px] uppercase tracking-[.14em] text-muted">
           <span>RD / 2026 / Digital</span>
           <span>© {new Date().getFullYear()} Ragophala Digital</span>
           <span>All prices in ZAR</span>

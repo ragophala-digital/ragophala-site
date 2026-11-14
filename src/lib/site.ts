@@ -276,3 +276,26 @@ export const SERVICE_OPTIONS: { value: string; label: string }[] = [
   { value: "support", label: "Support and maintenance" },
   { value: "other", label: "Not sure yet" },
 ];
+
+export type MockKind = "booking" | "shop" | "studio" | "fleet" | "portal" | "stock" | "chat" | "whatsapp";
+
+export interface CaseStudy {
+  mock: MockKind;
+  tint: string;
+  services: string[];
+  problem: string;
+  solution: string;
+  design: string;
+}
+
+/** Concept case studies. These are demonstration projects, not client work. */
+export const CASES: Record<string, CaseStudy> = {
+  "karoo-stays-booking": { mock: "booking", tint: "#315BFA", services: ["Website design", "Booking enquiry flow", "SEO foundations"], problem: "Small guesthouses lose enquiries when rooms, rates and availability are hard to find on a phone.", solution: "A fast, mobile-first website with room galleries and a short enquiry form that captures dates and guest numbers.", design: "Warm editorial layouts, generous image areas and a single clear enquiry action on every screen." },
+  "cape-fresh-market-shop": { mock: "shop", tint: "#4B6BFF", services: ["E-commerce design", "Checkout flow", "Delivery area logic"], problem: "Fresh produce sellers need repeat orders to be quick, and customers must know whether delivery reaches them.", solution: "A catalogue with filters, a delivery-area check before checkout and order confirmation emails.", design: "Clean product grids, high-contrast prices and a streamlined three-step checkout." },
+  "launchpad-landing-page": { mock: "studio", tint: "#2547D6", services: ["Landing page design", "Motion design", "Lead capture"], problem: "A product launch page has one job: turn attention into sign-ups.", solution: "A single scrolling story with a clear offer, supporting points and one lead-capture form.", design: "Confident typography, restrained motion and a focused call to action." },
+  "fleet-dashboard": { mock: "fleet", tint: "#5D7DFF", services: ["Web application", "Dashboard design", "Role-based access"], problem: "Operations teams juggle spreadsheets and messages to track vehicles, jobs and service dates.", solution: "One dashboard showing vehicle status, job allocation and maintenance reminders.", design: "A dense but calm interface with clear status colours, sortable tables and persistent side navigation." },
+  "clinic-booking-portal": { mock: "portal", tint: "#3A63F5", services: ["Web application", "Client portal", "Reminders"], problem: "Phone-based booking is slow for clients and staff, and missed appointments cost time.", solution: "A portal where clients book and manage appointments, with reminders and a staff schedule.", design: "A reassuring, accessible interface with large touch targets and plain-language labels." },
+  "stock-manager": { mock: "stock", tint: "#6A86FF", services: ["Web application", "Inventory system", "Alerts"], problem: "Spreadsheet stock lists go out of date and low stock is noticed too late.", solution: "A live inventory view with low-stock alerts, supplier records and simple reorder lists.", design: "A table-first layout with inline stock bars and clear alert states." },
+  "website-support-agent": { mock: "chat", tint: "#7B92FF", services: ["AI agent", "Knowledge base setup", "Lead capture"], problem: "Teams answer the same questions repeatedly while visitors wait for replies.", solution: "An assistant that answers from approved content, captures contact details and hands over to a person.", design: "A friendly, compact chat interface with clear hand-over and lead-capture moments." },
+  "whatsapp-lead-automation": { mock: "whatsapp", tint: "#4A5CFF", services: ["Business automation", "WhatsApp integration", "Notifications"], problem: "Enquiries arrive across channels and some are never followed up.", solution: "A workflow that collects each enquiry, tags it and notifies the right person with a follow-up reminder.", design: "A simple status-driven view so owners can see at a glance what needs attention." },
+};

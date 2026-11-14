@@ -140,24 +140,3 @@ export function PageHero({ crumbs, label, title, text, actions, children, classN
     </section>
   );
 }
-
-export function CTASection({ title = "Ready to build something?", text = "Tell us what you need and we will send a clear, written quotation.", service, item }: { title?: string; text?: string; service?: string; item?: string }) {
-  const href = service ? `/contact?service=${service}${item ? `&item=${encodeURIComponent(item)}` : ""}` : "/contact";
-  return (
-    <section className="theme-dark relative overflow-hidden bg-navy">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
-      <div aria-hidden className="absolute -right-32 top-1/2 h-[28rem] w-[28rem] -translate-y-1/2 rounded-full bg-cobalt/25 blur-[120px]" />
-      <div className="container-x relative py-24 lg:py-32">
-        <Reveal>
-          <p className="label mb-6">Start a project</p>
-          <h2 className="display-lg max-w-[16ch]">{title}</h2>
-          <p className="body-lg mt-6">{text}</p>
-          <div className="mt-10 flex flex-wrap gap-3">
-            <LinkButton href={href}>Start a project</LinkButton>
-            <WhatsAppButton message="Hi Ragophala Digital, I would like to discuss a project." variant="line" />
-          </div>
-        </Reveal>
-      </div>
-    </section>
-  );
-}

@@ -28,12 +28,36 @@ All copy, prices, services, FAQs and demo projects are in `src/lib/site.ts`. Pac
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Yes for the contact form | SMTP credentials (server-side only) |
 | `CONTACT_TO_EMAIL` | Yes for the contact form | Inbox that receives enquiries |
 | `CONTACT_FROM_EMAIL` | Optional | From address (defaults to `SMTP_USER`) |
+| `GROQ_API_KEY` | For AI features | Server-side only. Without it the assistant is hidden and demos use scripted or rule-based fallbacks |
 
 Until SMTP is configured, the contact form validates input and then shows an honest error with a WhatsApp fallback (when configured). It never pretends an email was sent.
 
 ## Contact form protections
 
 Zod validation on client and server, honeypot field, minimum time-to-submit check, same-origin check, payload size limit, and an in-memory rate limit (5 per 10 minutes per IP). For multi-instance deployments, replace the rate limiter with a shared store such as Upstash Redis.
+
+## RAGOPHALA AI, Smart Intake and enquiry automation
+
+All AI calls happen on the server (`src/lib/ai/provider.ts`, Groq's OpenAI-compatible API). The key never reaches the browser.
+
+| Feature | Route / page | Notes |
+| --- | --- | --- |
+| RAGOPHALA AI assistant | floating button, `POST /api/ai/chat` | Streams replies. Knowledge is built from `src/lib/pricing.ts` and `src/lib/site.ts`, so prices stay accurate. Hidden when no key is set. |
+| Smart Intake | `/smart-intake`, `POST /api/ai/intake` | Idea in plain language, optional follow-up questions, editable brief, consent, then submit. Prices in the brief are looked up from the catalogue, never taken from the model. |
+| Demonstration centre | `/ai-automation#demo` | Demo assistant (fictional guesthouse), lead qualification demo (saves nothing), workflow explanation. |
+| Enquiry automation | `POST /api/contact` | Validate, consent, de-duplicate, store, AI analysis (category, priority, summary, follow-up draft), email owner with retries. Falls back to keyword rules if AI is unavailable. |
+| Admin list | `GET /api/admin/enquiries` | Disabled unless `ADMIN_TOKEN` (24+ characters) is set. Send `Authorization: Bearer <token>`. |
+| Privacy information | `/privacy` | Describes what is stored and for how long. |
+
+Environment variables: `GROQ_API_KEY`, `GROQ_MODEL`, `GROQ_API_URL` (optional), `ENQUIRY_DATA_DIR`, `DATA_RETENTION_DAYS`, `ADMIN_TOKEN`. See `.env.example`.
+
+Things to know:
+- **Model:** set `GROQ_MODEL` to a model your key can use. `GET https://api.groq.com/openai/v1/models` lists them. If the configured model returns 404, the server picks an available one automatically and logs `ai.model_unavailable`.
+- **Free tier limits** are per model (requests and tokens per minute and day) and shared by all visitors, so a busy site can hit them. The UI shows a friendly message on HTTP 429, and Smart Intake and qualification fall back to keyword rules.
+- **Privacy:** email addresses and phone numbers are removed from text before it is sent to the AI provider. Chats are not stored on the server. Enquiries are saved only after consent and are deleted after `DATA_RETENTION_DAYS`.
+- **Storage:** enquiries are saved to `.data/enquiries.json` (git-ignored, owner-only file permissions, no public route). This suits a VPS or local use. On Vercel or other serverless hosts the filesystem is not persistent: replace `src/lib/enquiry-store.ts` with a hosted database (for example Postgres) before going live.
+- **Email:** "notified" is only reported when the SMTP server accepts the message. Temporary failures are retried three times. Configure `SMTP_*` and `CONTACT_TO_EMAIL`.
+- **Rate limits** are in memory per server instance; use a shared store such as Upstash Redis for multi-instance deployments.
 
 ## Design system
 
