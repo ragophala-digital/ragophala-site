@@ -7,7 +7,7 @@ import { mailtoUrl, pageMeta, whatsappUrl } from "@/lib/utils";
 
 export const metadata = pageMeta("Start a Project", "Request a quotation or tell Ragophala Digital about your website, web application, AI agent or automation project.", "/contact");
 
-const NEXT_STEPS = ["We review your enquiry.", "We may ask a few clarifying questions.", "You receive a written quotation with scope, price and deliverables."];
+const NEXT_STEPS = ["We review your enquiry.", "We may ask a few clarifying questions.", "You receive a personalised written quotation with scope, deliverables and price."];
 
 export default function Contact() {
   const wa = whatsappUrl("Hi Ragophala Digital, I would like to request a quotation.");
@@ -37,7 +37,7 @@ export default function Contact() {
                 </>
               )}
               <p className="mt-10 text-xs text-muted">Serving businesses across {SITE.location}.</p>
-              <div className="mt-6 flex flex-wrap gap-3"><LinkButton href="/smart-intake" variant="primary">Try Smart Intake</LinkButton><LinkButton href="/pricing" variant="line">View pricing</LinkButton></div>
+              <div className="mt-6 flex flex-wrap gap-3"><LinkButton href="/smart-intake" variant="primary">Try Smart Intake</LinkButton><LinkButton href="/quote" variant="line">How quotations work</LinkButton></div>
             </div>
           </Reveal>
           <Reveal delay={0.1}>

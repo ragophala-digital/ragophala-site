@@ -1,6 +1,7 @@
+import { twMerge } from "tailwind-merge";
 import { SITE } from "./site";
 
-export const cn = (...c: (string | false | null | undefined)[]) => c.filter(Boolean).join(" ");
+export const cn = (...c: (string | false | null | undefined)[]): string => twMerge(c.filter(Boolean).join(" "));
 
 /** Returns a wa.me link, or null when no WhatsApp number has been configured. */
 export function whatsappUrl(text: string): string | null {

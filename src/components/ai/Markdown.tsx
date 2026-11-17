@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Fragment, type ReactNode } from "react";
 
 /** Minimal, safe formatter for assistant replies: paragraphs, "-" lists, **bold** and internal links. No raw HTML is ever rendered. */
-const INLINE = /(\*\*[^*]+\*\*|\[[^\]]+\]\(\/[^)\s]*\)|(?<![\w/])\/(?:contact|smart-intake|pricing|process|faq|about|services|web-development|web-applications|ai-automation|privacy)(?![\w-]))/g;
+const INLINE = /(\*\*[^*]+\*\*|\[[^\]]+\]\(\/[^)\s]*\)|(?<![\w/])\/(?:contact|smart-intake|quote|process|faq|about|services|web-development|web-applications|ai-agents|business-automation|website-maintenance|ai-support|privacy)(?![\w-]))/g;
 
 function inline(text: string): ReactNode[] {
   return text.split(INLINE).map((part, i) => {

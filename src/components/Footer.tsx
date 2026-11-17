@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Mail, MessageCircle } from "lucide-react";
+import { ArrowUp, ArrowUpRight, Mail, MessageCircle } from "lucide-react";
 import { SERVICES, SITE } from "@/lib/site";
 import { mailtoUrl, whatsappUrl } from "@/lib/utils";
 import { CursorGlow, Magnetic } from "./ui-motion";
@@ -9,11 +9,14 @@ import { CursorGlow, Magnetic } from "./ui-motion";
 const STUDIO = [
   ["/about", "About"],
   ["/process", "Our process"],
-  ["/pricing", "Pricing"],
+  ["/quote", "Request a quote"],
   ["/portfolio", "Selected concepts"],
   ["/faq", "FAQ"],
   ["/smart-intake", "Smart Intake"],
+  ["/insights", "Insights"],
+  ["/lab", "3D Lab"],
   ["/privacy", "Privacy"],
+  ["/terms", "Terms"],
   ["/contact", "Contact"],
 ];
 
@@ -36,10 +39,10 @@ export function Footer() {
         <div className="grid items-end gap-10 lg:grid-cols-[1.5fr_1fr]">
           <div>
             <p className="label mb-6">Start a project</p>
-            <h2 className="display-lg max-w-[14ch]">Let&apos;s build something remarkable.</h2>
+            <h2 className="display-lg max-w-[14ch]">Let&apos;s build something meaningful.</h2>
           </div>
           <div>
-            <p className="body-lg">Tell us what you need and we will reply with a clear, written quotation.</p>
+            <p className="body-lg">Have an idea, a business challenge or a digital project in mind? Let&apos;s discuss how we can bring it to life.</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <Magnetic strength={0.25}>
                 <Link href="/contact" className="btn btn-primary group">
@@ -90,7 +93,7 @@ export function Footer() {
         <div className="flex flex-wrap items-center justify-between gap-3 border-t border-line py-6 font-mono text-[11px] uppercase tracking-[.14em] text-muted">
           <span>RD / 2026 / Digital</span>
           <span>© {new Date().getFullYear()} Ragophala Digital</span>
-          <span>All prices in ZAR</span>
+          <a href="#main" className="link-underline inline-flex items-center gap-1.5 text-fg">Back to top <ArrowUp size={12} aria-hidden /></a>
         </div>
       </div>
     </footer>

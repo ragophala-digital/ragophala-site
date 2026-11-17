@@ -6,3 +6,7 @@ node_modules
 next-env.d.ts
 
 .data
+
+# Private business documents: never commit prices or the generated catalogue
+private/catalogue.json
+private/documents/

@@ -1,5 +1,6 @@
 "use client";
 
+import { HeroAccent } from "@/components/HeroAccent";
 import Link from "next/link";
 import { animate, motion, useInView, useReducedMotion } from "framer-motion";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
@@ -127,6 +128,7 @@ export function PageHero({ crumbs, label, title, text, actions, children, classN
   return (
     <section className={cn("relative overflow-hidden pb-14 pt-32 sm:pt-40 lg:pb-20", className)}>
       <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
+      <HeroAccent />
       <div className="container-x relative">
         {crumbs && <Breadcrumb items={crumbs} />}
         <Reveal>

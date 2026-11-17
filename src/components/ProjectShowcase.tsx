@@ -95,9 +95,13 @@ export function ProjectShowcase() {
           <div className="min-h-[220px]" aria-live="polite">
             <AnimatePresence mode="wait">
               <motion.div key={active.slug} initial={reduce ? false : { opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={reduce ? undefined : { opacity: 0, y: -10 }} transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}>
-                <p className="label mb-3">{active.category} · Concept project</p>
+                <p className="label mb-3">{active.category} · Illustrative concept, not a client project</p>
                 <h3 className="display-md">{active.title}</h3>
-                <p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-muted">{active.summary} {c.solution}</p>
+                <p className="mt-4 max-w-[58ch] text-[15px] leading-relaxed text-muted">{active.summary}</p>
+                <dl className="mt-4 max-w-[58ch] space-y-2 text-[15px] leading-relaxed text-muted">
+                  <div><dt className="inline font-medium text-fg">The challenge: </dt><dd className="inline">{c.problem}</dd></div>
+                  <div><dt className="inline font-medium text-fg">The proposed solution: </dt><dd className="inline">{c.solution}</dd></div>
+                </dl>
                 <ul className="mt-5 flex flex-wrap gap-2" aria-label="Services involved">
                   {c.services.map((s) => (<li key={s} className="rounded-md border border-line px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-fg">{s}</li>))}
                 </ul>

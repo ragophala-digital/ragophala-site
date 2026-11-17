@@ -5,8 +5,10 @@ import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, TriangleAlert } from "lucide-react";
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
+import { track } from "@/lib/analytics";
 import { contactSchema } from "@/lib/contact";
-import { BUDGETS, PACKAGES, SERVICE_OPTIONS } from "@/lib/site";
+import { PACKAGES_PUBLIC } from "@/lib/catalogue-public";
+import { BUDGETS, SERVICE_OPTIONS } from "@/lib/site";
 import { whatsappUrl } from "@/lib/utils";
 
 type Errors = Partial<Record<string, string>>;
@@ -27,8 +29,9 @@ function Field({ id, label, error, optional, children }: { id: string; label: st
 
 export function ContactForm() {
   const params = useSearchParams();
-  const pkg = PACKAGES.find((p) => p.id === params.get("package"));
+  const pkg = PACKAGES_PUBLIC.find((p) => p.id === params.get("package"));
   const service = SERVICE_OPTIONS.some((s) => s.value === params.get("service")) ? (params.get("service") as string) : pkg ? "web" : "";
+  const consultation = params.get("intent") === "consultation";
   const item = (params.get("item") ?? "").slice(0, 80).replace(/\s+/g, " ");
   const startedAt = useRef(Date.now());
   const [errors, setErrors] = useState<Errors>({});
@@ -64,6 +67,7 @@ export function ContactForm() {
         return;
       }
       setNotified(Boolean(data.notified));
+      track("Enquiry Sent", "contact-form");
       setStatus("success");
       form.reset();
     } catch {
@@ -106,15 +110,22 @@ export function ContactForm() {
             {SERVICE_OPTIONS.map((s) => (<option key={s.value} value={s.value}>{s.label}</option>))}
           </select>
         </Field>
-        <Field id="budget" label="Estimated budget" error={errors.budget}>
+        <Field id="budget" label="Estimated budget range" optional error={errors.budget}>
           <select id="budget" defaultValue="" {...field("budget")}>
-            <option value="" disabled>Select a range</option>
+            <option value="">Prefer not to say</option>
             {BUDGETS.map((b) => (<option key={b} value={b}>{b}</option>))}
+          </select>
+        </Field>
+        <Field id="contactMethod" label="Preferred contact method" error={errors.contactMethod}>
+          <select id="contactMethod" defaultValue="email" {...field("contactMethod")}>
+            <option value="email">Email</option>
+            <option value="phone">Phone call</option>
+            <option value="whatsapp">WhatsApp</option>
           </select>
         </Field>
       </div>
       <Field id="message" label="Project description" error={errors.message}>
-        <textarea id="message" rows={5} defaultValue={pkg ? `I am interested in the ${pkg.name} package.\n` : item ? `I would like a quotation for: ${item}.\n` : ""} {...field("message")} />
+        <textarea id="message" rows={5} defaultValue={pkg ? `I am interested in the ${pkg.name} package.\n` : item ? `I would like a quotation for: ${item}.\n` : consultation ? "I would like to book a consultation.\n" : ""} {...field("message")} />
       </Field>
       <Field id="extra" label="Additional information" optional error={errors.extra}>
         <textarea id="extra" rows={3} placeholder="Deadlines, existing website, examples you like…" {...field("extra")} />
@@ -140,7 +151,7 @@ export function ContactForm() {
       )}
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={status === "sending"} className="btn btn-primary disabled:opacity-70">
-          {status === "sending" ? (<><Loader2 size={16} className="animate-spin" aria-hidden /> Sending…</>) : "Send enquiry"}
+          {status === "sending" ? (<><Loader2 size={16} className="animate-spin" aria-hidden /> Sending…</>) : "Request a quote"}
         </button>
         <p className="text-xs text-muted">We use your details only to respond to your enquiry.</p>
       </div>

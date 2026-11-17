@@ -37,7 +37,7 @@ function load(key: string): Msg[] {
 }
 
 /** Streaming chat used by the floating assistant and the demonstration centre. Conversations live only in this browser session. */
-export function ChatPanel({ mode, greeting, suggestions, storageKey, className, placeholder = "Ask about services, pricing or your project…", hideReset }: Props) {
+export function ChatPanel({ mode, greeting, suggestions, storageKey, className, placeholder = "Ask about our services or your project…", hideReset }: Props) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [busy, setBusy] = useState(false);

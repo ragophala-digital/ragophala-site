@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Bot, Check, Pause, Play, RotateCcw, Send } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
-import { AUTOMATION_FLOW, ENQUIRY_FLOW } from "./mockups-ai";
+import { AUTOMATION_DETAIL, AUTOMATION_FLOW, ENQUIRY_FLOW } from "./mockups-ai";
 import { useInView } from "./three/capability";
 
 interface Scenario {
@@ -15,9 +15,9 @@ interface Scenario {
 }
 
 const SCENARIOS: Scenario[] = [
-  { chip: "How much does a basic website cost?", answer: "Our Basic Website starts at R2,800, once-off. Prices are starting prices and a written quotation confirms the final amount.", ask: "Is this for a new business or an existing one?", result: "Qualified: new website · routed to the team with the Basic Website package." },
+  { chip: "How much does a basic website cost?", answer: "Pricing is tailored to each project. I can pass your details to the team so you receive a personalised written quotation.", ask: "Is this for a new business or an existing one?", result: "Qualified: new website · routed to the team for a quotation." },
   { chip: "Do you offer weekend appointments?", answer: "Yes, Saturday appointments are available. I can pass your details to the team to confirm a time.", ask: "What is your name and preferred time?", result: "Appointment request captured · team notified." },
-  { chip: "I need a quote for an inventory system.", answer: "We build inventory systems, and web applications start from R8,000. A short scoping conversation gives the exact price.", ask: "Roughly how many products do you manage?", result: "Qualified lead: web application · flagged for a discovery call." },
+  { chip: "I need a quote for an inventory system.", answer: "We build inventory systems. A short scoping conversation lets the team prepare a personalised quotation.", ask: "Roughly how many products do you manage?", result: "Qualified lead: web application · flagged for a discovery call." },
 ];
 
 type Msg = { from: "user" | "bot" | "system"; text: string };
@@ -120,6 +120,7 @@ export function AutomationFlow({ className, dark }: { className?: string; dark?:
   const { ref, visible } = useInView<HTMLDivElement>("0px");
   const [tick, setTick] = useState(reduce ? n : -1);
   const [running, setRunning] = useState(true);
+  const [selected, setSelected] = useState(0);
 
   const advance = useCallback(() => setTick((t) => (t >= n + 1 ? -1 : t + 1)), [n]);
   useEffect(() => {
@@ -135,7 +136,7 @@ export function AutomationFlow({ className, dark }: { className?: string; dark?:
           const status = tick > i ? "done" : tick === i ? "running" : "waiting";
           return (
             <li key={s.title} className="flex flex-col items-stretch lg:flex-1 lg:flex-row">
-              <div className={cn("relative flex-1 rounded-xl border p-5 transition-all duration-500", dark ? "border-line bg-card" : "border-navy/15 bg-white", status === "running" && "-translate-y-1 !border-cobalt shadow-[0_24px_40px_-26px_rgba(49,91,250,.7)]")}>
+              <button type="button" aria-pressed={selected === i} onClick={() => { setSelected(i); setRunning(false); }} className={cn("relative flex-1 rounded-xl border p-5 text-left transition-all duration-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2", dark ? "border-line bg-card" : "border-navy/15 bg-white", status === "running" && "-translate-y-1 !border-cobalt shadow-[0_24px_40px_-26px_rgba(49,91,250,.7)]", selected === i && "!border-cobalt ring-2 ring-cobalt/30")}>
                 <div className="flex items-center justify-between">
                   <span className={cn("grid h-10 w-10 place-items-center rounded-lg transition-colors duration-500", status === "waiting" ? (dark ? "bg-cobalt/20 text-cobalt-300" : "bg-softblue text-cobalt") : "bg-cobalt text-white")}>
                     {status === "done" ? <Check size={18} aria-hidden /> : <s.icon size={18} aria-hidden />}
@@ -144,7 +145,7 @@ export function AutomationFlow({ className, dark }: { className?: string; dark?:
                 </div>
                 <h3 className="mt-5 font-display text-base font-semibold">{s.title}</h3>
                 <p className="mt-1.5 text-sm leading-relaxed text-muted">{s.text}</p>
-              </div>
+              </button>
               {i < n - 1 && (
                 <span aria-hidden className="relative mx-auto h-8 w-0.5 overflow-hidden bg-[var(--line)] lg:my-auto lg:h-0.5 lg:w-10">
                   <motion.i className="absolute inset-0 origin-top bg-cobalt lg:origin-left" animate={{ scaleX: tick > i ? 1 : 0, scaleY: tick > i ? 1 : 0 }} transition={{ duration: reduce ? 0 : 0.5 }} />
@@ -154,6 +155,15 @@ export function AutomationFlow({ className, dark }: { className?: string; dark?:
           );
         })}
       </ol>
+      <div className={cn("mt-5 rounded-2xl border p-6", dark ? "border-line bg-card" : "border-navy/15 bg-white")} aria-live="polite">
+        <p className="label">Stage {String(selected + 1).padStart(2, "0")} · {steps[selected].title}</p>
+        <dl className="mt-4 grid gap-x-8 gap-y-4 text-sm sm:grid-cols-2">
+          {([["What happens", AUTOMATION_DETAIL[selected].happens], ["What is processed", AUTOMATION_DETAIL[selected].processed], ["What follows", AUTOMATION_DETAIL[selected].follows], ["Problem it solves", AUTOMATION_DETAIL[selected].solves]] as const).map(([k, v]) => (
+            <div key={k}><dt className="font-mono text-[10px] uppercase tracking-[.14em] text-accent">{k}</dt><dd className="mt-1 leading-relaxed text-muted">{v}</dd></div>
+          ))}
+        </dl>
+        <p className="mt-4 text-xs text-muted">Select any stage to explore it. This is an illustrative example: nothing here is running on real business data.</p>
+      </div>
       <div className="mt-5 flex items-center gap-3">
         <button type="button" onClick={() => setRunning((r) => !r)} className="btn btn-line !px-4 !py-2.5" aria-label={running ? "Pause animation" : "Play animation"}>
           {running ? <Pause size={14} aria-hidden /> : <Play size={14} aria-hidden />}{running ? "Pause" : "Play"}

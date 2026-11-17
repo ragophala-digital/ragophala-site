@@ -48,11 +48,20 @@ export const ENQUIRY_FLOW: FlowStep[] = [
 ];
 
 export const AUTOMATION_FLOW: FlowStep[] = [
-  { icon: MessageSquare, title: "New enquiry", text: "A form, email or WhatsApp message arrives." },
-  { icon: ListChecks, title: "Tag and score", text: "It is categorised using your rules." },
-  { icon: BellRing, title: "Notify", text: "The right person is alerted immediately." },
-  { icon: ClipboardList, title: "Create task", text: "A task is added to your system." },
-  { icon: CalendarCheck, title: "Remind", text: "Follow-up reminders go out on time." },
+  { icon: MessageSquare, title: "Enquiry received", text: "A form, email or WhatsApp message arrives." },
+  { icon: ListChecks, title: "Information analysed", text: "The details are read and organised." },
+  { icon: ClipboardList, title: "Lead categorised", text: "It is tagged using your rules." },
+  { icon: CalendarCheck, title: "Action prepared", text: "A task or reply is prepared." },
+  { icon: BellRing, title: "Business notified", text: "The right person is alerted." },
+];
+
+/** Plain-language detail for each stage, shown when a visitor selects it. Illustrative only. */
+export const AUTOMATION_DETAIL: { happens: string; processed: string; follows: string; solves: string }[] = [
+  { happens: "A new enquiry arrives from your website form, an email or a supported messaging channel.", processed: "The sender's details and their message.", follows: "The enquiry is passed to the next stage straight away.", solves: "Enquiries that sit unnoticed in an inbox." },
+  { happens: "The message is read and its key points are pulled out, such as the service wanted and any deadline.", processed: "The text of the enquiry, plus any fields the form collected.", follows: "A short structured summary is produced.", solves: "Reading and re-typing the same details by hand." },
+  { happens: "The lead is tagged using rules you set, for example by service type or urgency.", processed: "The summary and your categorisation rules.", follows: "The lead is labelled so it reaches the right person.", solves: "Inconsistent sorting and missed priorities." },
+  { happens: "A follow-up task, acknowledgement or draft reply is prepared for review.", processed: "The category and your templates.", follows: "The task or draft is ready, and can go to a person for approval.", solves: "Forgotten follow-ups and slow first responses." },
+  { happens: "The right person is notified, by email or in a connected tool, with the summary attached.", processed: "The summary, category and prepared action.", follows: "A person picks it up and decides the next step.", solves: "Nobody knowing a new lead has arrived." },
 ];
 
 export function WorkflowDiagram({ steps = ENQUIRY_FLOW, dark }: { steps?: FlowStep[]; dark?: boolean }) {

@@ -16,6 +16,7 @@ export interface EnquiryRecord {
   phone: string;
   service: string;
   budget: string;
+  contactMethod?: string;
   message: string;
   extra: string;
   brief?: Brief;

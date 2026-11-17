@@ -39,6 +39,7 @@ export async function runEnquiryWorkflow(input: ContactInput): Promise<WorkflowO
     phone: input.phone,
     service: input.service,
     budget: input.budget,
+    contactMethod: input.contactMethod,
     message: input.message,
     extra: input.extra,
     brief: input.brief,

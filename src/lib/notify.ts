@@ -23,11 +23,12 @@ function compose(r: EnquiryRecord) {
     `Email: ${r.email}`,
     `Phone: ${r.phone || "-"}`,
     `Service: ${service}`,
-    `Budget: ${r.budget}`,
+    `Budget: ${r.budget || "Not stated"}`,
+    `Preferred contact: ${r.contactMethod ?? "email"}`,
     "",
     r.message,
     r.extra ? `\nAdditional information:\n${r.extra}` : "",
-    b ? `\nProject brief (${b.source === "ai" ? "AI-assisted, visitor reviewed" : "automatic, visitor reviewed"}):\nOverview: ${b.overview}\nRecommended: ${b.recommendedSolution}\nRequirements: ${b.requirements.join("; ")}\nIndicative: ${b.indicativeItems.map((i) => `${i.name} (${i.price})`).join("; ") || "-"}\nBudget category: ${b.budgetCategory}` : "",
+    b ? `\nProject brief (${b.source === "ai" ? "AI-assisted, visitor reviewed" : "automatic, visitor reviewed"}):\nOverview: ${b.overview}\nRecommended: ${b.recommendedSolution}\nRequirements: ${b.requirements.join("; ")}\nRelevant services: ${b.indicativeItems.map((i) => i.name).join("; ") || "-"}\nBudget category: ${b.budgetCategory}` : "",
     a ? `\nSuggested follow-up message:\n${a.followUp}` : "",
   ];
   const text = lines.join("\n");
@@ -35,10 +36,10 @@ function compose(r: EnquiryRecord) {
     `<div style="font-family:system-ui,sans-serif;max-width:640px"><h2>New enquiry</h2>` +
     `<p style="color:#566075">${r.source === "smart-intake" ? "Smart Intake" : "Contact form"} · reference ${esc(r.id.slice(0, 8))}</p>` +
     (a ? `<p><b>${esc(categoryLabel(a.category))}</b> · priority <b>${esc(a.priority.toUpperCase())}</b><br><i>${esc(a.priorityReason)}</i><br>Analysed by ${a.source === "ai" ? "AI" : "keyword rules"}</p><p>${esc(a.summary)}</p>` : "") +
-    `<hr><p><b>Name:</b> ${esc(r.name)}<br><b>Business:</b> ${esc(r.business || "-")}<br><b>Email:</b> ${esc(r.email)}<br><b>Phone:</b> ${esc(r.phone || "-")}<br><b>Service:</b> ${esc(service)}<br><b>Budget:</b> ${esc(r.budget)}</p>` +
+    `<hr><p><b>Name:</b> ${esc(r.name)}<br><b>Business:</b> ${esc(r.business || "-")}<br><b>Email:</b> ${esc(r.email)}<br><b>Phone:</b> ${esc(r.phone || "-")}<br><b>Service:</b> ${esc(service)}<br><b>Budget:</b> ${esc(r.budget || "Not stated")}<br><b>Preferred contact:</b> ${esc(r.contactMethod ?? "email")}</p>` +
     `<p>${nl(r.message)}</p>` +
     (r.extra ? `<p><b>Additional information:</b><br>${nl(r.extra)}</p>` : "") +
-    (b ? `<hr><h3>Project brief</h3><p>${esc(b.overview)}</p><p><b>Recommended:</b> ${esc(b.recommendedSolution)}</p><ul>${b.requirements.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p><b>Indicative:</b> ${esc(b.indicativeItems.map((i) => `${i.name} (${i.price})`).join("; ") || "-")}<br><b>Budget category:</b> ${esc(b.budgetCategory)}</p>` : "") +
+    (b ? `<hr><h3>Project brief</h3><p>${esc(b.overview)}</p><p><b>Recommended:</b> ${esc(b.recommendedSolution)}</p><ul>${b.requirements.map((x) => `<li>${esc(x)}</li>`).join("")}</ul><p><b>Relevant services:</b> ${esc(b.indicativeItems.map((i) => i.name).join("; ") || "-")}<br><b>Budget category:</b> ${esc(b.budgetCategory)}</p>` : "") +
     (a ? `<hr><p><b>Suggested follow-up</b></p><p>${nl(a.followUp)}</p>` : "") +
     `</div>`;
   return { subject: `${a ? `[${a.priority.toUpperCase()}] ` : ""}New enquiry: ${service} – ${r.name}`, text, html };

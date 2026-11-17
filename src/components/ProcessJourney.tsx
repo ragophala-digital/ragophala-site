@@ -40,7 +40,7 @@ function StageVisual({ index }: { index: number }) {
           {[40, 140, 240, 340].map((x) => (<path key={x} d={`M200 56 V86 H${x} V120`} fill="none" stroke="#8FA5FF" strokeOpacity=".6" strokeWidth="1.5" />))}
           <rect x="150" y="16" width="100" height="40" rx="8" fill="#315BFA" />
           <text x="200" y="41" textAnchor="middle" fill="#fff" fontSize="13" fontFamily="var(--font-mono)">Home</text>
-          {["About", "Services", "Pricing", "Contact"].map((t, i) => (<g key={t}><rect x={i * 100 - 6 + 0} y="120" width="92" height="38" rx="8" fill="#F5F3EF" /><text x={i * 100 + 40} y="144" textAnchor="middle" fill="#101827" fontSize="12" fontFamily="var(--font-mono)">{t}</text></g>))}
+          {["About", "Services", "Quote", "Contact"].map((t, i) => (<g key={t}><rect x={i * 100 - 6 + 0} y="120" width="92" height="38" rx="8" fill="#F5F3EF" /><text x={i * 100 + 40} y="144" textAnchor="middle" fill="#101827" fontSize="12" fontFamily="var(--font-mono)">{t}</text></g>))}
           {[0, 1, 2, 3].map((i) => (<circle key={i} cx={52 + i * 100} cy="196" r="6" fill={i < 2 ? "#315BFA" : "#8FA5FF"} fillOpacity={i < 2 ? 1 : 0.4} />))}
           <path d="M52 196 H352" stroke="#8FA5FF" strokeOpacity=".4" />
         </svg>
@@ -85,6 +85,20 @@ function StageVisual({ index }: { index: number }) {
         </div>
         <ul className="mt-6 space-y-2 text-sm text-fg">{["Forms and links", "Speed and performance", "Accessibility basics"].map((t, i) => (<motion.li key={t} initial={{ opacity: 0, x: -8 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.9 + i * 0.15 }} className="flex items-center gap-2.5"><Check size={15} className="text-emerald-400" aria-hidden />{t}</motion.li>))}</ul>
       </div>
+    );
+  }
+  if (index === 6) {
+    return (
+      <Frame>
+        <div className="p-5 text-navy">
+          <p className="font-mono text-[10px] uppercase tracking-wider text-cobalt">After launch</p>
+          <ul className="mt-4 space-y-2.5">
+            {[["Monitoring and checks", "Ongoing"], ["Updates and fixes", "As agreed"], ["Improvements", "Quoted"]].map(([t, v], i) => (
+              <Pop key={t} delay={0.12 * i} className="flex items-center justify-between rounded-lg bg-softblue px-3 py-2.5 text-xs"><span className="font-medium">{t}</span><span className="font-mono text-[10px] uppercase tracking-wider text-muted">{v}</span></Pop>
+            ))}
+          </ul>
+        </div>
+      </Frame>
     );
   }
   return (
@@ -145,7 +159,11 @@ export function ProcessJourney() {
             <ul className="space-y-2.5 text-[15px] leading-relaxed">
               {s.expect.map((e) => (<li key={e} className="flex gap-3"><span aria-hidden className="mt-2.5 h-px w-4 shrink-0 bg-cobalt" />{e}</li>))}
             </ul>
-            <div className="mt-6 rounded-xl border border-line bg-card p-5"><h3 className="label mb-2">What we need from you</h3><p className="text-sm leading-relaxed text-muted">{s.need}</p></div>
+            <dl className="mt-6 grid gap-3 sm:grid-cols-3">
+              {([["You contribute", s.need], ["We deliver", s.delivers], ["Outcome", s.outcome]] as const).map(([k, v]) => (
+                <div key={k} className="rounded-xl border border-line bg-card p-4"><dt className="label mb-2">{k}</dt><dd className="text-sm leading-relaxed text-muted">{v}</dd></div>
+              ))}
+            </dl>
           </li>
         ))}
       </ol>

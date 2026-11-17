@@ -28,6 +28,7 @@ All copy, prices, services, FAQs and demo projects are in `src/lib/site.ts`. Pac
 | `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASS` | Yes for the contact form | SMTP credentials (server-side only) |
 | `CONTACT_TO_EMAIL` | Yes for the contact form | Inbox that receives enquiries |
 | `CONTACT_FROM_EMAIL` | Optional | From address (defaults to `SMTP_USER`) |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Optional | Enables cookieless Plausible analytics and conversion events (enquiry sent, Smart Intake sent). Disabled when empty |
 | `GROQ_API_KEY` | For AI features | Server-side only. Without it the assistant is hidden and demos use scripted or rule-based fallbacks |
 
 Until SMTP is configured, the contact form validates input and then shows an honest error with a WhatsApp fallback (when configured). It never pretends an email was sent.
@@ -69,7 +70,17 @@ Palette: Midnight Navy `#101827`, Warm Ivory `#F5F3EF`, Electric Blue `#315BFA`,
 
 ## Pages
 
-Home, Services, Website Development, Web Applications, AI Agents and Automation, Pricing, About, Our Process, Contact, FAQ, plus Selected Concepts (`/portfolio`).
+Home, Services, Website Development, Web Applications, AI Agents and Automation, Pricing, About, Our Process, Contact, FAQ, plus Selected Concepts (`/portfolio`), Insights (`/insights`, articles live in `src/lib/insights.ts`), Smart Intake, Privacy and Terms. Error, loading and 404 pages are in `src/app`.
+
+## Tests and CI
+
+```bash
+npm test          # Vitest unit tests in tests/
+npm run typecheck
+npm run lint
+```
+
+GitHub Actions (`.github/workflows/ci.yml`) runs typecheck, lint, tests and build on every push and pull request. Never put real keys in `.env.example`; use `.env` (git-ignored).
 
 ## Deploy to Vercel
 

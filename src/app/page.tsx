@@ -1,10 +1,12 @@
+import { Marquee } from "@/components/Marquee";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { HeroScene } from "@/components/three/lazy";
 import { CountUp, LinkButton, Reveal, SectionHead, StaggerHeadline } from "@/components/ui";
 import { CursorGlow, Magnetic, Parallax } from "@/components/ui-motion";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
-import { PACKAGES, PROCESS, SERVICES, WHY } from "@/lib/site";
+import { PACKAGES_PUBLIC } from "@/lib/catalogue-public";
+import { PROCESS, SERVICES, WHY } from "@/lib/site";
 
 const HERO_META = ["Websites", "Web applications", "AI agents", "Business automation"];
 
@@ -25,7 +27,7 @@ export default function Home() {
             </p>
             <StaggerHeadline className="display-xl" parts={[{ text: "Digital solutions." }, { text: "Built for business.", accent: true }]} />
             <Reveal delay={0.5}>
-              <p className="body-lg mt-8">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter and grow.</p>
+              <p className="body-lg mt-8">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter, connect with customers and grow.</p>
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <Magnetic><LinkButton href="/contact">Start a project</LinkButton></Magnetic>
                 <LinkButton href="/services" variant="line" arrow={false}>Explore our services</LinkButton>
@@ -45,15 +47,19 @@ export default function Home() {
         </div>
       </section>
 
+      <section aria-label="Technology" className="border-b border-line py-8">
+        <Marquee label="Technology we build with" items={["Next.js", "React", "TypeScript", "Three.js", "Tailwind CSS", "Framer Motion", "Blender", "AI and automation"]} />
+      </section>
+
       {/* INTRODUCTION */}
       <section className="section">
         <div className="container-x grid gap-10 lg:grid-cols-12">
           <Reveal className="lg:col-span-4"><p className="label flex items-center gap-3"><span className="text-accent">01</span><span aria-hidden className="h-px w-8 bg-current opacity-40" />The studio</p></Reveal>
           <div className="lg:col-span-8">
-            <Reveal><h2 className="display-md max-w-[24ch]">We build real digital products and business solutions, not just attractive websites.</h2></Reveal>
+            <Reveal><h2 className="display-md max-w-[24ch]">A digital studio for what&apos;s next.</h2></Reveal>
             <Reveal delay={0.1}><p className="body-lg mt-6">Ragophala Digital is a South African digital studio for small businesses, entrepreneurs and growing organisations. We combine thoughtful design with solid engineering, so what we build looks credible and works properly.</p></Reveal>
             <dl className="mt-14 grid grid-cols-3 gap-6 border-t border-line pt-8">
-              {[[SERVICES.length, "Service divisions"], [PACKAGES.length, "Website packages"], [PROCESS.length, "Project stages"]].map(([n, l]) => (
+              {[[SERVICES.length, "Service divisions"], [PACKAGES_PUBLIC.length, "Website packages"], [PROCESS.length, "Project stages"]].map(([n, l]) => (
                 <div key={l as string}>
                   <dt className="label order-2">{l}</dt>
                   <dd className="mt-2 font-display text-4xl font-semibold tracking-tight text-heading sm:text-5xl"><CountUp to={n as number} /></dd>
@@ -67,7 +73,7 @@ export default function Home() {
       {/* SERVICES INDEX */}
       <section className="pb-20 sm:pb-28">
         <div className="container-x">
-          <SectionHead index="02" label="What we do" title="Four disciplines, one connected studio" />
+          <SectionHead index="02" label="What we do" title="Six services, one connected studio" />
           <ul className="border-t border-line">
             {SERVICES.map((s) => (
               <li key={s.key} className="border-b border-line">
@@ -90,7 +96,7 @@ export default function Home() {
       <section className="theme-soft section bg-softblue">
         <div className="container-x">
           <SectionHead index="04" label="How we work" title="A clear journey from first conversation to launch" />
-          <ol className="grid gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-6 lg:gap-x-6">
+          <ol className="grid gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 lg:gap-x-6">
             {PROCESS.map((s, i) => (
               <Reveal key={s.title} delay={i * 0.06}>
                 <li className="relative">
@@ -110,7 +116,7 @@ export default function Home() {
       <section className="section">
         <div className="container-x grid gap-12 lg:grid-cols-[0.8fr_1.2fr]">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <SectionHead index="05" label="Why Ragophala Digital" title="Considered work, clearly communicated" className="mb-0 lg:mb-0" />
+            <SectionHead index="05" label="Why Ragophala Digital" title="Built with purpose. Designed to deliver." className="mb-0 lg:mb-0" />
           </div>
           <ul className="border-t border-line">
             {WHY.map((w, i) => (

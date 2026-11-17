@@ -44,7 +44,7 @@ export default function About() {
           <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
             <Reveal>
               <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />About Ragophala Digital</p>
-              <h1 className="display-lg">A digital studio that cares about the business behind the screen.</h1>
+              <h1 className="display-lg">Technology with purpose. Design with intention.</h1>
               <p className="body-lg mt-6">We help South African businesses get online properly, work more efficiently and grow with technology that is built to last.</p>
             </Reveal>
             <Reveal delay={0.15} className="justify-self-center"><BrandGraphic /></Reveal>

@@ -3,9 +3,9 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
-import { ArrowUpRight, Menu, X } from "lucide-react";
-import { useEffect, useState } from "react";
-import { NAV } from "@/lib/site";
+import { Activity, ArrowUpRight, Bot, ChevronDown, Globe, LayoutDashboard, Menu, ShieldCheck, Workflow, X, type LucideIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { NAV, SERVICES, type ServiceKey } from "@/lib/site";
 import { cn } from "@/lib/utils";
 import { MenuScene } from "./three/lazy";
 import { Magnetic } from "./ui-motion";
@@ -21,7 +21,78 @@ export function Wordmark({ dark, onClick }: { dark?: boolean; onClick?: () => vo
   );
 }
 
-const MENU_LINKS = [...NAV, { href: "/process", label: "Process" }, { href: "/faq", label: "FAQ" }];
+const MENU_LINKS = [...NAV, { href: "/lab", label: "3D Lab" }, { href: "/faq", label: "FAQ" }];
+
+const SERVICE_ICONS: Record<ServiceKey, LucideIcon> = { web: Globe, apps: LayoutDashboard, ai: Bot, automation: Workflow, maintenance: ShieldCheck, support: Activity };
+
+/** Services mega-menu: opens on hover, focus or click; closes with Escape, outside click or navigation. */
+function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boolean; path: string }) {
+  const [open, setOpen] = useState(false);
+  const root = useRef<HTMLLIElement>(null);
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        root.current?.querySelector<HTMLElement>("button")?.focus();
+      }
+    };
+    const onDown = (e: MouseEvent) => {
+      if (!root.current?.contains(e.target as Node)) setOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    document.addEventListener("mousedown", onDown);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.removeEventListener("mousedown", onDown);
+    };
+  }, [open]);
+  const hover = (v: boolean) => {
+    clearTimeout(timer.current);
+    timer.current = setTimeout(() => setOpen(v), v ? 60 : 140);
+  };
+  return (
+    <li ref={root} onMouseEnter={() => hover(true)} onMouseLeave={() => hover(false)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false); }}>
+      <button type="button" aria-expanded={open} aria-controls="services-menu" onClick={() => setOpen((o) => !o)} className={cn("relative flex items-center gap-1 px-3.5 py-2 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>
+        Services <ChevronDown size={14} aria-hidden className={cn("transition-transform duration-300", open && "rotate-180")} />
+        {active && <span aria-hidden className="absolute inset-x-3.5 -bottom-0.5 h-px bg-cobalt" />}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div id="services-menu" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }} className="theme-dark absolute inset-x-0 top-full border-b border-white/10 bg-navy shadow-[0_40px_80px_-30px_rgba(0,0,0,.6)]">
+            <div className="container-x grid gap-10 py-9 lg:grid-cols-[1fr_270px]">
+              <ul className="grid gap-x-8 gap-y-1 sm:grid-cols-2 xl:grid-cols-3">
+                {SERVICES.map((s) => {
+                  const Icon = SERVICE_ICONS[s.key];
+                  return (
+                    <li key={s.key}>
+                      <Link href={s.href} className="group flex gap-4 rounded-xl p-3 transition hover:bg-white/5 focus-visible:bg-white/5">
+                        <span className="grid h-10 w-10 shrink-0 place-items-center rounded-lg border border-white/15 bg-cobalt/15 text-cobalt-300 transition group-hover:border-cobalt-300"><Icon size={18} aria-hidden /></span>
+                        <span><span className="block font-display text-[15px] font-semibold tracking-tight text-ivory">{s.title}</span><span className="mt-1 block text-xs leading-relaxed text-slate">{s.short}</span></span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+              <div className="flex flex-col justify-between rounded-2xl border border-white/10 bg-white/[.04] p-6">
+                <div>
+                  <p className="label">Start a project</p>
+                  <p className="mt-3 text-sm leading-relaxed text-slate">Tell us what you want to build and receive a personalised written quotation.</p>
+                </div>
+                <div className="mt-6 flex flex-col gap-2">
+                  <Link href="/contact" className="btn btn-primary">Start a project <ArrowUpRight size={15} aria-hidden /></Link>
+                  <Link href="/services" className="btn btn-line !border-white/20 !text-ivory">All services</Link>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </li>
+  );
+}
 
 /** Full-screen menu. Rendered outside the header so the header's blur cannot shrink it. */
 function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
@@ -70,7 +141,13 @@ function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
             );
           })}
         </ul>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.5 }} className="mt-8 w-full max-w-sm">
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }} className="mt-6 w-full max-w-sm">
+          <p className="label mb-3">Services</p>
+          <ul className="grid grid-cols-2 gap-2 text-left">
+            {SERVICES.map((sv) => (<li key={sv.key}><Link href={sv.href} onClick={onClose} className="block rounded-lg border border-white/15 px-3 py-2.5 text-xs leading-snug text-ivory transition hover:border-cobalt-300">{sv.title}</Link></li>))}
+          </ul>
+        </motion.div>
+        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.5 }} className="mt-6 w-full max-w-sm">
           <Link href="/contact" onClick={onClose} className="btn btn-primary w-full">
             Start a project <ArrowUpRight size={16} aria-hidden />
           </Link>
@@ -114,6 +191,7 @@ export function Header() {
           <ul className="hidden items-center gap-1 lg:flex">
             {NAV.map((n) => {
               const active = isActive(n.href);
+              if (n.href === "/services") return <ServicesMenu key={n.href} active={active} onDark={onDark} path={path} />;
               return (
                 <li key={n.href}>
                   <Link href={n.href} aria-current={active ? "page" : undefined} className={cn("relative block px-3.5 py-2 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", active && (onDark ? "!text-ivory" : "!text-navy"))}>

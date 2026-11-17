@@ -1,6 +1,3 @@
-export { PACKAGES, formatZAR } from "./pricing";
-export type { Package } from "./pricing";
-
 export const SITE = {
   name: "Ragophala Digital",
   tagline: "Digital solutions. Built for business.",
@@ -15,66 +12,13 @@ export const SITE = {
 export const NAV = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
-  { href: "/pricing", label: "Pricing" },
+  { href: "/portfolio", label: "Work" },
   { href: "/about", label: "About" },
+  { href: "/process", label: "Process" },
   { href: "/contact", label: "Contact" },
 ];
 
-export type ServiceKey = "web" | "apps" | "ai" | "automation";
-
-export interface Service {
-  key: ServiceKey;
-  index: string;
-  title: string;
-  short: string;
-  href: string;
-  benefits: string[];
-  included: string[];
-  examples: string[];
-}
-
-export const SERVICES: Service[] = [
-  {
-    key: "web",
-    index: "01",
-    title: "Website Development",
-    short: "Fast, search-friendly websites that present your business properly and turn visitors into enquiries.",
-    href: "/web-development",
-    benefits: ["Looks credible on every screen", "Built to be found on Google", "Clear paths to enquire"],
-    included: ["Custom design and build", "Mobile-first layouts", "Contact and lead forms", "SEO foundations", "Analytics integration"],
-    examples: ["Business and corporate sites", "Landing pages", "Online stores", "Booking websites"],
-  },
-  {
-    key: "apps",
-    index: "02",
-    title: "Web Applications",
-    short: "Custom systems, portals and dashboards that replace spreadsheets and manual admin.",
-    href: "/web-applications",
-    benefits: ["Shaped around your workflow", "One source of truth for your data", "Room to grow with the business"],
-    included: ["Discovery and scoping", "Secure user accounts and roles", "Database design", "Dashboards and reporting", "Deployment and handover"],
-    examples: ["CRM platforms", "Inventory management", "Client portals", "Booking platforms"],
-  },
-  {
-    key: "ai",
-    index: "03",
-    title: "AI Agents",
-    short: "Assistants that answer common questions, qualify enquiries and hand over to your team when it matters.",
-    href: "/ai-automation",
-    benefits: ["Respond to customers faster", "Capture leads around the clock", "Clear human hand-over"],
-    included: ["Assistant design and training on your content", "Website or WhatsApp deployment", "Lead capture and routing", "Guardrails and escalation rules", "Testing and monitoring options"],
-    examples: ["Website AI assistants", "FAQ chatbots", "WhatsApp assistants", "Appointment assistants"],
-  },
-  {
-    key: "automation",
-    index: "04",
-    title: "Business Automation",
-    short: "Connected workflows that move information between your tools without repeated manual work.",
-    href: "/ai-automation#automation",
-    benefits: ["Fewer repetitive tasks", "Fewer missed follow-ups", "Consistent processes"],
-    included: ["Process mapping", "Workflow build and integration", "Notifications and reminders", "Document handling", "Documentation and support"],
-    examples: ["Lead routing", "Quote and invoice workflows", "Reminders and follow-ups", "Document processing"],
-  },
-];
+export { SERVICES, type Service, type ServiceKey } from "./services";
 
 export interface Project {
   slug: string;
@@ -185,31 +129,43 @@ export interface ProcessStage {
   n: string;
   title: string;
   summary: string;
+  /** What happens in this stage. */
   expect: string[];
+  /** What the client contributes. */
   need: string;
+  /** What Ragophala Digital delivers. */
+  delivers: string;
+  /** The outcome of the stage. */
+  outcome: string;
 }
 
 export const PROCESS: ProcessStage[] = [
   {
     n: "01",
-    title: "Discovery",
+    title: "Discovery & Consultation",
     summary: "We learn about your business, customers and goals before proposing anything.",
-    expect: ["A conversation about your goals, audience and current tools", "Questions about content, branding and must-have features", "A written quotation with scope, deliverables and price"],
+    expect: ["A conversation about your goals, audience and current tools", "Questions about content, branding and must-have features", "A review of any existing website or systems"],
     need: "A clear idea of what you want the project to achieve, plus any existing branding or content.",
+    delivers: "A shared understanding of your needs and a written quotation with scope, deliverables and price.",
+    outcome: "You know what we recommend and what it will involve.",
   },
   {
     n: "02",
-    title: "Planning",
+    title: "Requirements & Planning",
     summary: "We turn the agreed scope into a structure, a feature list and a plan of delivery.",
-    expect: ["Site map or system outline", "Feature list confirmed against the quotation", "Agreed milestones, feedback points and the 50% deposit"],
-    need: "Approval of the plan and the deposit so development can begin.",
+    expect: ["Site map or system outline", "Feature list confirmed against the quotation", "Agreed milestones and feedback points"],
+    need: "Approval of the plan and the 50% deposit so development can begin.",
+    delivers: "A confirmed scope, structure and delivery plan.",
+    outcome: "Everyone agrees what is being built, and work can begin.",
   },
   {
     n: "03",
-    title: "Design",
+    title: "UI/UX Design",
     summary: "We design the look, layout and interactions, and share them for your feedback.",
     expect: ["Visual direction and key page or screen designs", "Mobile and desktop layouts", "Revision rounds as included in your package"],
-    need: "Timely feedback and your content, logos and images where available.",
+    need: "Timely feedback, plus your content, logos and images where available.",
+    delivers: "Approved designs for the key pages or screens.",
+    outcome: "A design you have reviewed and signed off.",
   },
   {
     n: "04",
@@ -217,25 +173,40 @@ export const PROCESS: ProcessStage[] = [
     summary: "We build the approved design into a fast, secure and maintainable product.",
     expect: ["Regular progress updates", "A working preview you can review", "Integrations such as forms, analytics or WhatsApp where scoped"],
     need: "Availability to answer questions and review progress.",
+    delivers: "A working build of the agreed scope.",
+    outcome: "A functioning product ready to be tested.",
   },
   {
     n: "05",
-    title: "Testing",
+    title: "Testing & Quality Assurance",
     summary: "We test across devices and browsers, and check performance, forms and accessibility.",
     expect: ["Testing on phone, tablet and desktop", "Form, link and integration checks", "Fixes from your final review"],
     need: "Your final review and sign-off.",
+    delivers: "A tested build with review feedback addressed.",
+    outcome: "A product that is ready to go live.",
   },
   {
     n: "06",
-    title: "Launch and support",
-    summary: "We publish the project, hand over the agreed files and access, and stay available afterwards.",
-    expect: ["Final 50% payment before handover and deployment", "Deployment and handover of agreed files and access details", "Post-launch support where included, with optional monthly maintenance"],
+    title: "Deployment",
+    summary: "We publish the project and hand over the agreed files and access.",
+    expect: ["Final 50% payment before handover and deployment", "Deployment to your hosting", "Handover of agreed files and access details"],
     need: "Hosting and domain details, if these are not part of your quotation.",
+    delivers: "A live product plus the agreed files, access credentials and deployment information.",
+    outcome: "Your project is live and in your hands.",
+  },
+  {
+    n: "07",
+    title: "Support & Improvement",
+    summary: "We stay available after launch, with support as agreed and optional monthly care.",
+    expect: ["Post-launch support where included in your package", "Optional monthly maintenance or AI and automation support", "Quoted improvements as your needs grow"],
+    need: "Tell us what is working and what you would like to improve.",
+    delivers: "Support within the agreed limits and a route for future improvements.",
+    outcome: "Your solution keeps working as your business grows.",
   },
 ];
 
 export const WHY = [
-  { title: "Built for South African business", text: "Pricing in rand, WhatsApp-friendly communication and solutions that work well on local mobile networks." },
+  { title: "Built for South African business", text: "Clear quotations, WhatsApp-friendly communication and solutions that work well on local mobile networks." },
   { title: "Clear quotations", text: "You see scope, deliverables and costs before work begins, with no hidden surprises." },
   { title: "Real products, not templates", text: "Every build is designed around your business and developed with modern, maintainable technology." },
   { title: "Performance and SEO built in", text: "Fast loading, clean structure and metadata are part of the build, not optional extras." },
@@ -244,9 +215,12 @@ export const WHY = [
 ];
 
 export const FAQS: { category: string; q: string; a: string }[] = [
-  { category: "Pricing", q: "How much does a website cost?", a: "Website packages start at R2,800 for a Basic Website and go up to R14,000 for a Premium Business Website. Specialist websites, web applications and AI solutions have their own starting prices on the pricing page. A formal quotation confirms the final price and deliverables." },
-  { category: "Pricing", q: "What costs extra?", a: "Domain registration and hosting (unless included in your quotation), third-party subscriptions, additional pages, complex functionality, content updates, API and AI usage costs, and anything outside the agreed scope are quoted separately." },
-  { category: "Pricing", q: "Why are prices shown as starting prices?", a: "Every project is different. Starting prices reflect the base package, and the final price depends on requirements, functionality, complexity and agreed deliverables. We always confirm the price in writing before work begins." },
+  { category: "Quotations", q: "How much does a website cost?", a: "Pricing is tailored to your project requirements. Tell us what you need and we will send a personalised written quotation that confirms scope, deliverables and price. You do not need to know our pricing before you enquire." },
+  { category: "Services", q: "What services do you offer?", a: "Website development, custom web applications, AI agents and intelligent assistants, business automation, website maintenance and support, and AI and automation support. Each has its own page under Services." },
+  { category: "Services", q: "Can you redesign my existing website?", a: "Yes. A redesign starts with an assessment of your current site, then improves design, layout, mobile experience, performance and content structure. Migration is included only where your quotation says so." },
+  { category: "Services", q: "Can you integrate AI into my existing systems?", a: "Often, yes. It depends on the systems involved, whether they offer an API or supported integration, and the permissions and subscriptions required. We assess this during discovery and tell you plainly what is and is not possible." },
+  { category: "Quotations", q: "What costs extra?", a: "Domain registration and hosting (unless included in your quotation), third-party subscriptions, additional pages, complex functionality, content updates, API and AI usage costs, and anything outside the agreed scope are quoted separately." },
+  { category: "Quotations", q: "Why do you not publish your prices?", a: "Every project is different, and the right price depends on requirements, functionality, complexity and agreed deliverables. We share our service catalogue and a personalised quotation privately with serious enquiries, and always confirm the price in writing before work begins." },
   { category: "Timelines", q: "How long does a project take?", a: "It depends on the package, the number of pages or features, and how quickly content and feedback are supplied. We confirm a realistic timeline in your quotation before work begins." },
   { category: "Timelines", q: "What do you need from me to start?", a: "A clear idea of your goals, your business details, any logo or brand colours, the content you want on the site, and examples of designs you like. We guide you on anything that is missing." },
   { category: "Payments", q: "How do deposits and payments work?", a: "We ask for a 50% deposit before development begins and the remaining 50% before final handover and deployment. Monthly services are billed separately. Exact terms are confirmed in your written quotation." },
@@ -254,11 +228,11 @@ export const FAQS: { category: string; q: string; a: string }[] = [
   { category: "Domains and hosting", q: "Is hosting included?", a: "Hosting is quoted separately unless explicitly included in your quotation. We can advise on suitable hosting for your project." },
   { category: "Revisions", q: "How many revisions are included?", a: "Each package includes a specified number of revision rounds, from 1 round in the Basic Website to up to 4 in the Premium Business Website. Revisions must relate to the originally agreed scope." },
   { category: "Revisions", q: "What if I want changes outside the original scope?", a: "New features, additional pages and major design changes are quoted separately. Changes outside the agreed scope may also affect the project timeline." },
-  { category: "Maintenance", q: "Do you offer website maintenance?", a: "Yes. Monthly maintenance plans start at R350 and cover updates, security checks, backups and support depending on the plan. Maintenance is optional and not automatically included in once-off development." },
+  { category: "Maintenance", q: "Do you offer website maintenance?", a: "Yes. We offer Basic, Standard and Premium monthly maintenance plans covering updates, security checks, backups and support depending on the plan. Maintenance is optional and not automatically included in once-off development." },
   { category: "Maintenance", q: "Is any support included after launch?", a: "Post-launch support is included only where the selected package says so, for example one month in the Professional Business Website and two months in the Premium Business Website. After that, ongoing support requires a separate agreement." },
   { category: "Ownership", q: "Who owns the website once it is finished?", a: "Project ownership and the agreed deliverables transfer to you after full payment. Third-party software, licensed assets and subscriptions remain subject to their own licence agreements." },
   { category: "Ownership", q: "What do I receive at handover?", a: "The agreed project files, access credentials and deployment information." },
-  { category: "Web applications", q: "Can you build a custom application for my business?", a: "Yes. We build business management systems, CRMs, inventory systems, client portals and dashboards. Applications start from R8,000, and complex or enterprise systems require a detailed assessment and formal quotation." },
+  { category: "Web applications", q: "Can you build a custom application for my business?", a: "Yes. We build business management systems, CRMs, inventory systems, client portals and dashboards. Complex or enterprise systems require a detailed assessment and formal quotation." },
   { category: "AI agents", q: "What can an AI assistant do for my business?", a: "It can answer common questions, collect enquiry details, qualify leads and pass conversations to your team. It works from your approved information and hands over to a person when it cannot help." },
   { category: "AI agents", q: "Is customer data safe with an AI assistant?", a: "We design integrations to collect only the information needed and keep credentials on the server. We discuss privacy and POPIA considerations with you during scoping." },
   { category: "Third-party costs", q: "Are there costs from other providers?", a: "Yes, sometimes. API usage, AI model consumption, WhatsApp Business API charges, hosting and third-party subscriptions are excluded unless explicitly included in the quotation. We explain these costs up front." },
@@ -271,9 +245,10 @@ export const BUDGETS = ["Under R5,000", "R5,000 – R10,000", "R10,000 – R25,0
 export const SERVICE_OPTIONS: { value: string; label: string }[] = [
   { value: "web", label: "Website development" },
   { value: "apps", label: "Web application" },
-  { value: "ai", label: "AI agent" },
+  { value: "ai", label: "AI agent or assistant" },
   { value: "automation", label: "Business automation" },
-  { value: "support", label: "Support and maintenance" },
+  { value: "maintenance", label: "Website maintenance and support" },
+  { value: "support", label: "AI and automation support" },
   { value: "other", label: "Not sure yet" },
 ];
 

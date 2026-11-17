@@ -7,9 +7,9 @@ import { useEffect, useState } from "react";
 import { ChatPanel } from "./ChatPanel";
 import { useAiStatus } from "./useAiStatus";
 
-const GREETING = "Hello! I'm Ragophala AI. I can help you explore our digital services, understand pricing and find the right solution for your business. What are you looking to build?";
+const GREETING = "Hello! I'm RAGOPHALA AI. I can help you explore our services, understand what we build and find the right digital solution for your business. What are you looking to create?";
 
-const SUGGESTIONS = ["I need a business website.", "I want to build an application.", "How can AI help my business?", "I need business automation.", "Help me estimate my project."];
+const SUGGESTIONS = ["I need a business website.", "I want a custom application.", "I need an AI assistant.", "I want to automate my business.", "I need help choosing a solution."];
 
 function Orb({ size = 40 }: { size?: number }) {
   return (
@@ -90,7 +90,7 @@ export function AiAssistant() {
             </header>
             <ChatPanel mode="assistant" greeting={GREETING} suggestions={SUGGESTIONS} storageKey="rd-ai-chat" className="flex-1" />
             <footer className="border-t border-navy/10 bg-ivory-200 px-4 py-2.5 text-[11px] leading-snug text-muted">
-              <p>AI can make mistakes. Prices are indicative; a written quotation confirms the final price. Messages are not stored by us. <Link href="/privacy" className="underline">Privacy</Link></p>
+              <p>AI can make mistakes. Pricing is tailored; a written quotation confirms scope and price. Messages are not stored by us. <Link href="/privacy" className="underline">Privacy</Link></p>
               <Link href="/smart-intake" className="mt-1.5 inline-flex items-center gap-1 font-medium text-cobalt">Prefer a structured project brief? Try Smart Intake <ArrowUpRight size={12} aria-hidden /></Link>
             </footer>
           </motion.section>

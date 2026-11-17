@@ -4,6 +4,7 @@ import Link from "next/link";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ArrowLeft, Loader2, Sparkles, TriangleAlert } from "lucide-react";
 import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { track } from "@/lib/analytics";
 import { contactSchema } from "@/lib/contact";
 import { BUDGETS, SERVICE_OPTIONS } from "@/lib/site";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,7 @@ interface Brief {
   requirements: string[];
   recommendedSolution: string;
   budgetCategory: string;
-  indicativeItems: { name: string; price: string; billing: string }[];
+  indicativeItems: { name: string; billing: string }[];
   nextSteps: string[];
   source: "ai" | "rules";
 }
@@ -130,7 +131,7 @@ export function SmartIntake() {
         features: lines(form.features),
         integrations: lines(form.integrations),
         budgetCategory: form.budget,
-        indicativeItems: brief.indicativeItems.map(({ name, price }) => ({ name, price })),
+        indicativeItems: brief.indicativeItems.map(({ name }) => ({ name })),
         nextSteps: brief.nextSteps,
         source: brief.source,
       },
@@ -154,6 +155,7 @@ export function SmartIntake() {
         return;
       }
       setOutcome({ reference: data.reference ?? "", notified: Boolean(data.notified) });
+      track("Smart Intake Sent", "smart-intake");
       goto("done");
     } catch {
       setError("We could not reach the server. Please check your connection and try again.");
@@ -245,16 +247,16 @@ export function SmartIntake() {
                   </div>
                   <div className="grid gap-5 sm:grid-cols-2">
                     <Field id="integrations" label="Potential integrations (one per line)" optional><textarea id="integrations" rows={3} value={form.integrations} onChange={(e) => set("integrations", e.target.value)} className="field" /></Field>
-                    <Field id="budget" label="Indicative budget category">
+                    <Field id="budget" label="Estimated budget range">
                       <select id="budget" value={form.budget} onChange={(e) => set("budget", e.target.value)} className="field">{BUDGETS.map((b) => (<option key={b} value={b}>{b}</option>))}</select>
                     </Field>
                   </div>
                 </div>
                 {brief.indicativeItems.length > 0 && (
                   <div className="mt-6 rounded-xl border border-line p-5">
-                    <h3 className="label mb-3">Indicative starting prices from our catalogue</h3>
-                    <ul className="space-y-1.5 text-[15px]">{brief.indicativeItems.map((i) => (<li key={i.name} className="flex flex-wrap justify-between gap-2"><span>{i.name}</span><span className="font-display font-semibold">{i.price} · {i.billing}</span></li>))}</ul>
-                    <p className="mt-3 text-xs text-muted">Indicative only. A formal quotation confirms the final price and deliverables.</p>
+                    <h3 className="label mb-3">Services that look relevant</h3>
+                    <ul className="space-y-1.5 text-[15px]">{brief.indicativeItems.map((i) => (<li key={i.name} className="flex flex-wrap justify-between gap-2"><span>{i.name}</span><span className="font-display font-semibold">{i.billing}</span></li>))}</ul>
+                    <p className="mt-3 text-xs text-muted">Pricing is tailored to your project. Submit the brief for a personalised quotation.</p>
                   </div>
                 )}
                 <div className="mt-6"><h3 className="label mb-3">Suggested next steps</h3><ol className="space-y-1.5 text-sm text-muted">{brief.nextSteps.map((n, i) => (<li key={n}>{i + 1}. {n}</li>))}</ol></div>

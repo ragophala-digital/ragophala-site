@@ -3,6 +3,10 @@ import type { NextConfig } from "next";
 const config: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  redirects: async () => [
+    { source: "/pricing", destination: "/quote", permanent: true },
+    { source: "/ai-automation", destination: "/ai-agents", permanent: true },
+  ],
   headers: async () => [
     {
       source: "/:path*",

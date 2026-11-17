@@ -3,6 +3,7 @@ import { BUDGETS, SERVICE_OPTIONS } from "./site";
 
 const serviceValues = SERVICE_OPTIONS.map((s) => s.value) as [string, ...string[]];
 const budgetValues = BUDGETS as unknown as [string, ...string[]];
+export const CONTACT_METHODS = ["email", "phone", "whatsapp"] as const;
 
 const list = (max: number, len = 200) => z.array(z.string().max(len)).max(max).default([]);
 
@@ -17,7 +18,7 @@ export const briefSchema = z.object({
   features: list(10, 120),
   integrations: list(8, 120),
   budgetCategory: z.string().max(40).default(""),
-  indicativeItems: z.array(z.object({ name: z.string().max(120), price: z.string().max(80) })).max(4).default([]),
+  indicativeItems: z.array(z.object({ name: z.string().max(120) })).max(4).default([]),
   nextSteps: list(6),
   source: z.enum(["ai", "rules"]).default("rules"),
 });
@@ -35,7 +36,8 @@ export const contactSchema = z.object({
     .optional()
     .default(""),
   service: z.enum(serviceValues, { message: "Please choose a service." }),
-  budget: z.enum(budgetValues, { message: "Please choose a budget range." }),
+  budget: z.enum(budgetValues, { message: "Please choose a budget range." }).or(z.literal("")).optional().default(""),
+  contactMethod: z.enum(CONTACT_METHODS, { message: "Please choose how you would like us to contact you." }).default("email"),
   message: z.string().trim().min(20, "Please describe your project in at least 20 characters.").max(3000),
   extra: z.string().trim().max(1500).optional().default(""),
   consent: z.literal(true, { message: "Please agree to the privacy information so we can save your enquiry." }),
@@ -43,6 +45,10 @@ export const contactSchema = z.object({
   brief: briefSchema.optional(),
   website: z.string().max(0).optional().default(""), // honeypot
   startedAt: z.number().optional(),
+}).superRefine((v, ctx) => {
+  if ((v.contactMethod === "phone" || v.contactMethod === "whatsapp") && !v.phone) {
+    ctx.addIssue({ code: "custom", path: ["phone"], message: "Please add a phone number so we can reach you that way." });
+  }
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

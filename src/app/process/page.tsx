@@ -2,15 +2,15 @@ import { LinkButton, PageHero } from "@/components/ui";
 import { ProcessJourney } from "@/components/ProcessJourney";
 import { pageMeta } from "@/lib/utils";
 
-export const metadata = pageMeta("Our Process", "How Ragophala Digital works: discovery, planning, design, development, testing, and launch and support.", "/process");
+export const metadata = pageMeta("Our Process", "How Ragophala Digital works: discovery, planning, design, development, testing, deployment and support.", "/process");
 
 export default function ProcessPage() {
   return (
     <>
       <PageHero
         crumbs={[{ label: "Our process" }]}
-        label="Our process · six stages"
-        title={<>A clear journey from first conversation to launch.</>}
+        label="Our process · seven stages"
+        title={<>From idea to implementation.</>}
         text="Every project follows the same dependable path, so you always know what is happening, what we need from you and what comes next. Scroll to follow the journey."
         actions={<LinkButton href="/contact">Start a project</LinkButton>}
       />
