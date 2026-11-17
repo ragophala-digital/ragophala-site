@@ -25,6 +25,7 @@
   --accent: #8fa5ff;
 }
 .theme-soft {
+  --accent: #2447d6;
   --card: rgba(255, 255, 255, 0.6);
   --line: rgba(16, 24, 39, 0.16);
 }
@@ -106,3 +107,11 @@ body::after {
 @keyframes marquee { to { transform: translateX(-50%); } }
 .marquee-track { animation: marquee var(--marquee-duration, 32s) linear infinite; }
 .marquee:hover .marquee-track { animation-play-state: paused; }
+
+/* Hero entrance that runs without waiting for JavaScript, so the first content paints early. */
+@keyframes rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+.animate-rise { animation: rise .6s cubic-bezier(.22, 1, .36, 1) both; }
+
+/* Staggered headline words: pure CSS, so the headline can paint before JavaScript loads. */
+@keyframes word-up { from { transform: translateY(110%); } to { transform: none; } }
+.word-up { animation: word-up .8s cubic-bezier(.22, 1, .36, 1) both; }

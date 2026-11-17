@@ -151,7 +151,7 @@ export function ProcessJourney() {
 
       <ol>
         {PROCESS.map((s, i) => (
-          <li key={s.n} data-i={i} ref={(el) => { refs.current[i] = el; }} className={cn("flex min-h-[62vh] flex-col justify-center py-10 transition-opacity duration-500 lg:min-h-[78vh]", i === active ? "opacity-100" : "opacity-40")}>
+          <li key={s.n} data-i={i} ref={(el) => { refs.current[i] = el; }} className={cn("flex min-h-[62vh] flex-col justify-center border-l-2 py-10 pl-6 transition-colors duration-500 lg:min-h-[78vh]", i === active ? "border-cobalt" : "border-transparent")}>
             <p className="font-mono text-xs text-accent">Stage {s.n}</p>
             <h2 className="display-md mt-3">{s.title}</h2>
             <p className="body-lg mt-4">{s.summary}</p>

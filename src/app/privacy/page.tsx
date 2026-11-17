@@ -6,8 +6,6 @@ import { pageMeta } from "@/lib/utils";
 
 export const metadata = pageMeta("Privacy Information", "How Ragophala Digital handles enquiries, the RAGOPHALA AI assistant and Smart Intake, and what personal information is stored.", "/privacy");
 
-export const dynamic = "force-dynamic";
-
 export default function Privacy() {
   const days = retentionDays();
   const sections: [string, React.ReactNode][] = [

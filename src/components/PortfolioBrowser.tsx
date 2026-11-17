@@ -27,7 +27,7 @@ export function PortfolioBrowser() {
                 <ProjectVisual project={p} className="aspect-[16/10] w-full" />
                 <div className="p-5">
                   <div className="mb-3 flex items-center justify-between"><span className="label">{p.category}</span><span className="rounded-md bg-softblue px-2 py-0.5 font-mono text-[10px] uppercase tracking-wider text-navy">Concept</span></div>
-                  <div className="flex items-start justify-between gap-3"><h3 className="font-display text-lg font-semibold tracking-tight">{p.title}</h3><ArrowUpRight size={18} className="mt-1 shrink-0 text-muted transition group-hover:text-cobalt" aria-hidden /></div>
+                  <div className="flex items-start justify-between gap-3"><h2 className="font-display text-lg font-semibold tracking-tight">{p.title}</h2><ArrowUpRight size={18} className="mt-1 shrink-0 text-muted transition group-hover:text-cobalt" aria-hidden /></div>
                   <p className="mt-2 text-sm leading-relaxed text-muted">{p.summary}</p>
                 </div>
               </Link>

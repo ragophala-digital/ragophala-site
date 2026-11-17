@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
 export function MockCaption({ children = "Illustrative interface" }: { children?: ReactNode }) {
-  return <p className="mt-3 font-mono text-[10px] uppercase tracking-[.16em] text-muted">{children}</p>;
+  return <p className="mt-3 font-mono text-[10px] uppercase tracking-[.16em] text-[#566075]">{children}</p>;
 }
 
 export function BrowserFrame({ url = "yourbusiness.co.za", children, className }: { url?: string; children: ReactNode; className?: string }) {
@@ -12,7 +12,7 @@ export function BrowserFrame({ url = "yourbusiness.co.za", children, className }
         <span className="h-2 w-2 rounded-full bg-navy/20" />
         <span className="h-2 w-2 rounded-full bg-navy/20" />
         <span className="h-2 w-2 rounded-full bg-navy/20" />
-        <span className="ml-3 flex-1 truncate rounded-md bg-white px-3 py-1 font-mono text-[10px] text-muted">{url}</span>
+        <span className="ml-3 flex-1 truncate rounded-md bg-white px-3 py-1 font-mono text-[10px] text-[#566075]">{url}</span>
       </div>
       {children}
     </div>
@@ -66,7 +66,7 @@ export function SiteMock({ variant = "studio" }: { variant?: "studio" | "shop" |
           </div>
           <div className="space-y-2">
             {["09:00", "10:30", "13:00", "15:30"].map((t, n) => (
-              <span key={t} className={cn("block rounded border px-2 py-1.5 font-mono text-[10px]", n === 1 ? "border-cobalt bg-cobalt text-white" : "border-navy/15 text-muted")}>{t}</span>
+              <span key={t} className={cn("block rounded border px-2 py-1.5 font-mono text-[10px]", n === 1 ? "border-cobalt bg-cobalt text-white" : "border-navy/15 text-[#566075]")}>{t}</span>
             ))}
           </div>
         </div>

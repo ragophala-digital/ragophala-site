@@ -42,11 +42,11 @@ export default function About() {
         <div className="container-x relative">
           <Breadcrumb items={[{ label: "About" }]} />
           <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">
-            <Reveal>
+            <div className="animate-rise">
               <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />About Ragophala Digital</p>
               <h1 className="display-lg">Technology with purpose. Design with intention.</h1>
               <p className="body-lg mt-6">We help South African businesses get online properly, work more efficiently and grow with technology that is built to last.</p>
-            </Reveal>
+            </div>
             <Reveal delay={0.15} className="justify-self-center"><BrandGraphic /></Reveal>
           </div>
         </div>
@@ -70,12 +70,10 @@ export default function About() {
           <SectionHead index="02" label="What we believe" title="Five principles behind our work" />
           <ol className="border-t border-line">
             {BELIEFS.map(([t, d], i) => (
-              <Reveal key={t}>
-                <li className="grid gap-3 border-b border-line py-8 lg:grid-cols-[70px_1.2fr_1fr] lg:gap-8">
-                  <span className="font-mono text-xs text-accent">0{i + 1}</span>
-                  <h3 className="display-md">{t}</h3>
-                  <p className="text-[15px] leading-relaxed text-muted">{d}</p>
-                </li>
+              <Reveal as="li" key={t} className="grid gap-3 border-b border-line py-8 lg:grid-cols-[70px_1.2fr_1fr] lg:gap-8">
+                <span className="font-mono text-xs text-accent">0{i + 1}</span>
+                <h3 className="display-md">{t}</h3>
+                <p className="text-[15px] leading-relaxed text-muted">{d}</p>
               </Reveal>
             ))}
           </ol>

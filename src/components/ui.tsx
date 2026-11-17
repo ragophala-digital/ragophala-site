@@ -7,10 +7,11 @@ import { ArrowUpRight, MessageCircle } from "lucide-react";
 import { Fragment, useEffect, useRef, type ReactNode } from "react";
 import { cn, whatsappUrl } from "@/lib/utils";
 
-export function Reveal({ children, delay = 0, className, y = 24 }: { children: ReactNode; delay?: number; className?: string; y?: number }) {
+export function Reveal({ children, delay = 0, className, y = 24, as = "div" }: { children: ReactNode; delay?: number; className?: string; y?: number; as?: "div" | "li" }) {
   const reduce = useReducedMotion();
+  const Tag = as === "li" ? motion.li : motion.div;
   return (
-    <motion.div
+    <Tag
       className={className}
       initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -18,27 +19,21 @@ export function Reveal({ children, delay = 0, className, y = 24 }: { children: R
       transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
     >
       {children}
-    </motion.div>
+    </Tag>
   );
 }
 
 /** Headline with a staggered word reveal. Parts marked `accent` render in the accent colour. */
 export function StaggerHeadline({ parts, className, as: Tag = "h1" }: { parts: { text: string; accent?: boolean }[]; className?: string; as?: "h1" | "h2" }) {
-  const reduce = useReducedMotion();
   const words = parts.flatMap((p) => p.text.split(" ").map((w) => ({ w, accent: p.accent })));
   return (
     <Tag className={className} aria-label={parts.map((p) => p.text).join(" ")}>
       {words.map((word, i) => (
         <Fragment key={i}>
           <span aria-hidden className="inline-block overflow-hidden align-bottom pb-[0.12em]">
-            <motion.span
-              className={cn("inline-block", word.accent && "text-cobalt-300")}
-              initial={reduce ? false : { y: "110%" }}
-              animate={{ y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 + i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            >
+            <span className={cn("word-up inline-block", word.accent && "text-cobalt-300")} style={{ animationDelay: `${0.1 + i * 0.07}s` }}>
               {word.w}
-            </motion.span>
+            </span>
           </span>{" "}
         </Fragment>
       ))}
@@ -131,12 +126,12 @@ export function PageHero({ crumbs, label, title, text, actions, children, classN
       <HeroAccent />
       <div className="container-x relative">
         {crumbs && <Breadcrumb items={crumbs} />}
-        <Reveal>
+        <div className="animate-rise">
           <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />{label}</p>
           <h1 className="display-lg max-w-[18ch]">{title}</h1>
           <p className="body-lg mt-6">{text}</p>
           {actions && <div className="mt-9 flex flex-wrap gap-3">{actions}</div>}
-        </Reveal>
+        </div>
         {children}
       </div>
     </section>

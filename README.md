@@ -16,7 +16,7 @@ Quality checks: `npm run typecheck`, `npm run lint`, `npm run build`.
 
 ## Editing content
 
-All copy, prices, services, FAQs and demo projects are in `src/lib/site.ts`. Package prices (`PACKAGES`) are editable starting values.
+Copy, FAQs and demo projects are in `src/lib/site.ts`; the six services are in `src/lib/services.ts`. **There are no public prices.** The approved catalogue stays in `src/lib/pricing.ts` and is never imported by site code; see "Private pricing" below.
 
 ## Environment variables
 
@@ -43,9 +43,9 @@ All AI calls happen on the server (`src/lib/ai/provider.ts`, Groq's OpenAI-compa
 
 | Feature | Route / page | Notes |
 | --- | --- | --- |
-| RAGOPHALA AI assistant | floating button, `POST /api/ai/chat` | Streams replies. Knowledge is built from `src/lib/pricing.ts` and `src/lib/site.ts`, so prices stay accurate. Hidden when no key is set. |
+| RAGOPHALA AI assistant | floating button, `POST /api/ai/chat` | Streams replies. Knowledge is built from the price-free `src/lib/catalogue-public.ts` and `src/lib/site.ts`; the assistant is instructed never to state prices. Hidden when no key is set. |
 | Smart Intake | `/smart-intake`, `POST /api/ai/intake` | Idea in plain language, optional follow-up questions, editable brief, consent, then submit. Prices in the brief are looked up from the catalogue, never taken from the model. |
-| Demonstration centre | `/ai-automation#demo` | Demo assistant (fictional guesthouse), lead qualification demo (saves nothing), workflow explanation. |
+| Demonstration centre | `/ai-agents#demo` | Demo assistant (fictional guesthouse), lead qualification demo (saves nothing), workflow explanation. |
 | Enquiry automation | `POST /api/contact` | Validate, consent, de-duplicate, store, AI analysis (category, priority, summary, follow-up draft), email owner with retries. Falls back to keyword rules if AI is unavailable. |
 | Admin list | `GET /api/admin/enquiries` | Disabled unless `ADMIN_TOKEN` (24+ characters) is set. Send `Authorization: Bearer <token>`. |
 | Privacy information | `/privacy` | Describes what is stored and for how long. |
@@ -70,7 +70,7 @@ Palette: Midnight Navy `#101827`, Warm Ivory `#F5F3EF`, Electric Blue `#315BFA`,
 
 ## Pages
 
-Home, Services, Website Development, Web Applications, AI Agents and Automation, Pricing, About, Our Process, Contact, FAQ, plus Selected Concepts (`/portfolio`), Insights (`/insights`, articles live in `src/lib/insights.ts`), Smart Intake, Privacy and Terms. Error, loading and 404 pages are in `src/app`.
+Home, Services, Website Development, Web Applications, AI Agents, Business Automation, Website Maintenance, AI Support, Request a Quote (`/quote`), About, Our Process, Contact, FAQ, plus Selected Concepts (`/portfolio`), Insights (`/insights`, articles live in `src/lib/insights.ts`), Smart Intake, Privacy and Terms. Error, loading and 404 pages are in `src/app`.
 
 ## Tests and CI
 
@@ -93,3 +93,14 @@ GitHub Actions (`.github/workflows/ci.yml`) runs typecheck, lint, tests and buil
 
 - Portfolio items are clearly labelled demonstration projects, not real client work. Replace them in `PROJECTS` when real case studies are available.
 - `npm audit` reports a PostCSS advisory bundled inside Next.js 15.5.x; the only fix is the Next.js 16 major upgrade. It affects build-time CSS processing of untrusted CSS, which this site does not do.
+
+## Private pricing
+
+Public pages never show prices. `src/lib/pricing.ts` is the approved internal catalogue; do not import it from site code (a test enforces this).
+
+```bash
+node private/export-catalogue.mjs        # regenerates src/lib/catalogue-public.ts (prices removed) and private/catalogue.json
+python private/build-catalogue-pdf.py    # builds private/documents/...Pricing-Guide-2026.pdf (needs reportlab)
+```
+
+`private/catalogue.json` and `private/documents/` are git-ignored and must never be placed in `public/`. Send the PDF only to serious enquiries. `tests/privacy.test.ts` fails if any catalogue amount reaches the site source or the production build.

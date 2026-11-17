@@ -4,7 +4,7 @@ import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { FloatingWhatsApp } from "@/components/FloatingWhatsApp";
-import { AiAssistant } from "@/components/ai/AiAssistant";
+import { LazyAssistant } from "@/components/ai/LazyAssistant";
 import { CardSpotlight } from "@/components/CardSpotlight";
 import { Analytics } from "@/components/Analytics";
 import { SITE } from "@/lib/site";
@@ -44,7 +44,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main">{children}</main>
         <Footer />
         <FloatingWhatsApp />
-        <AiAssistant />
+        <LazyAssistant />
         <CardSpotlight />
         <Analytics />
       </body>

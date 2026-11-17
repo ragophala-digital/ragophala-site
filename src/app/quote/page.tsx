@@ -37,7 +37,7 @@ export default function Quote() {
           <SectionHead index="01" label="How it works" title="From first message to written quotation" />
           <ol className="grid gap-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map(([t, d], i) => (
-              <Reveal key={t} delay={i * 0.07}><li><p className="font-mono text-xs text-accent">0{i + 1}</p><h3 className="mt-3 font-display text-lg font-semibold tracking-tight">{t}</h3><p className="mt-2 text-sm leading-relaxed text-muted">{d}</p></li></Reveal>
+              <Reveal as="li" key={t} delay={i * 0.07}><p className="font-mono text-xs text-accent">0{i + 1}</p><h3 className="mt-3 font-display text-lg font-semibold tracking-tight">{t}</h3><p className="mt-2 text-sm leading-relaxed text-muted">{d}</p></Reveal>
             ))}
           </ol>
         </div>

@@ -6,11 +6,13 @@ export interface Capability {
   ready: boolean;
   ok: boolean;
   low: boolean;
+  /** Phone-sized viewport: heavy 3D should not even be downloaded. */
+  narrow: boolean;
 }
 
 /** Detects WebGL support, reduced motion and weaker devices. `ready` flips true after the first check. */
 export function useCapability(): Capability {
-  const [state, setState] = useState<Capability>({ ready: false, ok: false, low: false });
+  const [state, setState] = useState<Capability>({ ready: false, ok: false, low: false, narrow: false });
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let webgl = false;
@@ -21,7 +23,7 @@ export function useCapability(): Capability {
       webgl = false;
     }
     const cores = navigator.hardwareConcurrency ?? 4;
-    setState({ ready: true, ok: webgl && !reduce, low: window.innerWidth < 768 || cores <= 4 });
+    setState({ ready: true, ok: webgl && !reduce, low: window.innerWidth < 768 || cores <= 4, narrow: window.innerWidth < 768 });
   }, []);
   return state;
 }

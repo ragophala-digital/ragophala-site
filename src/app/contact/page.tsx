@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import { Mail, MessageCircle } from "lucide-react";
 import { ContactForm } from "@/components/ContactForm";
-import { Breadcrumb, LinkButton, Reveal } from "@/components/ui";
+import { Breadcrumb, LinkButton } from "@/components/ui";
 import { SITE } from "@/lib/site";
 import { mailtoUrl, pageMeta, whatsappUrl } from "@/lib/utils";
 
@@ -18,8 +18,8 @@ export default function Contact() {
       <div className="container-x relative">
         <Breadcrumb items={[{ label: "Start a project" }]} />
         <div className="grid items-start gap-10 lg:grid-cols-[0.85fr_1.15fr]">
-          <Reveal>
-            <div className="theme-dark rounded-2xl bg-navy p-8 sm:p-10 lg:sticky lg:top-28">
+          <div className="animate-rise">
+            <div className="theme-dark rounded-2xl bg-navy p-8 text-fg sm:p-10 lg:sticky lg:top-28">
               <p className="label mb-6">Start a project</p>
               <h1 className="display-md">Tell us what you want to build.</h1>
               <p className="mt-5 text-[15px] leading-relaxed text-muted">Share a few details and we will reply with next steps and a written quotation, usually within one to two working days.</p>
@@ -39,12 +39,12 @@ export default function Contact() {
               <p className="mt-10 text-xs text-muted">Serving businesses across {SITE.location}.</p>
               <div className="mt-6 flex flex-wrap gap-3"><LinkButton href="/smart-intake" variant="primary">Try Smart Intake</LinkButton><LinkButton href="/quote" variant="line">How quotations work</LinkButton></div>
             </div>
-          </Reveal>
-          <Reveal delay={0.1}>
+          </div>
+          <div className="animate-rise [animation-delay:.1s]">
             <Suspense fallback={<div className="h-[520px] animate-pulse rounded-2xl border border-line bg-card" aria-busy="true" />}>
               <ContactForm />
             </Suspense>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>

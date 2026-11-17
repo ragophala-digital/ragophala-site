@@ -128,7 +128,7 @@ export function ProjectShowcase() {
             </div>
             <div className="mt-5 flex flex-wrap gap-2" role="tablist" aria-label="Choose project">
               {PROJECTS.map((p, idx) => (
-                <button key={p.slug} role="tab" aria-selected={idx === i} aria-label={`Show ${p.title}`} onClick={() => { setAuto(false); setI(idx); }} className={cn("h-2 rounded-full transition-all duration-300", idx === i ? "w-8 bg-cobalt-300" : "w-2 bg-[var(--line)] hover:bg-cobalt-300/60")} />
+                <button key={p.slug} role="tab" aria-selected={idx === i} aria-label={`Show ${p.title}`} onClick={() => { setAuto(false); setI(idx); }} className="group grid h-6 place-items-center px-1"><span aria-hidden className={cn("block h-2 rounded-full transition-all duration-300", idx === i ? "w-8 bg-cobalt-300" : "w-2 bg-[var(--line)] group-hover:bg-cobalt-300/60")} /></button>
               ))}
             </div>
             <p className="mt-6 text-xs text-muted">Use the arrow keys or swipe to browse. Autoplay pauses when you interact.</p>

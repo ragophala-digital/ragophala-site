@@ -5,7 +5,7 @@ This file used to hold an early build prompt describing an older design and old 
 The current source of truth is:
 
 - `README.md`: setup, environment variables, the AI module, design system, deployment and tests
-- `src/lib/pricing.ts`: the 2026 rate card (the only place prices are defined)
+- `src/lib/pricing.ts`: the private 2026 rate card (the only place prices are defined; never shown publicly)
 - `src/lib/site.ts`: navigation, services, concept projects, process, FAQs and other copy
 - `src/lib/insights.ts`: Insights articles
 

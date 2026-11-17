@@ -26,15 +26,15 @@ export default function Home() {
               South Africa
             </p>
             <StaggerHeadline className="display-xl" parts={[{ text: "Digital solutions." }, { text: "Built for business.", accent: true }]} />
-            <Reveal delay={0.5}>
-              <p className="body-lg mt-8">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter, connect with customers and grow.</p>
+            <div className="animate-rise [animation-delay:.5s]">
+              <p className="body-lg mt-8 lg:max-w-[38ch]">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter, connect with customers and grow.</p>
               <div className="mt-10 flex flex-wrap items-center gap-3">
                 <Magnetic><LinkButton href="/contact">Start a project</LinkButton></Magnetic>
                 <LinkButton href="/services" variant="line" arrow={false}>Explore our services</LinkButton>
               </div>
-            </Reveal>
+            </div>
           </div>
-          <div className="relative -mx-5 h-[400px] sm:mx-0 sm:h-[500px] lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:h-auto lg:w-[66%]">
+          <div className="relative -mx-5 h-[400px] sm:mx-0 sm:h-[500px] lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:h-auto lg:w-[62%]">
             <HeroScene />
           </div>
         </div>
@@ -98,13 +98,11 @@ export default function Home() {
           <SectionHead index="04" label="How we work" title="A clear journey from first conversation to launch" />
           <ol className="grid gap-y-8 border-t border-line pt-8 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-7 lg:gap-x-6">
             {PROCESS.map((s, i) => (
-              <Reveal key={s.title} delay={i * 0.06}>
-                <li className="relative">
-                  <span aria-hidden className="absolute -top-[37px] left-0 h-2.5 w-2.5 rounded-full bg-cobalt ring-4 ring-softblue" />
-                  <p className="font-mono text-xs text-accent">{s.n}</p>
-                  <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">{s.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted">{s.summary}</p>
-                </li>
+              <Reveal as="li" key={s.title} delay={i * 0.06} className="relative">
+                <span aria-hidden className="absolute -top-[37px] left-0 h-2.5 w-2.5 rounded-full bg-cobalt ring-4 ring-softblue" />
+                <p className="font-mono text-xs text-accent">{s.n}</p>
+                <h3 className="mt-3 font-display text-lg font-semibold tracking-tight">{s.title}</h3>
+                <p className="mt-2 text-sm leading-relaxed text-muted">{s.summary}</p>
               </Reveal>
             ))}
           </ol>
@@ -120,11 +118,9 @@ export default function Home() {
           </div>
           <ul className="border-t border-line">
             {WHY.map((w, i) => (
-              <Reveal key={w.title} delay={(i % 2) * 0.05}>
-                <li className="grid gap-2 border-b border-line py-7 sm:grid-cols-[1fr_1.3fr] sm:gap-8">
-                  <h3 className="font-display text-lg font-semibold tracking-tight"><span className="mr-3 font-mono text-xs text-accent">0{i + 1}</span>{w.title}</h3>
-                  <p className="text-[15px] leading-relaxed text-muted">{w.text}</p>
-                </li>
+              <Reveal as="li" key={w.title} delay={(i % 2) * 0.05} className="grid gap-2 border-b border-line py-7 sm:grid-cols-[1fr_1.3fr] sm:gap-8">
+                <h3 className="font-display text-lg font-semibold tracking-tight"><span className="mr-3 font-mono text-xs text-accent">0{i + 1}</span>{w.title}</h3>
+                <p className="text-[15px] leading-relaxed text-muted">{w.text}</p>
               </Reveal>
             ))}
           </ul>
