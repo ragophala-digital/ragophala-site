@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { Check, Info } from "lucide-react";
+import { AskService } from "@/components/ai/AskService";
 import { LinkButton, PageHero, Reveal, SectionHead } from "@/components/ui";
 import type { Service } from "@/lib/services";
 import { SITE } from "@/lib/site";
@@ -79,6 +80,8 @@ export function ServiceTemplate({ service: s, visual, extra }: Props) {
       </section>
 
       {extra}
+
+      <AskService service={s} />
 
       <section className="theme-dark bg-navy text-fg">
         <div className="container-x section grid gap-14 lg:grid-cols-[0.9fr_1.1fr]">

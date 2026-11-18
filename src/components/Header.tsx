@@ -30,7 +30,10 @@ function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boole
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLLIElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
-  useEffect(() => setOpen(false), [path]);
+  useEffect(() => {
+    clearTimeout(timer.current);
+    setOpen(false);
+  }, [path]);
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -55,10 +58,13 @@ function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boole
   };
   return (
     <li ref={root} onMouseEnter={() => hover(true)} onMouseLeave={() => hover(false)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false); }}>
-      <button type="button" aria-expanded={open} aria-controls="services-menu" onClick={() => setOpen((o) => !o)} className={cn("relative flex items-center gap-1 px-3.5 py-2 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>
-        Services <ChevronDown size={14} aria-hidden className={cn("transition-transform duration-300", open && "rotate-180")} />
+      <span className="relative flex items-center">
+        <Link href="/services" onClick={() => { clearTimeout(timer.current); setOpen(false); }} aria-current={active ? "page" : undefined} className={cn("py-2 pl-3.5 pr-1 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>Services</Link>
+        <button type="button" aria-expanded={open} aria-controls="services-menu" aria-label="Show services menu" onClick={() => setOpen((o) => !o)} className={cn("py-2 pl-0.5 pr-3 transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>
+          <ChevronDown size={14} aria-hidden className={cn("transition-transform duration-300", open && "rotate-180")} />
+        </button>
         {active && <span aria-hidden className="absolute inset-x-3.5 -bottom-0.5 h-px bg-cobalt" />}
-      </button>
+      </span>
       <AnimatePresence>
         {open && (
           <motion.div id="services-menu" initial={{ opacity: 0, y: -8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }} className="theme-dark absolute inset-x-0 top-full border-b border-white/10 bg-navy shadow-[0_40px_80px_-30px_rgba(0,0,0,.6)]">

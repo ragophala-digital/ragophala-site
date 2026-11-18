@@ -26,13 +26,6 @@ export function HeroScene() {
               <meshPhysicalMaterial {...CHROME} />
             </mesh>
           </Spin>
-          <Spin speed={-0.08} axis="y">
-            <mesh rotation={[0.35, 0, 0.5]}>
-              <torusGeometry args={[3.3, 0.012, 8, 220]} />
-              <meshBasicMaterial color={SOFT} transparent opacity={0.55} />
-            </mesh>
-          </Spin>
-
           {/* glass sphere with cobalt core */}
           <Float speed={1} floatIntensity={0.4}>
             <mesh>
