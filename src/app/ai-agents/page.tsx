@@ -1,5 +1,6 @@
 import { ServiceTemplate } from "@/components/ServiceTemplate";
 import { DemoCentre } from "@/components/ai/DemoCentre";
+import { DemoSuite } from "@/components/demos/DemoSuite";
 import { LinkButton, Reveal, SectionHead } from "@/components/ui";
 import { serviceByKey } from "@/lib/services";
 import { pageMeta } from "@/lib/utils";
@@ -12,6 +13,13 @@ export default function AiAgents() {
     <ServiceTemplate
       service={service}
       extra={
+        <>
+        <section id="suite-section" className="scroll-mt-24 pb-16 pt-4 sm:pb-20">
+          <div className="container-x">
+            <SectionHead label="Interactive demonstrations" title="See AI assistants at work." text="Step through scripted examples with fictional businesses. Each one shows what the AI does and where a person stays in control." />
+            <DemoSuite show={["chatbot", "voice", "whatsapp", "leads", "support"]} />
+          </div>
+        </section>
         <section id="demo" className="scroll-mt-24 pb-20 sm:pb-28">
           <div className="container-x">
             <SectionHead label="Demonstration centre" title="Experience intelligent business solutions." text="Try a working AI assistant, watch an enquiry being qualified, and see the automation behind it. Demonstrations use clearly labelled sample data." />
@@ -22,6 +30,7 @@ export default function AiAgents() {
             </div>
           </div>
         </section>
+        </>
       }
     />
   );

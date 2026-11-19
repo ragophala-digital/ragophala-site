@@ -1,5 +1,6 @@
 import { createHash, randomUUID } from "crypto";
 import { promises as fs } from "fs";
+import os from "os";
 import path from "path";
 import type { Brief } from "./contact";
 import type { Qualification } from "./ai/analyse";
@@ -29,7 +30,8 @@ export interface EnquiryRecord {
  * permissions, and there is no public read route. On serverless hosts (for example Vercel) the filesystem is
  * ephemeral: swap these functions for a hosted database before relying on stored enquiries.
  */
-const DIR = process.env.ENQUIRY_DATA_DIR || path.join(process.cwd(), ".data");
+/** On Vercel the project folder is read-only, so fall back to the temporary folder (not durable: rely on email or a hosted database there). */
+const DIR = process.env.ENQUIRY_DATA_DIR || (process.env.VERCEL ? path.join(os.tmpdir(), "ragophala-data") : path.join(process.cwd(), ".data"));
 const FILE = path.join(DIR, "enquiries.json");
 const RETENTION_DAYS = Number(process.env.DATA_RETENTION_DAYS) > 0 ? Number(process.env.DATA_RETENTION_DAYS) : 365;
 

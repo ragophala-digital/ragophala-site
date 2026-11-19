@@ -15,6 +15,7 @@ const mono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono", displ
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
+  robots: process.env.NEXT_PUBLIC_NOINDEX === "true" ? { index: false, follow: false } : undefined,
   title: { default: `${SITE.name} | ${SITE.tagline}`, template: `%s | ${SITE.name}` },
   description: SITE.description,
   openGraph: { title: `${SITE.name} | ${SITE.tagline}`, description: SITE.description, siteName: SITE.name, locale: "en_ZA", type: "website" },
