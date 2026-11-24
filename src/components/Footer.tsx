@@ -7,6 +7,7 @@ import { mailtoUrl, whatsappUrl } from "@/lib/utils";
 import { CursorGlow, Magnetic } from "./ui-motion";
 
 const STUDIO = [
+  ["/products", "Products"],
   ["/about", "About"],
   ["/process", "Our process"],
   ["/quote", "Request a quote"],

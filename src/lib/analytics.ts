@@ -7,7 +7,7 @@ export const ANALYTICS = {
 
 export const analyticsEnabled = (): boolean => ANALYTICS.domain.length > 0;
 
-export type ConversionEvent = "Enquiry Sent" | "Smart Intake Sent" | "WhatsApp Click";
+export type ConversionEvent = "Enquiry Sent" | "Smart Intake Sent" | "WhatsApp Click" | "Waitlist Joined";
 
 type Plausible = (event: string, options?: { props?: Record<string, string> }) => void;
 

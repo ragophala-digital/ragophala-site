@@ -115,3 +115,10 @@ body::after {
 /* Staggered headline words: pure CSS, so the headline can paint before JavaScript loads. */
 @keyframes word-up { from { transform: translateY(110%); } to { transform: none; } }
 .word-up { animation: word-up .8s cubic-bezier(.22, 1, .36, 1) both; }
+
+/* Slow marching dashes on optional-connection lines. */
+@keyframes eco-dash { to { stroke-dashoffset: -6.4; } }
+.eco-dash { animation: eco-dash 14s linear infinite; }
+
+@keyframes eco-pulse { 0%, 100% { opacity: .45; transform: translateX(0); } 50% { opacity: 1; transform: translateX(3px); } }
+.eco-pulse { animation: eco-pulse 3.2s ease-in-out infinite; }
