@@ -87,7 +87,7 @@ export function Footer() {
           )}
         </div>
 
-        <p aria-hidden className="pointer-events-none mt-16 select-none whitespace-nowrap bg-gradient-to-b from-ivory/90 to-ivory/0 bg-clip-text text-center font-display text-[clamp(3.4rem,15.5vw,14rem)] font-bold leading-[0.85] tracking-[-0.06em] text-transparent">
+        <p aria-hidden className="pointer-events-none mt-16 select-none whitespace-nowrap bg-gradient-to-b from-ivory/90 to-ivory/0 bg-clip-text text-center font-display text-[clamp(2.75rem,14vw,14rem)] font-bold leading-[0.85] tracking-[-0.06em] text-transparent">
           RAGOPHALA
         </p>
 
