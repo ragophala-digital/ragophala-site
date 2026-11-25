@@ -24,7 +24,7 @@ export function ProjectMock({ kind }: { kind: MockKind }) {
       {kind === "portal" && (
         <>
           <PortalMock className="absolute left-6 top-10 w-[600px] scale-[1.02]" />
-          <div className="absolute bottom-10 right-8 w-[250px] rounded-xl bg-white p-4 text-navy shadow-xl"><p className="font-mono text-[10px] uppercase tracking-wider text-muted">Reminder sent</p><p className="mt-1 font-display text-base font-semibold">Appointment tomorrow</p><div className="mt-3"><StatusPill status="Paid" /></div></div>
+          <div className="absolute bottom-10 right-8 w-[250px] rounded-xl bg-white p-4 text-navy shadow-xl"><p className="font-mono text-[10px] uppercase tracking-wider text-[#566075]">Reminder sent</p><p className="mt-1 font-display text-base font-semibold">Appointment tomorrow</p><div className="mt-3"><StatusPill status="Paid" /></div></div>
         </>
       )}
       {kind === "stock" && (

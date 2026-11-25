@@ -6,7 +6,7 @@ export function ChatMock({ className }: { className?: string }) {
     <div className={cn("overflow-hidden rounded-xl border border-navy/15 bg-white text-navy shadow-[0_40px_70px_-40px_rgba(16,24,39,.55)]", className)}>
       <div className="flex items-center gap-3 border-b border-navy/10 px-4 py-3">
         <span className="grid h-8 w-8 place-items-center rounded-full bg-cobalt text-white"><Bot size={16} aria-hidden /></span>
-        <div><p className="font-display text-sm font-semibold">Business assistant</p><p className="font-mono text-[9px] uppercase tracking-wider text-muted">Answers from your approved content</p></div>
+        <div><p className="font-display text-sm font-semibold">Business assistant</p><p className="font-mono text-[9px] uppercase tracking-wider text-[#566075]">Answers from your approved content</p></div>
       </div>
       <div className="space-y-3 p-4 text-[12px]">
         <p className="max-w-[80%] rounded-2xl rounded-bl-sm bg-ivory-200 px-3.5 py-2.5">Hi, do you do weekend appointments?</p>
@@ -14,7 +14,7 @@ export function ChatMock({ className }: { className?: string }) {
         <p className="max-w-[80%] rounded-2xl rounded-bl-sm bg-ivory-200 px-3.5 py-2.5">Saturday morning please.</p>
         <p className="rounded-lg border border-dashed border-cobalt/50 bg-softblue/60 px-3 py-2 font-mono text-[10px] text-cobalt-700">Lead captured · passed to the team for confirmation</p>
       </div>
-      <div className="flex items-center gap-2 border-t border-navy/10 p-3"><span className="flex-1 rounded-lg bg-ivory-200 px-3 py-2 text-[11px] text-muted">Type a message</span><span className="grid h-8 w-8 place-items-center rounded-lg bg-navy text-ivory"><Send size={14} aria-hidden /></span></div>
+      <div className="flex items-center gap-2 border-t border-navy/10 p-3"><span className="flex-1 rounded-lg bg-ivory-200 px-3 py-2 text-[11px] text-[#566075]">Type a message</span><span className="grid h-8 w-8 place-items-center rounded-lg bg-navy text-ivory"><Send size={14} aria-hidden /></span></div>
     </div>
   );
 }
