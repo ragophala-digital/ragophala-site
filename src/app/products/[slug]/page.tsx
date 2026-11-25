@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, Check, ShieldCheck } from "lucide-react";
+import { ArrowUpRight, Check, CircleCheck, Clock, Link2, ShieldCheck } from "lucide-react";
 import { Monogram, ProductCard } from "@/components/products/ProductCard";
 import { ProductStatus } from "@/components/products/ProductStatus";
 import { ProductWaitlistForm } from "@/components/products/ProductWaitlistForm";
@@ -25,6 +25,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 }
 
 const INTEGRATION_LABEL = { available: "Available", planned: "Planned", conceptual: "Conceptual" } as const;
+
+const INTEGRATION_ICON = { available: CircleCheck, planned: Clock, conceptual: Link2 } as const;
 
 function faqs(p: Product): { q: string; a: string }[] {
   const m = STATUS_META[p.status];
@@ -60,11 +62,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
         <div className="container-x relative">
           <Breadcrumb items={[{ label: "Products", href: "/products" }, { label: p.name }]} />
-          <div className="animate-rise grid items-start gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+          <div className="animate-rise grid items-start gap-7 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] xl:gap-14">
             <div>
               <div className="flex flex-wrap items-center gap-4"><Monogram product={p} size="lg" /><ProductStatus status={p.status} /></div>
               <p className="label mt-6">{p.division}</p>
-              <h1 className="display-lg mt-3">{p.name}</h1>
+              <h1 className="display-lg mt-3 [overflow-wrap:anywhere]">{p.name}</h1>
               <p className="body-lg mt-5">{p.description}</p>
               {p.longDescription && <p className="mt-4 max-w-[60ch] text-[15px] leading-relaxed text-[#566075]">{p.longDescription}</p>}
               <div className="mt-8 flex flex-wrap items-center gap-4">
@@ -72,11 +74,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
                 {isSafeUrl(p.pricingUrl) ? <a href={p.pricingUrl} target="_blank" rel="noopener noreferrer" className="link-underline text-sm font-medium">View pricing</a> : <span className="text-sm text-[#566075]">Pricing not yet available</span>}
               </div>
             </div>
-            <aside className="rounded-2xl border border-line bg-white p-6">
+            <aside className="rounded-2xl border border-line bg-white p-5 md:mt-4 xl:p-7">
               <ShieldCheck size={22} aria-hidden className="text-cobalt" />
               <h2 className="mt-3 font-display text-lg font-semibold tracking-tight">An independent product</h2>
               <p className="mt-2 text-sm leading-relaxed text-[#566075]">{p.name} is designed to work fully on its own. Nobody needs to buy another Ragophala Digital product to use it. Connecting products is always optional.</p>
-              <p className="mt-4 font-mono text-[10px] uppercase tracking-[.12em] text-[#566075]">Status: {STATUS_META[p.status].label}. {STATUS_META[p.status].meaning}</p>
+              <p className="mt-4 border-t border-line pt-4 text-sm leading-relaxed text-[#566075]">Status: {STATUS_META[p.status].label}. {STATUS_META[p.status].meaning}</p>
             </aside>
           </div>
         </div>
@@ -84,9 +86,9 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
 
       {p.features.length > 0 && (
         <section className="theme-soft section bg-softblue">
-          <div className="container-x grid gap-10 lg:grid-cols-[0.8fr_1.2fr]">
+          <div className="container-x grid gap-7 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] xl:gap-14">
             <div><p className="label mb-4">What it covers</p><h2 className="display-md">Built around these workflows.</h2></div>
-            <ul className="grid gap-3 sm:grid-cols-2">{p.features.map((f) => (<li key={f} className="flex gap-3 rounded-xl bg-white p-4 text-[15px]"><Check size={16} aria-hidden className="mt-1 shrink-0 text-cobalt" />{f}</li>))}</ul>
+            <ul className="divide-y divide-navy/15 border-y border-navy/15">{p.features.map((f) => (<li key={f} className="flex gap-3 px-1 py-3.5 text-[15px]"><Check size={16} aria-hidden className="mt-1 shrink-0 text-cobalt" />{f}</li>))}</ul>
           </div>
         </section>
       )}
@@ -115,10 +117,11 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
             <ul className="mt-8 divide-y divide-line border-y border-line">
               {p.integrations.map((i) => {
                 const other = getProduct(i.with);
+                const Icon = INTEGRATION_ICON[i.state];
                 return other ? (
                   <li key={i.with} className="flex flex-wrap items-center justify-between gap-3 py-4">
                     <span><Link href={`/products/${other.slug}`} className="font-display text-lg font-semibold hover:text-cobalt">{other.name}</Link>{i.note && <span className="block text-sm text-[#566075]">{i.note}</span>}</span>
-                    <span className="rounded-full bg-[#EDEAE4] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[#4d576b]">{INTEGRATION_LABEL[i.state]}</span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-[#EDEAE4] px-2.5 py-1 font-mono text-[10px] uppercase tracking-[.1em] text-[#4d576b]"><Icon size={13} aria-hidden />{INTEGRATION_LABEL[i.state]}</span>
                   </li>
                 ) : null;
               })}
@@ -128,15 +131,16 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
       )}
 
       <section className="theme-soft section bg-softblue">
-        <div className="container-x grid gap-12 lg:grid-cols-2">
+        <div className="container-x grid items-start gap-8 min-[900px]:grid-cols-2 xl:gap-16">
           <div>
-            <h2 className="display-md">Register your interest in {p.name}.</h2>
+            <p className="label mb-4">Product updates</p>
+            <h2 id="waitlist-heading" className="display-md [overflow-wrap:anywhere]">Register your interest in {p.name}.</h2>
             <p className="body-lg mt-4">Tell us you are interested and we will contact you about this product. Registering does not commit you to anything and is not a promise of a release date.</p>
             <dl className="mt-8 divide-y divide-navy/15 border-y border-navy/15">
               {items.map((f) => (<div key={f.q} className="py-4"><dt className="font-display text-base font-semibold">{f.q}</dt><dd className="mt-1 text-sm leading-relaxed text-[#3d475c]">{f.a}</dd></div>))}
             </dl>
           </div>
-          <ProductWaitlistForm initialProduct={p.slug} compact />
+          <ProductWaitlistForm initialProduct={p.slug} headingId="waitlist-heading" />
         </div>
       </section>
 

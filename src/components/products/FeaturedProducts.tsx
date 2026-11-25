@@ -5,40 +5,41 @@ import { featuredProducts, productCta, productHref } from "@/lib/products/helper
 import type { Product } from "@/lib/products/types";
 import { cn } from "@/lib/utils";
 import { Monogram } from "./ProductCard";
+import { ICONS } from "./icons";
 import { ProductStatus } from "./ProductStatus";
 
-/** Placeholder preview for products without a real screenshot. It is plainly illustrative and never labelled as a screenshot. */
-function Illustration({ p, dark }: { p: Product; dark?: boolean }) {
+/** Decorative product artwork for a feature without a screenshot. */
+function Shot({ p }: { p: Product }) {
+  const screenshot = p.screenshots[0];
+  const Icon = ICONS[p.icon];
+  if (screenshot) {
+    // eslint-disable-next-line @next/next/no-img-element
+    return <img src={screenshot.src} alt={screenshot.alt} loading="lazy" className="h-full w-full rounded-xl border border-line object-cover" />;
+  }
+
   return (
-    <div aria-hidden className={cn("relative h-full min-h-[180px] overflow-hidden rounded-xl p-4", dark ? "bg-white/5" : "bg-softblue")}>
-      <div className={cn("rounded-lg p-3", dark ? "bg-navy" : "bg-white")}>
-        <div className="flex items-center gap-2"><span className="h-2 w-2 rounded-full bg-cobalt" /><span className={cn("h-1.5 w-16 rounded-full", dark ? "bg-white/30" : "bg-navy/20")} /></div>
-        <div className="mt-3 space-y-2">{[78, 60, 70].map((w, i) => (<span key={i} className={cn("block h-1.5 rounded-full", dark ? "bg-white/15" : "bg-navy/10")} style={{ width: `${w}%` }} />))}</div>
-        <div className="mt-3 grid grid-cols-3 gap-2">{p.features.slice(0, 3).map((f) => (<span key={f} className={cn("truncate rounded-md px-1.5 py-1 text-center text-[9px]", dark ? "bg-white/10 text-slate" : "bg-softblue text-navy")}>{f}</span>))}</div>
+    <div aria-hidden className="relative isolate grid min-h-44 place-items-center overflow-hidden rounded-xl border border-white/10 bg-white/[.04]">
+      <div className="grid-lines absolute inset-0 opacity-75" />
+      <div className="absolute size-36 rounded-full border border-dashed border-cobalt-300/25" />
+      <div className="absolute size-28 rounded-full border border-cobalt-300/20" />
+      <div className="relative grid size-[4.5rem] -rotate-6 place-items-center rounded-2xl border border-cobalt-300/50 bg-navy text-cobalt-300 shadow-[5px_7px_0_rgba(49,91,250,0.4)]">
+        <Icon size={33} strokeWidth={1.5} />
       </div>
-      <p className={cn("absolute bottom-2 right-3 font-mono text-[9px] uppercase tracking-[.12em]", dark ? "text-slate" : "text-[#566075]")}>Illustration</p>
     </div>
   );
-}
-
-function Shot({ p, dark }: { p: Product; dark?: boolean }) {
-  const s = p.screenshots[0];
-  // Real screenshots are plain images from the product data. Without one, show the labelled illustration.
-  // eslint-disable-next-line @next/next/no-img-element
-  return s ? <img src={s.src} alt={s.alt} loading="lazy" className="h-full w-full rounded-xl border border-line object-cover" /> : <Illustration p={p} dark={dark} />;
 }
 
 function Benefits({ p }: { p: Product }) {
   return (
     <ul className="mt-4 grid gap-1.5 text-sm">
-      {p.features.slice(0, 4).map((f) => (<li key={f} className="flex gap-2"><Check size={15} aria-hidden className="mt-0.5 shrink-0 text-cobalt" />{f}</li>))}
+      {p.features.slice(0, 4).map((f) => (<li key={f} className="flex gap-2"><Check size={15} aria-hidden className="mt-0.5 shrink-0 text-accent" />{f}</li>))}
     </ul>
   );
 }
 
 function Action({ p, className }: { p: Product; className?: string }) {
   const c = productCta(p);
-  const cls = cn("inline-flex items-center gap-1.5 text-sm font-semibold", className);
+  const cls = cn("link-underline inline-flex w-fit items-center gap-1.5 text-sm font-semibold", className);
   return c.external ? <a href={c.href} target="_blank" rel="noopener noreferrer" className={cls}>{c.label}<ArrowUpRight size={15} aria-hidden /></a> : <Link href={c.href} className={cls}>{c.label}<ArrowUpRight size={15} aria-hidden /></Link>;
 }
 
@@ -49,10 +50,10 @@ export function FeaturedProducts() {
   return (
     <section className="section">
       <div className="container-x">
-        <SectionHead label="Featured" title="Built to solve everyday business challenges." text="Statuses are shown exactly as they are. Nothing here is available until it says so." />
-        <div className="grid gap-5 lg:grid-cols-12">
-          <Reveal className="lg:col-span-7">
-            <article className="theme-dark grid h-full gap-6 rounded-2xl bg-navy p-6 text-fg sm:grid-cols-2 sm:p-8">
+        <SectionHead label="Featured" title="Built to solve everyday business challenges." text="Explore tools for managing daily operations, customer work and business processes." />
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-12">
+          <Reveal className="sm:col-span-2 xl:col-span-7">
+            <article className="theme-dark grid h-full gap-6 rounded-2xl bg-navy p-5 text-fg md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] sm:p-8">
               <div>
                 <div className="flex items-center gap-3"><Monogram product={a} size="lg" /><ProductStatus status={a.status} /></div>
                 <h3 className="display-md mt-5 !text-3xl"><Link href={productHref(a.slug)}>{a.name}</Link></h3>
@@ -60,23 +61,23 @@ export function FeaturedProducts() {
                 <Benefits p={a} />
                 <Action p={a} className="mt-6 text-cobalt-300" />
               </div>
-              <Shot p={a} dark />
+              <Shot p={a} />
             </article>
           </Reveal>
-          <div className="grid gap-5 lg:col-span-5">
+          <div className="grid gap-4 sm:col-span-2 sm:grid-cols-2 xl:col-span-5 xl:grid-cols-1">
             {[b, c].filter(Boolean).map((p, i) => (
               <Reveal key={p.id} delay={0.06 * (i + 1)}>
-                <article className="h-full rounded-2xl border border-line bg-white p-6">
+                <article className="flex h-full flex-col rounded-2xl border border-line bg-white p-5 hover:border-cobalt/40 sm:p-6">
                   <div className="flex items-start justify-between gap-3"><Monogram product={p} /><ProductStatus status={p.status} /></div>
                   <h3 className="mt-4 font-display text-xl font-semibold tracking-tight"><Link href={productHref(p.slug)}>{p.name}</Link></h3>
-                  <p className="mt-2 text-sm leading-relaxed text-[#566075]">{p.description}</p>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-[#566075]">{p.description}</p>
                   <Action p={p} className="mt-4 text-heading" />
                 </article>
               </Reveal>
             ))}
           </div>
           {rest.map((p, i) => (
-            <Reveal key={p.id} delay={0.05 * i} className="lg:col-span-4">
+            <Reveal key={p.id} delay={0.05 * i} className="sm:last:odd:col-span-2 xl:col-span-4 xl:last:odd:col-span-4">
               <article className="flex h-full flex-col rounded-2xl bg-softblue p-6">
                 <div className="flex items-start justify-between gap-3"><Monogram product={p} /><ProductStatus status={p.status} /></div>
                 <h3 className="mt-4 font-display text-xl font-semibold tracking-tight"><Link href={productHref(p.slug)}>{p.name}</Link></h3>

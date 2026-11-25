@@ -1,7 +1,9 @@
-import { ArrowDown, ArrowRight } from "lucide-react";
+import Link from "next/link";
+import { ArrowDown, ArrowRight, ArrowUpRight } from "lucide-react";
 import { getProduct } from "@/lib/products/helpers";
 import type { IntegrationState } from "@/lib/products/types";
 import { cn } from "@/lib/utils";
+import { ICONS } from "./icons";
 
 /** Illustrative chain. Every connection here is "conceptual" or "planned": none is described as working. */
 const CHAIN = [
@@ -27,12 +29,16 @@ const LEGEND: { state: IntegrationState; label: string; meaning: string }[] = [
 function Node({ slug, note, optional }: { slug: string; note: string; optional?: boolean }) {
   const p = getProduct(slug);
   if (!p) return null;
+  const Icon = ICONS[p.icon];
   return (
-    <li className={cn("rounded-xl border p-4", optional ? "border-dashed border-white/25 bg-transparent" : "border-white/15 bg-white/[.06]")}>
-      <p className="font-display text-base font-semibold text-ivory">{p.name}</p>
-      <p className="mt-0.5 text-xs text-slate">{note}</p>
-      <p className="mt-2 font-mono text-[10px] uppercase tracking-[.12em] text-cobalt-300">Works on its own</p>
-    </li>
+    <Link href={`/products/${p.slug}`} className={`flex h-full min-w-0 items-center gap-3 rounded-xl border p-3.5 transition-colors hover:border-cobalt-300 ${optional ? "border-dashed border-white/25" : "border-white/15 bg-white/[.06] min-[1100px]:flex-wrap min-[1100px]:content-start"}`}>
+      <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-cobalt/20 text-cobalt-300"><Icon size={18} aria-hidden /></span>
+      <span className={optional ? "min-w-0 flex-1" : "min-w-0 flex-1 min-[1100px]:basis-full"}>
+        <span className="block font-display text-sm font-semibold text-ivory">{p.name}</span>
+        <span className="mt-1 block text-xs leading-relaxed text-slate">{note}</span>
+      </span>
+      <ArrowUpRight size={14} aria-hidden className={optional ? "shrink-0 text-cobalt-300" : "shrink-0 text-cobalt-300 min-[1100px]:absolute min-[1100px]:right-3.5 min-[1100px]:top-4"} />
+    </Link>
   );
 }
 
@@ -47,28 +53,28 @@ export function EcosystemDiagram() {
           <p className="body-lg mt-5">Every Ragophala Digital product is designed to solve a specific operational problem. Businesses can adopt the tools they need independently and connect compatible systems when their operations require it.</p>
         </div>
 
-        <figure className="mt-12" aria-label="Illustrative example of products that could connect">
-          <ol className="grid items-stretch gap-2 lg:grid-cols-[repeat(9,auto)] lg:gap-3">
+        <figure className="mt-8 lg:mt-12" aria-label="Illustrative example of products that could connect">
+          <ol className="mx-auto grid max-w-2xl gap-2 min-[1100px]:max-w-none min-[1100px]:grid-cols-5 min-[1100px]:gap-7">
             {CHAIN.map((n, i) => (
-              <li key={n.slug} className="contents">
-                <ul className="m-0 list-none p-0"><Node {...n} /></ul>
+              <li key={n.slug} className="relative min-w-0">
+                <div className="min-[1100px]:h-full"><Node {...n} /></div>
                 {i < CHAIN.length - 1 && (
-                  <span aria-hidden className="grid place-items-center text-cobalt-300 lg:px-1">
-                    <ArrowDown size={20} className="lg:hidden" />
-                    <ArrowRight size={20} className="hidden lg:block eco-pulse" />
+                  <span aria-hidden className="mt-2 grid place-items-center text-cobalt-300 min-[1100px]:absolute min-[1100px]:-right-6 min-[1100px]:top-1/2 min-[1100px]:mt-0 min-[1100px]:-translate-y-1/2">
+                    <ArrowDown size={20} className="min-[1100px]:hidden" />
+                    <ArrowRight size={20} className="hidden min-[1100px]:block" />
                   </span>
                 )}
               </li>
             ))}
           </ol>
           <p className="mt-6 font-mono text-[10px] uppercase tracking-[.14em] text-slate">Optional connections</p>
-          <ul className="mt-3 grid gap-3 sm:grid-cols-3">{OPTIONAL.map((n) => (<Node key={n.slug} {...n} optional />))}</ul>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-3">{OPTIONAL.map((n) => (<li key={n.slug}><Node {...n} optional /></li>))}</ul>
           <figcaption className="mt-8 rounded-xl border border-white/10 bg-white/[.04] p-5">
-            <p className="text-sm leading-relaxed text-slate"><strong className="text-ivory">This is an illustration.</strong> It shows how products could connect, not integrations that exist today. Each product works fully on its own, and nobody needs to buy one product to use another.</p>
+            <p className="text-sm leading-relaxed text-slate"><strong className="text-ivory">Illustrative workflow.</strong> The arrows show possible connections between independent products. Each product is designed to work on its own.</p>
             <ul className="mt-4 grid gap-2 sm:grid-cols-3">
               {LEGEND.map((l) => (
                 <li key={l.state} className="flex items-start gap-2.5 text-xs text-slate">
-                  <span aria-hidden className={cn("mt-1 h-2 w-6 shrink-0 rounded-full", l.state === "available" ? "bg-emerald-400" : l.state === "planned" ? "border-b-2 border-dashed border-cobalt-300" : "border-b-2 border-dotted border-slate")} />
+                  <span aria-hidden className={cn("mt-1 h-2 w-6 shrink-0 rounded-full", l.state === "available" ? "bg-cobalt-300" : l.state === "planned" ? "border-b-2 border-dashed border-cobalt-300" : "border-b-2 border-dotted border-slate")} />
                   <span><strong className="text-ivory">{l.label}.</strong> {l.meaning}</span>
                 </li>
               ))}

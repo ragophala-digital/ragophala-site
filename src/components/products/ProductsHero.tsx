@@ -10,7 +10,7 @@ function EcosystemIllustration() {
     return { d, x: 50 + Math.cos(a) * 36, y: 50 + Math.sin(a) * 36 };
   });
   return (
-    <div className="relative mx-auto aspect-square w-full max-w-[520px]" role="img" aria-label="Seven independent product families arranged around optional connections between them">
+    <div className="relative mx-auto aspect-square w-full max-w-[360px] lg:max-w-[480px]" role="img" aria-label="Seven independent product families arranged around optional connections between them">
       <svg aria-hidden viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
         {pts.map((p, i) => {
           const n = pts[(i + 1) % pts.length];
@@ -25,9 +25,9 @@ function EcosystemIllustration() {
         const Icon = ICONS[d.icon];
         return (
           <div key={d.id} className="absolute w-[26%] -translate-x-1/2 -translate-y-1/2" style={{ left: `${x}%`, top: `${y}%` }}>
-            <div className="animate-rise rounded-xl border border-navy/10 bg-white p-2.5 shadow-[0_18px_30px_-22px_rgba(16,24,39,.45)]" style={{ animationDelay: `${0.1 + i * 0.08}s` }}>
+            <div className="animate-rise rounded-xl border border-navy/10 bg-white p-2 sm:p-2.5 shadow-[0_18px_30px_-22px_rgba(16,24,39,.45)]" style={{ animationDelay: `${0.1 + i * 0.08}s` }}>
               <span className="grid h-7 w-7 place-items-center rounded-md bg-softblue text-cobalt"><Icon size={14} aria-hidden /></span>
-              <p className="mt-2 truncate font-display text-[11px] font-semibold leading-tight text-navy sm:text-xs">{d.short}</p>
+              <p className="mt-2 font-display text-[10px] font-semibold leading-tight text-navy sm:text-xs">{d.short}</p>
               <span className="mt-1.5 block h-1 w-3/4 rounded-full bg-navy/10" />
               <span className="mt-1 block h-1 w-1/2 rounded-full bg-navy/5" />
             </div>
@@ -42,7 +42,7 @@ export function ProductsHero() {
   return (
     <section className="relative overflow-hidden pb-16 pt-32 sm:pt-40 lg:pb-24">
       <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
-      <div className="container-x relative grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
+      <div className="container-x relative grid items-center gap-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:gap-14">
         <div className="animate-rise">
           <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />Ragophala Digital / Software ecosystem</p>
           <h1 className="display-lg max-w-[14ch]">Software for the way businesses work.</h1>

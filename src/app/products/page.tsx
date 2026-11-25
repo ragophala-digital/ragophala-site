@@ -37,7 +37,16 @@ export default function ProductsPage() {
             <h2 className="display-md">Explore our software.</h2>
             <p className="body-lg mt-5">Discover software solutions designed for the different ways businesses operate. Every product shows its real status, so you always know what is available today.</p>
           </Reveal>
-          <Suspense fallback={<div aria-busy="true" className="h-[480px] animate-pulse rounded-2xl bg-white/60" />}>
+          <Suspense fallback={<div role="status">
+            <span className="sr-only">Loading product directory</span>
+            <div aria-hidden className="motion-safe:animate-pulse">
+              <div className="h-12 rounded-xl border border-line bg-white" />
+              <div className="mt-6 flex gap-2"><div className="h-8 w-24 rounded-full bg-softblue" /><div className="h-8 w-32 rounded-full bg-softblue" /></div>
+              <div className="mt-8 grid gap-5 sm:grid-cols-2 min-[1100px]:grid-cols-3">
+                {[0, 1, 2].map((i) => <div key={i} className="h-48 rounded-2xl border border-line bg-white" />)}
+              </div>
+            </div>
+          </div>}>
             <ProductDirectory products={PRODUCTS} />
           </Suspense>
         </div>

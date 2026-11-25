@@ -3,7 +3,6 @@ import { ArrowUpRight, Compass, Link2, Network, Sprout, Target, Layers, Wrench, 
 import { Reveal, SectionHead, LinkButton } from "@/components/ui";
 import { DIVISIONS } from "@/lib/products/categories";
 import { countByDivision } from "@/lib/products/helpers";
-import { cn } from "@/lib/utils";
 import { ICONS } from "./icons";
 
 export function EcosystemIntro() {
@@ -42,28 +41,28 @@ export function ProductDivisions() {
     <section className="section">
       <div className="container-x">
         <SectionHead label="Software divisions" title="Solutions across the business landscape." text="Choose a division to filter the catalogue below." />
-        <div className="grid gap-4 lg:grid-cols-12">
-          <Reveal className="lg:col-span-5 lg:row-span-2">
-            <Link href={`/products?category=${lead.id}#directory`} className="theme-dark group flex h-full min-h-[280px] flex-col justify-between rounded-2xl bg-navy p-7 text-fg transition hover:-translate-y-0.5">
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-12">
+          <Reveal className="sm:col-span-2 xl:col-span-5 xl:row-span-2">
+            <Link href={`/products?category=${lead.id}#directory`} className="theme-dark group flex h-full min-h-[240px] flex-col justify-between gap-8 rounded-2xl bg-navy p-5 sm:p-7 text-fg transition motion-safe:hover:-translate-y-0.5">
               <div className="flex items-start justify-between"><span className="grid h-12 w-12 place-items-center rounded-xl bg-cobalt/20 text-cobalt-300"><LeadIcon size={22} aria-hidden /></span><span className="font-mono text-xs text-cobalt-300">{counts[lead.id]} products</span></div>
               <div>
                 <h3 className="display-md !text-3xl">{lead.label}</h3>
                 <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-slate">{lead.intro}</p>
-                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium">Explore division <ArrowUpRight size={15} aria-hidden className="transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5" /></span>
+                <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium">Explore division <ArrowUpRight size={15} aria-hidden className="transition group-motion-safe:hover:-translate-y-0.5 group-hover:translate-x-0.5" /></span>
               </div>
             </Link>
           </Reveal>
           {rest.map((d, i) => {
             const Icon = ICONS[d.icon];
             return (
-              <Reveal key={d.id} delay={i * 0.05} className={cn(i < 2 ? "lg:col-span-7 sm:grid" : "lg:col-span-4")}>
-                <Link href={`/products?category=${d.id}#directory`} className="group flex h-full items-start gap-4 rounded-2xl border border-line bg-white p-5 transition hover:-translate-y-0.5 hover:border-cobalt/40">
+              <Reveal key={d.id} delay={i * 0.05} className={i < 2 ? "xl:col-span-7" : "xl:col-span-3"}>
+                <Link href={`/products?category=${d.id}#directory`} className="group flex h-full flex-col gap-3 rounded-2xl border border-line bg-white p-5 xl:flex-row xl:gap-4 transition motion-safe:hover:-translate-y-0.5 hover:border-cobalt/40">
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-softblue text-cobalt"><Icon size={20} aria-hidden /></span>
-                  <span className="min-w-0 flex-1">
-                    <span className="flex items-baseline justify-between gap-3"><span className="font-display text-lg font-semibold tracking-tight">{d.label}</span><span className="shrink-0 font-mono text-[11px] text-[#566075]">{counts[d.id]}</span></span>
-                    <span className="mt-1 block text-sm leading-relaxed text-[#566075]">{d.intro}</span>
+                  <div className="flex w-full min-w-0 flex-1 flex-col">
+                    <div className="flex items-baseline justify-between gap-3"><h3 className="font-display text-lg font-semibold tracking-tight">{d.label}</h3><span className="shrink-0 font-mono text-[11px] text-[#566075]" aria-label={`${counts[d.id]} products`}>{counts[d.id]}</span></div>
+                    <span className="mt-1 flex-1 text-sm leading-relaxed text-[#566075]">{d.intro}</span>
                     <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-heading">Explore division <ArrowUpRight size={14} aria-hidden /></span>
-                  </span>
+                  </div>
                 </Link>
               </Reveal>
             );

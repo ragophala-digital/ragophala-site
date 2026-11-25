@@ -10,7 +10,7 @@ import type { Product, ProductFilters, SortKey } from "@/lib/products/types";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "./ProductCard";
 
-const PAGE = 24;
+const PAGE = 12;
 
 /** Searchable, filterable catalogue. Filters live in the URL so a filtered view can be shared. */
 export function ProductDirectory({ products }: { products: readonly Product[] }) {
@@ -31,7 +31,15 @@ export function ProductDirectory({ products }: { products: readonly Product[] })
     const qs = filtersToQuery(next);
     router.replace(qs ? `${pathname}?${qs}#directory` : `${pathname}#directory`, { scroll: false });
   };
-  const patch = (p: Partial<ProductFilters>) => apply({ ...filters, ...p });
+  const patch = (p: Partial<ProductFilters>) => {
+    clearTimeout(timer.current);
+    apply({ ...filters, query: text, ...p });
+  };
+  const clearFilters = () => {
+    clearTimeout(timer.current);
+    setText("");
+    apply(DEFAULT_FILTERS);
+  };
 
   const onType = (v: string) => {
     setText(v);
@@ -91,25 +99,25 @@ export function ProductDirectory({ products }: { products: readonly Product[] })
       </div>
 
       <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-5">
-        <p className="text-sm text-[#566075]" role="status" aria-live="polite">
+        <p className="break-words text-sm text-[#566075] [overflow-wrap:anywhere]" role="status" aria-live="polite">
           <span className="font-display text-lg font-semibold text-heading">{results.length}</span> {results.length === 1 ? "product" : "products"}
           {active && <> matching{filters.query.trim() ? <> “{filters.query.trim()}”</> : null}{catLabel ? <> in {catLabel}</> : null}{filters.status !== "all" ? <> · {STATUS_META[filters.status].label}</> : null}</>}
         </p>
-        {active && (<button type="button" onClick={() => apply(DEFAULT_FILTERS)} className="inline-flex items-center gap-1.5 rounded-lg border border-navy/20 px-3 py-1.5 text-sm hover:border-cobalt"><X size={14} aria-hidden /> Clear all filters</button>)}
+        {active && (<button type="button" onClick={clearFilters} className="inline-flex items-center gap-1.5 rounded-lg border border-navy/20 px-3 py-1.5 text-sm hover:border-cobalt"><X size={14} aria-hidden /> Clear all filters</button>)}
       </div>
 
       {results.length === 0 ? (
-        <div className="mt-8 rounded-2xl border border-dashed border-navy/25 bg-white/60 p-10 text-center" role="status">
+        <div className="mt-8 rounded-2xl border border-dashed border-navy/25 bg-white/60 px-5 py-8 sm:p-10 text-center" role="status">
           <p className="font-display text-xl font-semibold">No products match your search.</p>
           <p className="mx-auto mt-2 max-w-md text-sm text-[#566075]">Try a different word, or clear the filters to see the whole catalogue. If you need software we haven&apos;t listed, tell us about it.</p>
           <div className="mt-5 flex flex-wrap justify-center gap-3">
-            <button type="button" onClick={() => apply(DEFAULT_FILTERS)} className="btn btn-primary">Clear all filters</button>
+            <button type="button" onClick={clearFilters} className="btn btn-primary">Clear all filters</button>
             <Link href="/contact" className="btn btn-line">Tell us what you need</Link>
           </div>
         </div>
       ) : (
         <>
-          <ul className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <ul className="mt-8 grid gap-5 sm:grid-cols-2 min-[1100px]:grid-cols-3">
             {shown.map((p) => (<li key={p.id}><ProductCard product={p} /></li>))}
           </ul>
           {results.length > shown.length && (
