@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { AnimatePresence, motion, useScroll, useSpring } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { Activity, ArrowUpRight, Bot, ChevronDown, Globe, LayoutDashboard, Menu, ShieldCheck, Workflow, X, type LucideIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { NAV, SERVICES, type ServiceKey } from "@/lib/site";
@@ -102,9 +102,31 @@ function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boole
 
 /** Full-screen menu. Rendered outside the header so the header's blur cannot shrink it. */
 function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
+  const reduceMotion = useReducedMotion();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    const trigger = document.activeElement;
+    closeRef.current?.focus();
+    return () => {
+      if (trigger instanceof HTMLElement) trigger.focus();
+    };
+  }, []);
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
+      if (e.key !== "Tab") return;
+      const controls = menuRef.current?.querySelectorAll<HTMLElement>("a[href], button");
+      if (!controls?.length) return;
+      const first = controls[0];
+      const last = controls[controls.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -112,14 +134,15 @@ function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
 
   return (
     <motion.div
+      ref={menuRef}
       id="mobile-menu"
       role="dialog"
       aria-modal="true"
       aria-label="Site menu"
-      initial={{ clipPath: "circle(0% at calc(100% - 40px) 34px)" }}
-      animate={{ clipPath: "circle(150% at calc(100% - 40px) 34px)" }}
-      exit={{ clipPath: "circle(0% at calc(100% - 40px) 34px)" }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduceMotion ? false : { opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className="theme-dark fixed inset-0 z-[70] flex flex-col overflow-hidden bg-navy lg:hidden"
     >
       <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
@@ -128,37 +151,37 @@ function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
 
       <div className="relative z-10 flex h-[68px] shrink-0 items-center justify-between px-5">
         <Wordmark dark onClick={onClose} />
-        <button type="button" onClick={onClose} aria-label="Close menu" className="rounded-lg border border-white/25 p-2 text-ivory transition hover:border-cobalt-300">
+        <button ref={closeRef} type="button" onClick={onClose} aria-label="Close menu" className="rounded-lg border border-white/25 p-2 text-ivory transition hover:border-cobalt-300">
           <X size={22} />
         </button>
       </div>
 
-      <nav aria-label="Mobile" className="relative z-10 flex flex-1 flex-col items-center justify-center overflow-y-auto px-6 py-6 text-center">
+      <nav aria-label="Mobile" className="relative z-10 flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 py-6 text-center">
         <ul className="w-full max-w-sm">
           {MENU_LINKS.map((n, i) => {
             const active = n.href === "/" ? path === "/" : path.startsWith(n.href);
             return (
-              <motion.li key={n.href} initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 + 0.055 * i, duration: 0.5, ease: [0.22, 1, 0.36, 1] }}>
+              <li key={n.href}>
                 <Link href={n.href} onClick={onClose} aria-current={active ? "page" : undefined} className={cn("group flex items-center justify-center gap-3 py-3.5 font-display text-[clamp(2rem,9vw,2.8rem)] font-semibold leading-none tracking-[-0.03em] transition-colors", active ? "text-cobalt-300" : "text-ivory hover:text-cobalt-300")}>
                   <span className="font-mono text-[11px] font-normal tracking-widest text-muted">0{i + 1}</span>
                   {n.label}
                 </Link>
-              </motion.li>
+              </li>
             );
           })}
         </ul>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.6, duration: 0.5 }} className="mt-6 w-full max-w-sm">
+        <div className="mt-6 w-full max-w-sm">
           <p className="label mb-3">Services</p>
           <ul className="grid grid-cols-2 gap-2 text-left">
             {SERVICES.map((sv) => (<li key={sv.key}><Link href={sv.href} onClick={onClose} className="block rounded-lg border border-white/15 px-3 py-2.5 text-xs leading-snug text-ivory transition hover:border-cobalt-300">{sv.title}</Link></li>))}
           </ul>
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.65, duration: 0.5 }} className="mt-6 w-full max-w-sm">
+        </div>
+        <div className="mt-6 w-full max-w-sm">
           <Link href="/contact" onClick={onClose} className="btn btn-primary w-full">
             Start a project <ArrowUpRight size={16} aria-hidden />
           </Link>
           <p className="mt-6 font-mono text-[10px] uppercase tracking-[.2em] text-muted">RD / 2026 / Digital</p>
-        </motion.div>
+        </div>
       </nav>
     </motion.div>
   );
