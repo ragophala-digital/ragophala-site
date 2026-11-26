@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { HomeFleetPreview, HomeServicePreview } from "@/components/HomeServicePreview";
 import { MOCK_HEIGHT, MOCK_WIDTH, ProjectMock } from "@/components/ProjectMock";
+import { ScrollCompanion } from "@/components/ScrollCompanion";
 import { Reveal } from "@/components/ui";
 import { ScaleToFit } from "@/components/ui-motion";
 import { WorkflowDepth } from "@/components/WorkflowDepth";
@@ -62,7 +63,8 @@ function WorkflowPreview() {
 export default function Home() {
   return (
     <div className="bg-ivory text-heading">
-      <section className="theme-dark relative border-b border-line bg-navy text-fg">
+      <ScrollCompanion />
+      <section data-scene-stage className="theme-dark relative border-b border-line bg-navy text-fg">
         <div className="container-x relative grid items-center gap-8 pb-12 pt-28 sm:pb-16 sm:pt-32 lg:grid-cols-[1.06fr_0.94fr] lg:gap-12 lg:pb-16 lg:pt-32 xl:gap-20">
           <div className="min-w-0">
             <p className="label">South African digital studio</p>
@@ -87,7 +89,7 @@ export default function Home() {
         </ul>
       </div>
 
-      <section id="home-services" className="scroll-mt-24 bg-white py-16 sm:py-20 lg:py-24">
+      <section id="home-services" data-scene-stage className="scroll-mt-24 bg-white py-16 sm:py-20 lg:py-24">
         <div className="container-x">
           <p className={eyebrow}>What we do</p>
           <h2 className="display-md mt-3 max-w-[25ch]">Four ways to improve how your business works.</h2>
@@ -122,7 +124,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-y border-line bg-softblue py-16 sm:py-20">
+      <section data-scene-stage className="border-y border-line bg-softblue py-16 sm:py-20">
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-5">
             <div>
@@ -160,7 +162,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-white py-16 sm:py-20 lg:py-24">
+      <section data-scene-stage className="bg-white py-16 sm:py-20 lg:py-24">
         <div className="container-x grid gap-8 lg:grid-cols-[.8fr_1.2fr] lg:gap-16">
           <div>
             <p className={eyebrow}>How we work</p>
@@ -178,7 +180,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="border-y border-line py-16 sm:py-20">
+      <section data-scene-stage className="border-y border-line py-16 sm:py-20">
         <div className="container-x">
           <p className={eyebrow}>The studio</p>
           <h2 className="display-md mt-3">Built around your business.</h2>
