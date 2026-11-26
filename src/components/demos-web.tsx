@@ -1,17 +1,30 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Monitor, Smartphone, Tablet } from "lucide-react";
-import { useState } from "react";
+import { ArrowUpRight, Monitor, Smartphone, Tablet } from "lucide-react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import { BrowserFrame, SiteMock } from "./mockups-web";
 
 type Device = "desktop" | "tablet" | "mobile";
 
+/** A real, live project shown at each screen width using screenshots taken at that width. */
+export interface ShowcaseSite {
+  name: string;
+  url: string;
+  shots: Record<Device, { src: string; width: number; height: number }>;
+}
+
 const DEVICES: Record<Device, { label: string; icon: typeof Monitor; w: string; h: string; r: number; border: number }> = {
   desktop: { label: "Desktop", icon: Monitor, w: "100%", h: "100%", r: 12, border: 1 },
   tablet: { label: "Tablet", icon: Tablet, w: "58%", h: "96%", r: 24, border: 8 },
   mobile: { label: "Mobile", icon: Smartphone, w: "27%", h: "98%", r: 26, border: 7 },
+};
+
+/** Real screenshots need more room than the sketch, especially on a phone. */
+const SITE_FRAMES: Record<"wide" | "narrow", Record<Device, { w: string; h: string }>> = {
+  wide: { desktop: { w: "100%", h: "100%" }, tablet: { w: "62%", h: "96%" }, mobile: { w: "30%", h: "98%" } },
+  narrow: { desktop: { w: "100%", h: "100%" }, tablet: { w: "82%", h: "96%" }, mobile: { w: "56%", h: "98%" } },
 };
 
 const bar = "block rounded-full bg-navy/10";
@@ -54,10 +67,22 @@ function ResponsiveSite({ device }: { device: Device }) {
   );
 }
 
-/** Switch between desktop, tablet and mobile and watch one website adapt. */
-export function DeviceShowcase({ className }: { className?: string }) {
+/** Switch between desktop, tablet and mobile and watch one website adapt. Pass `site` to show a real project. */
+export function DeviceShowcase({ className, site }: { className?: string; site?: ShowcaseSite }) {
   const [device, setDevice] = useState<Device>("desktop");
+  const [narrow, setNarrow] = useState(false);
   const d = DEVICES[device];
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const on = () => setNarrow(mq.matches);
+    on();
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, []);
+
+  const frame = site ? SITE_FRAMES[narrow ? "narrow" : "wide"][device] : { w: d.w, h: d.h };
+  const shot = site?.shots[device];
   return (
     <div className={className}>
       <div role="tablist" aria-label="Preview device" className="mb-4 inline-flex rounded-xl border border-line bg-card p-1">
@@ -71,12 +96,26 @@ export function DeviceShowcase({ className }: { className?: string }) {
           );
         })}
       </div>
-      <div className="relative flex aspect-[16/10] w-full items-center justify-center rounded-2xl bg-gradient-to-br from-softblue to-ivory-200 p-4 sm:p-7">
-        <motion.div layout animate={{ width: d.w, height: d.h, borderRadius: d.r, borderWidth: d.border }} transition={{ type: "spring", stiffness: 140, damping: 22 }} className="overflow-hidden border-solid border-navy bg-white shadow-[0_40px_70px_-35px_rgba(16,24,39,.6)]" role="img" aria-label={`Website preview on ${d.label.toLowerCase()}`}>
-          <ResponsiveSite device={device} />
+      <div className={cn("relative flex w-full items-center justify-center rounded-2xl bg-gradient-to-br from-softblue to-ivory-200 p-4 sm:p-7", site ? "h-[520px] sm:aspect-[16/10] sm:h-auto" : "aspect-[16/10]")}>
+        <motion.div layout animate={{ width: frame.w, height: frame.h, borderRadius: d.r, borderWidth: d.border }} transition={{ type: "spring", stiffness: 140, damping: 22 }} className="overflow-hidden border-solid border-navy bg-white shadow-[0_40px_70px_-35px_rgba(16,24,39,.6)]" role="img" aria-label={site ? `${site.name} website on ${d.label.toLowerCase()}` : `Website preview on ${d.label.toLowerCase()}`}>
+          {site && shot ? (
+            <div key={device} className="h-full overflow-y-auto overscroll-contain" tabIndex={0} aria-label={`Scrollable ${site.name} preview, ${d.label.toLowerCase()} layout`}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={shot.src} width={shot.width} height={shot.height} alt="" loading="lazy" decoding="async" className="block h-auto w-full" />
+            </div>
+          ) : (
+            <ResponsiveSite device={device} />
+          )}
         </motion.div>
       </div>
-      <p className="mt-3 font-mono text-[10px] uppercase tracking-[.16em] text-muted">Illustrative website · {d.label} layout</p>
+      {site ? (
+        <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[.16em] text-muted">
+          <span>Real project · {site.name} · {d.label} layout. Scroll inside the frame.</span>
+          <a href={site.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#2447D6] underline underline-offset-2">Visit the live site <ArrowUpRight size={11} aria-hidden /></a>
+        </p>
+      ) : (
+        <p className="mt-3 font-mono text-[10px] uppercase tracking-[.16em] text-muted">Illustrative website · {d.label} layout</p>
+      )}
     </div>
   );
 }
