@@ -6,9 +6,6 @@ import { useCapability } from "@/components/three/capability";
 
 const CompanionScene = dynamic(() => import("@/components/three/companion").then((m) => ({ default: m.CompanionScene })), { ssr: false });
 
-/** Narrower screens have no spare margin beside the content, so the companion would sit on top of it. */
-const MIN_WIDTH = 1366;
-
 interface NetworkInformation {
   saveData?: boolean;
   effectiveType?: string;
@@ -21,16 +18,16 @@ function isConstrained() {
 }
 
 /**
- * A small 3D companion that rides the right margin and reshapes as the visitor scrolls.
+ * A small 3D companion that glides to a landing slot in each home-page section and reshapes there.
  * Decorative only. It downloads nothing until the page has loaded and the browser is idle,
- * and never on small screens, reduced motion, no WebGL or a saving-data connection.
+ * and never with reduced motion, no WebGL or a saving-data connection. Works on phones too.
  */
 export function ScrollCompanion() {
   const { ready, ok } = useCapability();
   const [go, setGo] = useState(false);
 
   useEffect(() => {
-    if (!ready || !ok || window.innerWidth < MIN_WIDTH || isConstrained()) return;
+    if (!ready || !ok || isConstrained()) return;
     const start = () => setGo(true);
     const idle = typeof window.requestIdleCallback === "function";
     const id = idle ? window.requestIdleCallback(start, { timeout: 2500 }) : window.setTimeout(start, 1500);
@@ -39,7 +36,7 @@ export function ScrollCompanion() {
 
   if (!go) return null;
   return (
-    <div aria-hidden className="companion pointer-events-none fixed right-0 top-1/2 z-10 hidden h-[360px] w-[120px] -translate-y-1/2 min-[1366px]:block">
+    <div aria-hidden className="companion pointer-events-none fixed inset-0 z-10">
       <CompanionScene />
     </div>
   );

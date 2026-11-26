@@ -1,9 +1,10 @@
 import Link from "next/link";
-import type { CSSProperties } from "react";
 import {
-  ArrowRight, ArrowUpRight, Bot, Check, ChevronDown, Code2, Globe2,
+  ArrowRight, ArrowUpRight, Bot, Check, Code2, Globe2,
   LayoutDashboard, Workflow,
 } from "lucide-react";
+import { HeroBackdrop } from "@/components/HeroBackdrop";
+import { EnquiryWorkspace } from "@/components/EnquiryWorkspace";
 import { HomeFleetPreview, HomeServicePreview } from "@/components/HomeServicePreview";
 import { MOCK_HEIGHT, MOCK_WIDTH, ProjectMock } from "@/components/ProjectMock";
 import { ScrollCompanion } from "@/components/ScrollCompanion";
@@ -25,59 +26,29 @@ const primary = "btn btn-primary";
 const secondary = "btn btn-line";
 const eyebrow = "font-mono text-xs font-medium uppercase tracking-[.16em] text-[#2447D6]";
 
-function WorkflowPreview() {
-  const steps = [
-    { title: "Website enquiry", detail: "Can you help us manage online bookings?", icon: Globe2 },
-    { title: "AI assistant qualifies the request", detail: "What do you use to take bookings today?", icon: Bot },
-    { title: "CRM receives the details", detail: "Website enquiry · Booking workflow", icon: LayoutDashboard },
-    { title: "Team notified · Human follow-up", detail: "A team member reviews the enquiry and takes over.", icon: Check },
-  ];
-
-  return (
-    <figure className="min-w-0 overflow-hidden rounded-2xl border border-white/15 bg-[#172234] text-ivory shadow-2xl">
-      <figcaption className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/15 px-4 py-3 sm:px-5">
-        <span className="font-display text-sm font-semibold">Enquiry workspace</span>
-        <span className="font-mono text-[10px] uppercase tracking-wider text-slate">Illustrative sample data</span>
-      </figcaption>
-      <ol className="p-3 sm:p-5">
-        {steps.map(({ title, detail, icon: Icon }, i) => (
-          <li key={title} className={styles.step} style={{ "--step": i } as CSSProperties}>
-            <details name="enquiry-workflow" open={i === 0} className={`${styles.panel} group rounded-lg border border-white/15 bg-navy open:border-cobalt-300/70`}>
-              <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 px-3 py-2 text-sm font-semibold [&::-webkit-details-marker]:hidden">
-                <span className="grid size-8 shrink-0 place-items-center rounded-md bg-cobalt/20 text-cobalt-300"><Icon size={16} aria-hidden /></span>
-                <span className="flex-1">{title}</span>
-                <ChevronDown size={16} className="shrink-0 text-cobalt-300 group-open:rotate-180 motion-safe:transition-transform" aria-hidden />
-              </summary>
-              <div className="border-t border-white/10 px-3 py-2.5 text-xs leading-relaxed text-slate sm:pl-14">{detail}</div>
-            </details>
-          </li>
-        ))}
-      </ol>
-      <div className="border-t border-white/15 px-4 py-3 sm:px-5">
-        <Link href="/business-automation#automation" className="inline-flex min-h-8 items-center gap-2 text-sm font-medium text-cobalt-300 hover:underline">Try the automation demo <ArrowUpRight size={15} aria-hidden /></Link>
-      </div>
-    </figure>
-  );
-}
-
 export default function Home() {
   return (
     <div className="bg-ivory text-heading">
       <ScrollCompanion />
-      <section data-scene-stage className="theme-dark relative border-b border-line bg-navy text-fg">
+      <section data-scene-stage className="theme-dark relative overflow-hidden border-b border-line bg-navy text-fg">
+        <HeroBackdrop />
         <div className="container-x relative grid items-center gap-8 pb-12 pt-28 sm:pb-16 sm:pt-32 lg:grid-cols-[1.06fr_0.94fr] lg:gap-12 lg:pb-16 lg:pt-32 xl:gap-20">
-          <div className="min-w-0">
+          <div className="relative min-w-0">
             <p className="label">South African digital studio</p>
             <h1 className="mt-5 max-w-[16ch] font-display text-[clamp(2.35rem,5.25vw,4.85rem)] font-semibold leading-[1.02] tracking-[-.065em]">
-              Digital solutions. <span className="block text-cobalt-300">Built for business.</span>
+              Turn enquiries <span className="block text-cobalt-300">into customers.</span>
             </h1>
-            <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-muted sm:text-lg">We build websites, web applications, AI assistants and business automation for South African businesses.</p>
+            <p className="mt-5 max-w-[46ch] text-base leading-relaxed text-muted sm:text-lg">Websites, web applications, AI assistants and automation that capture, answer and follow up every enquiry, built for South African businesses.</p>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link href="/contact" className={primary}>Start a project <ArrowUpRight size={16} aria-hidden /></Link>
               <Link href="/services" className="btn btn-line">Explore services</Link>
             </div>
+            <span data-scene-slot="0" aria-hidden className="pointer-events-none mt-6 block h-40 lg:hidden" />
           </div>
-          <WorkflowDepth><WorkflowPreview /></WorkflowDepth>
+          <div className="relative min-w-0">
+            <span data-scene-slot="0" aria-hidden className="pointer-events-none absolute -bottom-[98px] -right-[29px] hidden size-44 lg:block min-[1360px]:-bottom-[124px] min-[1360px]:-right-[114px] min-[1360px]:size-52" />
+            <WorkflowDepth><EnquiryWorkspace /></WorkflowDepth>
+          </div>
         </div>
       </section>
 
@@ -94,12 +65,15 @@ export default function Home() {
           <p className={eyebrow}>What we do</p>
           <h2 className="display-md mt-3 max-w-[25ch]">Four ways to improve how your business works.</h2>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
-            {capabilities.map(({ key, icon: Icon, outcome }) => {
+            {capabilities.map(({ key, icon: Icon, outcome }, slot) => {
               const service = serviceByKey(key);
               return (
                 <li key={key} className="min-w-0">
                   <Link href={service.href} className="group flex h-full flex-col rounded-2xl border border-line bg-ivory p-5 transition-colors hover:border-[#315BFA] sm:p-7">
-                    <span className="grid size-11 place-items-center rounded-xl bg-softblue text-[#2447D6]"><Icon size={21} aria-hidden /></span>
+                    <div className="flex items-start justify-between gap-3">
+                      <span className="grid size-11 place-items-center rounded-xl bg-softblue text-[#2447D6]"><Icon size={21} aria-hidden /></span>
+                      <span data-scene-slot={slot} aria-hidden className="pointer-events-none size-24 shrink-0 sm:size-32" />
+                    </div>
                     <h3 className="mt-5 font-display text-xl font-semibold tracking-tight sm:text-2xl">{service.title}</h3>
                     <p className="mt-2 text-sm font-semibold text-[#2447D6]">{outcome}</p>
                     <p className="mt-3 flex-1 text-[15px] leading-relaxed text-muted">{service.short}</p>
@@ -132,6 +106,8 @@ export default function Home() {
               <h2 className="display-md mt-3">See what these tools can look like.</h2>
               <p className="mt-3 text-sm leading-relaxed text-muted">These illustrative concepts are fictional projects created by Ragophala Digital.</p>
             </div>
+            <span data-scene-slot="0" aria-hidden className="pointer-events-none block h-40 w-full lg:hidden" />
+            <span data-scene-slot="0" aria-hidden className="pointer-events-none hidden h-44 min-w-72 flex-1 lg:block" />
             <Link href="/portfolio" className={secondary}>View all concepts <ArrowUpRight size={16} aria-hidden /></Link>
           </div>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -168,6 +144,7 @@ export default function Home() {
             <p className={eyebrow}>How we work</p>
             <h2 className="display-md mt-3 max-w-[18ch]">A clear path from idea to launch.</h2>
             <Link href="/process" className={`mt-6 ${secondary}`}>Follow the full journey <ArrowRight size={16} aria-hidden /></Link>
+            <span data-scene-slot="0" aria-hidden className="pointer-events-none mt-6 block h-40 lg:mt-10 lg:h-64" />
           </div>
           <ol className={`${styles.timeline} divide-y divide-line border-y border-line`}>
             {PROCESS.map((stage) => (
@@ -181,10 +158,12 @@ export default function Home() {
       </section>
 
       <section data-scene-stage className="border-y border-line py-16 sm:py-20">
-        <div className="container-x">
+        <div className="container-x relative">
+          <span data-scene-slot="0" aria-hidden className="pointer-events-none absolute right-0 top-0 hidden h-60 w-72 lg:block" />
           <p className={eyebrow}>The studio</p>
           <h2 className="display-md mt-3">Built around your business.</h2>
           <p className="body-lg mt-4">Ragophala Digital brings design and engineering together for small businesses, entrepreneurs and growing organisations.</p>
+          <span data-scene-slot="0" aria-hidden className="pointer-events-none mt-6 block h-40 lg:hidden" />
           <Link href="/about" className={`mt-7 ${secondary}`}>About Ragophala Digital <ArrowUpRight size={16} aria-hidden /></Link>
           <Reveal y={8} className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-2xl border border-line bg-softblue p-5 shadow-sm sm:p-7">
             <div className="flex items-start gap-3">

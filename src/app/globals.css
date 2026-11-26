@@ -129,3 +129,84 @@ body::after {
 @media (prefers-reduced-motion: no-preference) {
   .companion { animation: companion-in 0.9s ease-out both; }
 }
+
+/* The 3D layer is decoration: it must never catch clicks, taps or scrolls meant for the page. */
+.companion, .companion * { pointer-events: none !important; }
+
+/* Animated backdrop for dark hero sections (see HeroBackdrop). Transform and opacity only. */
+.hero-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-bg__glow { position: absolute; border-radius: 9999px; will-change: transform; }
+.hero-bg__glow--a {
+  width: 60rem; height: 60rem; left: -20rem; top: -26rem;
+  background: radial-gradient(closest-side, rgba(49, 91, 250, .5), rgba(49, 91, 250, 0));
+}
+.hero-bg__glow--b {
+  width: 56rem; height: 56rem; right: -16rem; top: -8rem;
+  background: radial-gradient(closest-side, rgba(143, 165, 255, .34), rgba(143, 165, 255, 0));
+}
+.hero-bg__glow--c {
+  width: 50rem; height: 50rem; left: 22%; bottom: -30rem;
+  background: radial-gradient(closest-side, rgba(36, 71, 214, .45), rgba(36, 71, 214, 0));
+}
+.hero-bg__sweep {
+  position: absolute; inset: 0; opacity: 0; will-change: transform, opacity;
+  background: linear-gradient(105deg, transparent 30%, rgba(143, 165, 255, .16) 50%, transparent 70%);
+}
+@keyframes hero-glow-a { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(14rem, 8rem, 0) scale(1.15); } }
+@keyframes hero-glow-b { from { transform: translate3d(0, 0, 0) scale(1.1); } to { transform: translate3d(-12rem, 9rem, 0) scale(.95); } }
+@keyframes hero-glow-c { from { transform: translate3d(0, 0, 0) scale(1); } to { transform: translate3d(16rem, -6rem, 0) scale(1.2); } }
+@keyframes hero-sweep {
+  0% { transform: translate3d(-60%, 0, 0); opacity: 0; }
+  15% { opacity: 1; }
+  45% { opacity: 1; }
+  60%, 100% { transform: translate3d(60%, 0, 0); opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bg__glow--a { animation: hero-glow-a 14s ease-in-out infinite alternate; }
+  .hero-bg__glow--b { animation: hero-glow-b 17s ease-in-out infinite alternate; }
+  .hero-bg__glow--c { animation: hero-glow-c 20s ease-in-out infinite alternate; }
+  .hero-bg__sweep { animation: hero-sweep 11s ease-in-out infinite; }
+}
+
+/* The 3D layer is decoration: it must never catch clicks, taps or scrolls meant for the page. */
+.companion, .companion * { pointer-events: none !important; }
+
+/* Animated backdrop for dark hero sections (see HeroBackdrop). Transform and opacity only. */
+.hero-bg { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.hero-bg__glow { position: absolute; border-radius: 9999px; will-change: transform; }
+.hero-bg__glow--a {
+  width: 62rem; height: 62rem; left: -22rem; top: -30rem;
+  background: radial-gradient(closest-side, rgba(49, 91, 250, .34), rgba(49, 91, 250, 0));
+}
+.hero-bg__glow--b {
+  width: 52rem; height: 52rem; right: -18rem; bottom: -28rem;
+  background: radial-gradient(closest-side, rgba(143, 165, 255, .2), rgba(143, 165, 255, 0));
+}
+.hero-bg__grid {
+  position: absolute; inset: -56px 0 0 0; opacity: .5; will-change: transform;
+  background-image:
+    linear-gradient(rgba(143, 165, 255, .1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(143, 165, 255, .1) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 90% at 50% 40%, #000 20%, transparent 78%);
+  mask-image: radial-gradient(ellipse 80% 90% at 50% 40%, #000 20%, transparent 78%);
+}
+.hero-bg__sweep {
+  position: absolute; inset: 0; opacity: 0; will-change: transform, opacity;
+  background: linear-gradient(105deg, transparent 35%, rgba(143, 165, 255, .09) 50%, transparent 65%);
+}
+@keyframes hero-glow-a { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(9rem, 5rem, 0); } }
+@keyframes hero-glow-b { from { transform: translate3d(0, 0, 0); } to { transform: translate3d(-8rem, -4rem, 0); } }
+@keyframes hero-grid { to { transform: translate3d(0, 56px, 0); } }
+@keyframes hero-sweep {
+  0% { transform: translate3d(-60%, 0, 0); opacity: 0; }
+  15% { opacity: 1; }
+  45% { opacity: 1; }
+  60%, 100% { transform: translate3d(60%, 0, 0); opacity: 0; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-bg__glow--a { animation: hero-glow-a 26s ease-in-out infinite alternate; }
+  .hero-bg__glow--b { animation: hero-glow-b 32s ease-in-out infinite alternate; }
+  .hero-bg__grid { animation: hero-grid 18s linear infinite; }
+  .hero-bg__sweep { animation: hero-sweep 16s ease-in-out infinite; }
+}

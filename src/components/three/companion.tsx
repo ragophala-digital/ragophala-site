@@ -1,122 +1,162 @@
 "use client";
 
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { RoundedBox } from "@react-three/drei";
+import { Environment, Lightformer } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
-import { COBALT, Studio } from "./shared";
+import { RoundedBoxGeometry } from "three-stdlib";
+import { COBALT, SOFT } from "./shared";
+import { POOL, STAGES } from "./companion-shapes";
 
 /**
- * Scroll companion for the home page: four small blocks that reshape as each section passes the
- * middle of the screen (assembled, services, concepts, process, launch). No textures or models,
- * so it costs a few kilobytes of geometry and one small canvas.
+ * Home-page scroll story. One pool of cubes flies down the page: it assembles into a block in the
+ * hero, then builds a website, a dashboard, an AI network and a workflow inside the four service
+ * cards, then a guesthouse, dashboard and chat for the concepts, rising steps for the process and
+ * an "R" for the studio. Landing slots are tagged in the page markup:
+ * `data-scene-stage` on each section and `data-scene-slot` on the empty slot inside it.
+ * The canvas is orthographic, so one world unit is one CSS pixel and a slot's place on screen is
+ * also its place in the scene. No textures or models, and the pool is only a few dozen cubes.
  */
-
-type Pose = readonly [x: number, y: number, scale: number, cobalt: number];
-
-/** One pose per block, per stage. Stage order matches the data-scene-stage attributes on the page. */
-const STAGES: readonly (readonly Pose[])[] = [
-  // Hero: assembled into one block.
-  [[-0.27, 0.27, 1, 0], [0.27, 0.27, 1, 0], [-0.27, -0.27, 1, 0], [0.27, -0.27, 1, 0]],
-  // Services: four separate offerings in a line.
-  [[0, 1.6, 0.8, 0], [0, 0.55, 0.8, 0], [0, -0.55, 0.8, 0], [0, -1.6, 0.8, 0]],
-  // Concepts: a zig-zag, one picked out.
-  [[-0.4, 1.5, 0.75, 0], [0.4, 0.5, 0.75, 1], [-0.4, -0.5, 0.75, 0], [0.4, -1.5, 0.75, 0]],
-  // Process: a staircase that lights up step by step.
-  [[-0.5, 1.45, 0.6, 0.1], [-0.17, 0.48, 0.6, 0.4], [0.17, -0.48, 0.6, 0.7], [0.5, -1.45, 0.6, 1]],
-  // Studio: back together, finished.
-  [[-0.27, 0.27, 1.1, 1], [0.27, 0.27, 1.1, 1], [-0.27, -0.27, 1.1, 1], [0.27, -0.27, 1.1, 1]],
-];
 
 const BASE = new THREE.Color("#7384ad");
 const ACCENT = new THREE.Color(COBALT);
-const SIZE = 0.5;
+const UNITS_ACROSS = 3.4;
+/** Switch to a section once its top passes this fraction of the screen height. */
+const PROBE = 0.62;
 
-const smooth = (t: number) => t * t * (3 - 2 * t);
-
-/** Centres of the tagged sections, measured in page coordinates. Re-measured when the page resizes. */
-function useStageCentres() {
-  const centres = useRef<number[]>([]);
-  useEffect(() => {
-    const measure = () => {
-      const els = Array.from(document.querySelectorAll<HTMLElement>("[data-scene-stage]"));
-      centres.current = els.map((el) => {
-        const r = el.getBoundingClientRect();
-        return r.top + window.scrollY + r.height / 2;
-      });
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(document.body);
-    window.addEventListener("resize", measure);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", measure);
-    };
-  }, []);
-  return centres;
+interface Slots {
+  /** Slot elements for each section, by slot number. */
+  bySection: (HTMLElement | null)[][];
+  sections: HTMLElement[];
 }
 
-/** Whole stage index (for example 1.4 is 40% of the way from stage 1 to stage 2). */
-function stageAt(centres: number[], y: number) {
-  const n = centres.length;
-  if (n < 2) return 0;
-  if (y <= centres[0]) return 0;
-  if (y >= centres[n - 1]) return n - 1;
-  let i = 0;
-  while (i < n - 2 && y > centres[i + 1]) i++;
-  return i + smooth((y - centres[i]) / (centres[i + 1] - centres[i]));
+function findSlots(): Slots {
+  const sections = Array.from(document.querySelectorAll<HTMLElement>("[data-scene-stage]"));
+  const bySection = sections.map((section) => {
+    const slots: (HTMLElement | null)[] = [];
+    section.querySelectorAll<HTMLElement>("[data-scene-slot]").forEach((el) => {
+      const k = Number(el.dataset.sceneSlot);
+      if (!slots[k] && el.getClientRects().length > 0) slots[k] = el;
+    });
+    return slots;
+  });
+  return { bySection, sections };
 }
 
-function Blocks() {
-  const group = useRef<THREE.Group>(null);
-  const meshes = useRef<(THREE.Mesh | null)[]>([]);
-  const centres = useStageCentres();
+/** Stable pseudo-random number per cube, so each flies at its own speed. */
+const hash = (i: number) => (Math.sin(i * 12.9898) * 43758.5453) % 1 * 0.5 + 0.5;
+
+interface Cube {
+  cx: number; cy: number; u: number;
+  lx: number; ly: number; lz: number;
+  sx: number; sy: number; sz: number;
+  cob: number;
+}
+
+function Swarm() {
+  const mesh = useRef<THREE.InstancedMesh>(null);
+  const slots = useRef<Slots>({ bySection: [], sections: [] });
+  const cubes = useRef<Cube[] | null>(null);
+  const geometry = useMemo(() => new RoundedBoxGeometry(1, 1, 1, 3, 0.14), []);
+  const dummy = useMemo(() => new THREE.Object3D(), []);
+  const euler = useMemo(() => new THREE.Euler(), []);
+  const quat = useMemo(() => new THREE.Quaternion(), []);
+  const offset = useMemo(() => new THREE.Vector3(), []);
   const colour = useMemo(() => new THREE.Color(), []);
 
+  useEffect(() => {
+    const find = () => {
+      slots.current = findSlots();
+    };
+    find();
+    const ro = new ResizeObserver(find);
+    ro.observe(document.body);
+    window.addEventListener("resize", find);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", find);
+    };
+  }, []);
+
   useFrame((s, dt) => {
-    const g = group.current;
-    if (!g) return;
-    const vp = window.scrollY + window.innerHeight / 2;
-    const stage = Math.min(stageAt(centres.current, vp), STAGES.length - 1);
-    const a = Math.floor(stage);
-    const b = Math.min(a + 1, STAGES.length - 1);
-    const f = stage - a;
+    const im = mesh.current;
+    const { bySection, sections } = slots.current;
+    if (!im || sections.length === 0) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const t = s.clock.elapsedTime;
 
-    g.rotation.y = THREE.MathUtils.damp(g.rotation.y, s.clock.elapsedTime * 0.28 + stage * 0.9, 4, dt);
-    g.rotation.x = Math.sin(s.clock.elapsedTime * 0.4) * 0.08;
-
-    meshes.current.forEach((m, i) => {
-      if (!m) return;
-      const p = STAGES[a][i];
-      const q = STAGES[b][i];
-      const lerp = THREE.MathUtils.lerp;
-      m.position.x = THREE.MathUtils.damp(m.position.x, lerp(p[0], q[0], f), 6, dt);
-      m.position.y = THREE.MathUtils.damp(m.position.y, lerp(p[1], q[1], f), 6, dt);
-      const scale = THREE.MathUtils.damp(m.scale.x, lerp(p[2], q[2], f), 6, dt);
-      m.scale.setScalar(scale);
-      m.rotation.y = s.clock.elapsedTime * 0.2 * (i % 2 ? 1 : -1);
-      const mat = m.material as THREE.MeshStandardMaterial;
-      colour.copy(BASE).lerp(ACCENT, lerp(p[3], q[3], f));
-      mat.color.lerp(colour, Math.min(1, dt * 6));
+    // The last section whose top has passed the probe line is the one the cubes are building in.
+    let stage = 0;
+    sections.forEach((el, i) => {
+      if (el.getBoundingClientRect().top <= vh * PROBE) stage = i;
     });
+    const parts = STAGES[stage];
+    const stageSlots = bySection[stage] ?? [];
+
+    // Everything in a shape turns together, so it reads as one 3D object.
+    // The hero block is tilted to read as 3D, and opens up as the visitor starts to scroll.
+    const open = stage === 0 ? THREE.MathUtils.smoothstep(window.scrollY, 40, vh * 0.7) : 0;
+    euler.set(stage === 0 ? 0.5 : 0.3, Math.sin(t * 0.5) * 0.4 + (stage === 0 ? 0.6 : stage * 0.2), 0);
+    quat.setFromEuler(euler);
+
+    if (!cubes.current) {
+      const first = bySection[0]?.[0]?.getBoundingClientRect();
+      const cx = first ? first.left + first.width / 2 - vw / 2 : 0;
+      const cy = first ? -(first.top + first.height / 2 - vh / 2) : 0;
+      cubes.current = Array.from({ length: POOL }, () => ({ cx, cy, u: 30, lx: 0, ly: 0, lz: 0, sx: 0, sy: 0, sz: 0, cob: 0 }));
+    }
+
+    for (let i = 0; i < POOL; i++) {
+      const c = cubes.current[i];
+      const p = parts[i];
+      const el = p ? (stageSlots[p.slot ?? 0] ?? stageSlots[0]) : null;
+      const h = hash(i);
+      const move = 3 + h * 4;
+      const shape = 4 + h * 3;
+
+      let dist = 0;
+      if (p && el) {
+        const r = el.getBoundingClientRect();
+        const tx = r.left + r.width / 2 - vw / 2;
+        const ty = -(r.top + r.height / 2 - vh / 2);
+        dist = Math.hypot(tx - c.cx, ty - c.cy);
+        c.cx = THREE.MathUtils.damp(c.cx, tx, move, dt);
+        c.cy = THREE.MathUtils.damp(c.cy, ty, move, dt);
+        c.u = THREE.MathUtils.damp(c.u, Math.min(r.width, r.height) / UNITS_ACROSS, move, dt);
+        const spread = 1 + open * 1.1;
+        c.lx = THREE.MathUtils.damp(c.lx, p.l[0] * spread, shape, dt);
+        c.ly = THREE.MathUtils.damp(c.ly, p.l[1] * spread, shape, dt);
+        c.lz = THREE.MathUtils.damp(c.lz, p.l[2] * spread, shape, dt);
+        c.sx = THREE.MathUtils.damp(c.sx, p.s[0], shape, dt);
+        c.sy = THREE.MathUtils.damp(c.sy, p.s[1], shape, dt);
+        c.sz = THREE.MathUtils.damp(c.sz, p.s[2], shape, dt);
+        c.cob = THREE.MathUtils.damp(c.cob, p.cob, shape, dt);
+      } else {
+        // Not part of this shape: shrink away where it is.
+        c.sx = THREE.MathUtils.damp(c.sx, 0, shape, dt);
+        c.sy = THREE.MathUtils.damp(c.sy, 0, shape, dt);
+        c.sz = THREE.MathUtils.damp(c.sz, 0, shape, dt);
+      }
+
+      // Pieces still on their way swirl a little, so the flight looks like a swarm, not a slide.
+      const swirl = Math.min(dist, 500) * 0.07;
+      offset.set(c.lx * c.u, c.ly * c.u, c.lz * c.u).applyQuaternion(quat);
+      dummy.position.set(c.cx + offset.x + Math.sin(t * 2.7 + i) * swirl, c.cy + offset.y + Math.cos(t * 2.1 + i * 1.3) * swirl, offset.z);
+      dummy.quaternion.copy(quat);
+      dummy.scale.set(Math.max(c.sx * c.u, 0.001), Math.max(c.sy * c.u, 0.001), Math.max(c.sz * c.u, 0.001));
+      dummy.updateMatrix();
+      im.setMatrixAt(i, dummy.matrix);
+      im.setColorAt(i, colour.copy(BASE).lerp(ACCENT, c.cob));
+    }
+    im.instanceMatrix.needsUpdate = true;
+    if (im.instanceColor) im.instanceColor.needsUpdate = true;
   });
 
   return (
-    <>
-      {/* The route the blocks travel along. */}
-      <mesh position={[0, 0, -0.4]}>
-        <cylinderGeometry args={[0.012, 0.012, 7, 8]} />
-        <meshBasicMaterial color={COBALT} transparent opacity={0.4} />
-      </mesh>
-      <group ref={group}>
-        {STAGES[0].map((p, i) => (
-          <RoundedBox key={i} ref={(el) => { meshes.current[i] = el; }} args={[SIZE, SIZE, SIZE]} radius={0.07} smoothness={3} position={[p[0], p[1], 0]} scale={p[2]}>
-            <meshStandardMaterial color={BASE} metalness={0.7} roughness={0.3} envMapIntensity={1.3} />
-          </RoundedBox>
-        ))}
-      </group>
-    </>
+    <instancedMesh ref={mesh} args={[geometry, undefined, POOL]} frustumCulled={false}>
+      <meshStandardMaterial metalness={0.65} roughness={0.3} envMapIntensity={1.3} />
+    </instancedMesh>
   );
 }
 
@@ -139,9 +179,16 @@ function Pulse() {
 
 export function CompanionScene() {
   return (
-    <Canvas dpr={[1, 1.25]} frameloop="demand" camera={{ position: [0, 0, 7.5], fov: 35 }} gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}>
-      <Studio low />
-      <Blocks />
+    <Canvas orthographic style={{ pointerEvents: "none" }} dpr={[1, 1.5]} frameloop="demand" camera={{ position: [0, 0, 600], zoom: 1, near: 0.1, far: 2000 }} gl={{ antialias: true, alpha: true, powerPreference: "low-power" }}>
+      <ambientLight intensity={0.6} />
+      <directionalLight position={[200, 300, 400]} intensity={2.2} />
+      <Environment resolution={64} frames={1}>
+        <color attach="background" args={["#5f7098"]} />
+        <Lightformer form="rect" intensity={5} color="#ffffff" position={[0, 6, 3]} scale={[12, 3, 1]} />
+        <Lightformer form="rect" intensity={3} color={SOFT} position={[-7, 1, 2]} rotation-y={Math.PI / 2} scale={[8, 5, 1]} />
+        <Lightformer form="rect" intensity={2.5} color={COBALT} position={[7, 0, -2]} rotation-y={-Math.PI / 2} scale={[8, 5, 1]} />
+      </Environment>
+      <Swarm />
       <Pulse />
     </Canvas>
   );

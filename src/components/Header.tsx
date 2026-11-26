@@ -7,7 +7,6 @@ import { Activity, ArrowUpRight, Bot, ChevronDown, Globe, LayoutDashboard, Menu,
 import { useEffect, useRef, useState } from "react";
 import { NAV, SERVICES, type ServiceKey } from "@/lib/site";
 import { cn } from "@/lib/utils";
-import { MenuScene } from "./three/lazy";
 import { Magnetic } from "./ui-motion";
 
 export function Wordmark({ dark, onClick }: { dark?: boolean; onClick?: () => void }) {
@@ -145,8 +144,6 @@ function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
       transition={{ duration: reduceMotion ? 0 : 0.2 }}
       className="theme-dark fixed inset-0 z-[70] flex flex-col overflow-hidden bg-navy lg:hidden"
     >
-      <div aria-hidden className="pointer-events-none absolute inset-0 opacity-80"><MenuScene /></div>
-      <div aria-hidden className="pointer-events-none absolute inset-0 bg-gradient-to-b from-navy/70 via-navy/35 to-navy/80" />
 
       <div className="relative z-10 flex h-[68px] shrink-0 items-center justify-between px-5">
         <Wordmark dark onClick={onClose} />
@@ -157,25 +154,24 @@ function MobileMenu({ onClose, path }: { onClose: () => void; path: string }) {
 
       <nav aria-label="Mobile" className="relative z-10 flex min-h-0 flex-1 flex-col items-center overflow-y-auto overscroll-contain px-6 py-6 text-center">
         <ul className="w-full max-w-sm">
-          {MENU_LINKS.map((n, i) => {
+          {MENU_LINKS.map((n) => {
             const active = n.href === "/" ? path === "/" : path.startsWith(n.href);
             return (
               <li key={n.href}>
-                <Link href={n.href} onClick={onClose} aria-current={active ? "page" : undefined} className={cn("group flex items-center justify-center gap-3 py-3.5 font-display text-[clamp(2rem,9vw,2.8rem)] font-semibold leading-none tracking-[-0.03em] transition-colors", active ? "text-cobalt-300" : "text-ivory hover:text-cobalt-300")}>
-                  <span className="font-mono text-[11px] font-normal tracking-widest text-muted">0{i + 1}</span>
+                <Link href={n.href} onClick={onClose} aria-current={active ? "page" : undefined} className={cn("group flex items-center justify-center gap-3 py-2 font-display text-[clamp(1.35rem,5.6vw,1.75rem)] font-semibold leading-none tracking-[-0.03em] transition-colors", active ? "text-cobalt-300" : "text-ivory hover:text-cobalt-300")}>
                   {n.label}
                 </Link>
               </li>
             );
           })}
         </ul>
-        <div className="mt-6 w-full max-w-sm">
+        <div className="mt-4 w-full max-w-sm">
           <p className="label mb-3">Services</p>
           <ul className="grid grid-cols-2 gap-2 text-left">
             {SERVICES.map((sv) => (<li key={sv.key}><Link href={sv.href} onClick={onClose} className="block rounded-lg border border-white/15 px-3 py-2.5 text-xs leading-snug text-ivory transition hover:border-cobalt-300">{sv.title}</Link></li>))}
           </ul>
         </div>
-        <div className="mt-6 w-full max-w-sm">
+        <div className="mt-4 w-full max-w-sm">
           <Link href="/contact" onClick={onClose} className="btn btn-primary w-full">
             Start a project <ArrowUpRight size={16} aria-hidden />
           </Link>
