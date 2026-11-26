@@ -26,7 +26,7 @@ const MENU_LINKS = [...NAV, { href: "/lab", label: "3D Lab" }, { href: "/faq", l
 const SERVICE_ICONS: Record<ServiceKey, LucideIcon> = { web: Globe, apps: LayoutDashboard, ai: Bot, automation: Workflow, maintenance: ShieldCheck, support: Activity };
 
 /** Services mega-menu: opens on hover, focus or click; closes with Escape, outside click or navigation. */
-function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boolean; path: string }) {
+function ServicesMenu({ active, path }: { active: boolean; path: string }) {
   const [open, setOpen] = useState(false);
   const root = useRef<HTMLLIElement>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -59,8 +59,8 @@ function ServicesMenu({ active, onDark, path }: { active: boolean; onDark: boole
   return (
     <li ref={root} onMouseEnter={() => hover(true)} onMouseLeave={() => hover(false)} onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setOpen(false); }}>
       <span className="relative flex items-center">
-        <Link href="/services" onClick={() => { clearTimeout(timer.current); setOpen(false); }} aria-current={active ? "page" : undefined} className={cn("py-2 pl-3.5 pr-1 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>Services</Link>
-        <button type="button" aria-expanded={open} aria-controls="services-menu" aria-label="Show services menu" onClick={() => setOpen((o) => !o)} className={cn("py-2 pl-0.5 pr-3 transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", (active || open) && (onDark ? "!text-ivory" : "!text-navy"))}>
+        <Link href="/services" onClick={() => { clearTimeout(timer.current); setOpen(false); }} aria-current={active ? "page" : undefined} className={cn("py-2 pl-3.5 pr-1 text-sm transition-colors", "text-muted hover:text-navy", (active || open) && "!text-navy")}>Services</Link>
+        <button type="button" aria-expanded={open} aria-controls="services-menu" aria-label="Show services menu" onClick={() => setOpen((o) => !o)} className={cn("py-2 pl-0.5 pr-3 transition-colors", "text-muted hover:text-navy", (active || open) && "!text-navy")}>
           <ChevronDown size={14} aria-hidden className={cn("transition-transform duration-300", open && "rotate-180")} />
         </button>
         {active && <span aria-hidden className="absolute inset-x-3.5 -bottom-0.5 h-px bg-cobalt" />}
@@ -208,22 +208,22 @@ export function Header() {
     };
   }, [open]);
 
-  const onDark = path === "/" && !solid;
+  const home = path === "/";
   const isActive = (href: string) => (href === "/" ? path === "/" : path.startsWith(href));
 
   return (
     <>
-      <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", solid ? "border-b border-navy/10 bg-ivory/85 backdrop-blur-xl" : "bg-transparent")}>
-        <motion.div aria-hidden style={{ scaleX: progress }} className="absolute inset-x-0 bottom-0 h-px origin-left bg-cobalt" />
+      <header className={cn("fixed inset-x-0 top-0 z-50 transition-all duration-300", home && "border-b border-[#dbe6df] bg-[#f8fbf8]/95", solid && (home ? "backdrop-blur-xl" : "border-b border-navy/10 bg-ivory/85 backdrop-blur-xl"))}>
+        <motion.div aria-hidden style={{ scaleX: progress }} className={cn("absolute inset-x-0 bottom-0 h-px origin-left", home ? "bg-[#00c6bc]" : "bg-cobalt")} />
         <nav className="container-x flex h-[68px] items-center justify-between" aria-label="Main">
-          <Wordmark dark={onDark} />
+          <Wordmark />
           <ul className="hidden items-center gap-1 lg:flex">
             {NAV.map((n) => {
               const active = isActive(n.href);
-              if (n.href === "/services") return <ServicesMenu key={n.href} active={active} onDark={onDark} path={path} />;
+              if (n.href === "/services") return <ServicesMenu key={n.href} active={active} path={path} />;
               return (
                 <li key={n.href}>
-                  <Link href={n.href} aria-current={active ? "page" : undefined} className={cn("relative block px-3.5 py-2 text-sm transition-colors", onDark ? "text-slate hover:text-ivory" : "text-muted hover:text-navy", active && (onDark ? "!text-ivory" : "!text-navy"))}>
+                  <Link href={n.href} aria-current={active ? "page" : undefined} className={cn("relative block px-3.5 py-2 text-sm transition-colors", "text-muted hover:text-navy", active && "!text-navy")}>
                     {n.label}
                     {active && <motion.span layoutId="nav-indicator" aria-hidden className="absolute inset-x-3.5 -bottom-0.5 h-px bg-cobalt" transition={{ type: "spring", stiffness: 380, damping: 32 }} />}
                   </Link>
@@ -233,11 +233,11 @@ export function Header() {
           </ul>
           <div className="flex items-center gap-3">
             <Magnetic className="hidden lg:inline-block" strength={0.2}>
-              <Link href="/contact" className="btn btn-primary group !px-5 !py-2.5">
+              <Link href="/contact" className={cn("btn group !px-5 !py-2.5", home ? "bg-[#c9f56a] text-[#162019] hover:bg-[#b6e84e]" : "btn-primary")}>
                 Start a project <ArrowUpRight size={15} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
               </Link>
             </Magnetic>
-            <button type="button" className={cn("rounded-lg border p-2 transition-colors lg:hidden", onDark ? "border-white/25 text-ivory" : "border-navy/20 text-navy")} onClick={() => setOpen(true)} aria-expanded={open} aria-controls="mobile-menu" aria-label="Open menu">
+            <button type="button" className="rounded-lg border border-navy/20 p-2 text-navy transition-colors lg:hidden" onClick={() => setOpen(true)} aria-expanded={open} aria-controls="mobile-menu" aria-label="Open menu">
               <Menu size={22} />
             </button>
           </div>
