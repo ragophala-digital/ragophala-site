@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { ArrowUp, ArrowUpRight, Mail, MessageCircle } from "lucide-react";
 import { SERVICES, SITE } from "@/lib/site";
-import { mailtoUrl, whatsappUrl } from "@/lib/utils";
+import { cn, mailtoUrl, whatsappUrl } from "@/lib/utils";
 import { CursorGlow, Magnetic } from "./ui-motion";
 
 const STUDIO = [
@@ -28,15 +29,18 @@ const SOCIALS = [
 ].filter((s): s is [string, string] => Boolean(s[1]));
 
 export function Footer() {
+  const home = usePathname() === "/";
   const wa = whatsappUrl("Hi Ragophala Digital, I would like to find out more about your services.");
   const mail = mailtoUrl("Enquiry from the Ragophala Digital website");
   return (
     <footer className="theme-dark relative overflow-hidden bg-navy text-fg">
-      <div aria-hidden className="absolute -left-24 top-10 h-[26rem] w-[26rem] animate-drift rounded-full bg-cobalt/25 blur-[130px]" />
-      <div aria-hidden className="absolute -right-24 bottom-24 h-[22rem] w-[22rem] animate-drift rounded-full bg-cobalt-300/15 blur-[120px] [animation-delay:-4s]" />
-      <CursorGlow />
-      <div className="container-x relative pt-24 lg:pt-32">
-        <div className="grid items-end gap-10 lg:grid-cols-[1.5fr_1fr]">
+      {!home && <>
+        <div aria-hidden className="absolute -left-24 top-10 h-[26rem] w-[26rem] animate-drift rounded-full bg-cobalt/25 blur-[130px]" />
+        <div aria-hidden className="absolute -right-24 bottom-24 h-[22rem] w-[22rem] animate-drift rounded-full bg-cobalt-300/15 blur-[120px] [animation-delay:-4s]" />
+        <CursorGlow />
+      </>}
+      <div className={cn("container-x relative", home ? "pt-12 lg:pt-16" : "pt-24 lg:pt-32")}>
+        <div className={cn("grid items-end gap-10 lg:grid-cols-[1.5fr_1fr]", home && "gap-8 rounded-2xl border border-cobalt-300/30 bg-[#172234] p-5 shadow-[0_18px_0_-10px_rgba(49,91,250,.28)] sm:p-8 lg:p-10")}>
           <div>
             <p className="label mb-6">Start a project</p>
             <h2 className="display-lg max-w-[14ch]">Let&apos;s build something meaningful.</h2>
@@ -44,11 +48,13 @@ export function Footer() {
           <div>
             <p className="body-lg">Have an idea, a business challenge or a digital project in mind? Let&apos;s discuss how we can bring it to life.</p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Magnetic strength={0.25}>
-                <Link href="/contact" className="btn btn-primary group">
-                  Start a project <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
-                </Link>
-              </Magnetic>
+              {home ? <Link href="/contact" className="btn btn-primary">Start a project <ArrowUpRight size={16} aria-hidden /></Link> : (
+                <Magnetic strength={0.25}>
+                  <Link href="/contact" className="btn btn-primary group">
+                    Start a project <ArrowUpRight size={16} className="transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+                  </Link>
+                </Magnetic>
+              )}
               {wa && <a href={wa} target="_blank" rel="noopener noreferrer" className="btn btn-line"><MessageCircle size={16} aria-hidden /> WhatsApp</a>}
             </div>
           </div>

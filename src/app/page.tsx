@@ -1,11 +1,16 @@
 import Link from "next/link";
+import type { CSSProperties } from "react";
 import {
   ArrowRight, ArrowUpRight, Bot, Check, ChevronDown, Code2, Globe2,
   LayoutDashboard, Workflow,
 } from "lucide-react";
-import { ProjectVisual } from "@/components/ProjectVisual";
+import { HomeFleetPreview, HomeServicePreview } from "@/components/HomeServicePreview";
+import { MOCK_HEIGHT, MOCK_WIDTH, ProjectMock } from "@/components/ProjectMock";
 import { Reveal } from "@/components/ui";
-import { PROCESS, PROJECTS, SERVICES } from "@/lib/site";
+import { ScaleToFit } from "@/components/ui-motion";
+import { WorkflowDepth } from "@/components/WorkflowDepth";
+import styles from "@/components/home-visuals.module.css";
+import { CASES, PROCESS, PROJECTS, SERVICES } from "@/lib/site";
 import { serviceByKey } from "@/lib/services";
 
 const capabilities = [
@@ -33,10 +38,10 @@ function WorkflowPreview() {
         <span className="font-display text-sm font-semibold">Enquiry workspace</span>
         <span className="font-mono text-[10px] uppercase tracking-wider text-slate">Illustrative sample data</span>
       </figcaption>
-      <ol className="space-y-2.5 p-3 sm:p-5">
+      <ol className="p-3 sm:p-5">
         {steps.map(({ title, detail, icon: Icon }, i) => (
-          <li key={title}>
-            <details name="enquiry-workflow" open={i === 0} className="group rounded-lg border border-white/15 bg-navy open:border-cobalt-300/70">
+          <li key={title} className={styles.step} style={{ "--step": i } as CSSProperties}>
+            <details name="enquiry-workflow" open={i === 0} className={`${styles.panel} group rounded-lg border border-white/15 bg-navy open:border-cobalt-300/70`}>
               <summary className="flex min-h-11 cursor-pointer list-none items-center gap-3 px-3 py-2 text-sm font-semibold [&::-webkit-details-marker]:hidden">
                 <span className="grid size-8 shrink-0 place-items-center rounded-md bg-cobalt/20 text-cobalt-300"><Icon size={16} aria-hidden /></span>
                 <span className="flex-1">{title}</span>
@@ -70,7 +75,7 @@ export default function Home() {
               <Link href="/services" className="btn btn-line">Explore services</Link>
             </div>
           </div>
-          <WorkflowPreview />
+          <WorkflowDepth><WorkflowPreview /></WorkflowDepth>
         </div>
       </section>
 
@@ -87,18 +92,22 @@ export default function Home() {
           <p className={eyebrow}>What we do</p>
           <h2 className="display-md mt-3 max-w-[25ch]">Four ways to improve how your business works.</h2>
           <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:gap-5">
-            {capabilities.map(({ key, icon: Icon, outcome }, index) => {
+            {capabilities.map(({ key, icon: Icon, outcome }) => {
               const service = serviceByKey(key);
               return (
-                <Reveal as="li" key={key} delay={(index % 2) * 0.06} y={10} className="min-w-0">
+                <li key={key} className="min-w-0">
                   <Link href={service.href} className="group flex h-full flex-col rounded-2xl border border-line bg-ivory p-5 transition-colors hover:border-[#315BFA] sm:p-7">
                     <span className="grid size-11 place-items-center rounded-xl bg-softblue text-[#2447D6]"><Icon size={21} aria-hidden /></span>
                     <h3 className="mt-5 font-display text-xl font-semibold tracking-tight sm:text-2xl">{service.title}</h3>
                     <p className="mt-2 text-sm font-semibold text-[#2447D6]">{outcome}</p>
                     <p className="mt-3 flex-1 text-[15px] leading-relaxed text-muted">{service.short}</p>
+                    <div className="mt-5 rounded-xl border border-line bg-softblue/60 p-3 sm:p-4">
+                      <p className="mb-2 font-mono text-[10px] uppercase tracking-wider text-[#566075]">Illustrative interface</p>
+                      <div aria-hidden className={styles.screen}><HomeServicePreview service={key} /></div>
+                    </div>
                     <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold group-hover:underline">Explore {service.title.toLowerCase()} <ArrowUpRight size={15} className="shrink-0" aria-hidden /></span>
                   </Link>
-                </Reveal>
+                </li>
               );
             })}
           </ul>
@@ -129,7 +138,15 @@ export default function Home() {
               return (
                 <li key={slug} className="min-w-0">
                   <Link href={`/portfolio/${slug}`} className="group block h-full overflow-hidden rounded-2xl border border-line bg-white transition-colors hover:border-[#315BFA]">
-                    <ProjectVisual project={project} className="aspect-[2/1] w-full object-cover" />
+                    <div aria-hidden className="overflow-hidden border-b border-line bg-ivory p-2 sm:p-3">
+                      <div className={`${styles.screen} aspect-[760/470] overflow-hidden rounded-lg bg-softblue`}>
+                        {slug === "fleet-dashboard" ? <div className="p-2 sm:p-3"><HomeFleetPreview /></div> : (
+                          <ScaleToFit designWidth={MOCK_WIDTH} designHeight={MOCK_HEIGHT}>
+                            <ProjectMock kind={CASES[slug].mock} />
+                          </ScaleToFit>
+                        )}
+                      </div>
+                    </div>
                     <div className="p-5">
                       <p className={eyebrow}>Illustrative concept · {project.category}</p>
                       <h3 className="mt-2 flex items-start justify-between gap-2 font-display text-lg font-semibold tracking-tight group-hover:underline">{project.title} <ArrowUpRight size={17} className="mt-1 shrink-0 text-[#2447D6]" aria-hidden /></h3>
@@ -150,10 +167,10 @@ export default function Home() {
             <h2 className="display-md mt-3 max-w-[18ch]">A clear path from idea to launch.</h2>
             <Link href="/process" className={`mt-6 ${secondary}`}>Follow the full journey <ArrowRight size={16} aria-hidden /></Link>
           </div>
-          <ol className="divide-y divide-line border-y border-line">
+          <ol className={`${styles.timeline} divide-y divide-line border-y border-line`}>
             {PROCESS.map((stage) => (
               <li key={stage.n} className="grid grid-cols-[2rem_minmax(0,1fr)] gap-3 py-3.5">
-                <span className="font-mono text-xs font-medium leading-6 text-[#2447D6]">{stage.n}</span>
+                <span className="relative z-10 grid size-8 place-items-center rounded-full border border-cobalt/20 bg-white font-mono text-xs font-medium text-[#2447D6]">{stage.n}</span>
                 <div><h3 className="font-display text-sm font-semibold">{stage.title}</h3><p className="mt-1 text-sm leading-relaxed text-muted">{stage.summary}</p></div>
               </li>
             ))}
@@ -167,13 +184,13 @@ export default function Home() {
           <h2 className="display-md mt-3">Built around your business.</h2>
           <p className="body-lg mt-4">Ragophala Digital brings design and engineering together for small businesses, entrepreneurs and growing organisations.</p>
           <Link href="/about" className={`mt-7 ${secondary}`}>About Ragophala Digital <ArrowUpRight size={16} aria-hidden /></Link>
-          <div className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-2xl border border-line bg-softblue p-5 sm:p-7">
+          <Reveal y={8} className="mt-10 flex flex-wrap items-center justify-between gap-5 rounded-2xl border border-line bg-softblue p-5 shadow-sm sm:p-7">
             <div className="flex items-start gap-3">
               <Code2 size={23} className="mt-0.5 shrink-0 text-[#2447D6]" aria-hidden />
               <div><h3 className="font-display text-base font-semibold">Explore our software products</h3><p className="mt-1 text-sm text-muted">Browse the catalogue and see each product’s current status.</p></div>
             </div>
             <Link href="/products" className={primary}>Browse products <ArrowUpRight size={16} aria-hidden /></Link>
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>
