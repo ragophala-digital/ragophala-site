@@ -40,11 +40,11 @@ export function ProductDivisions() {
   return (
     <section className="section">
       <div className="container-x">
-        <SectionHead label="Software divisions" title="Solutions across the business landscape." text="Choose a division to filter the catalogue below." />
+        <SectionHead label="Software divisions" title="Solutions across the business landscape." text="Counts include every catalogue entry in a division, including products in development, coming-soon products, and research or planned concepts. Choose a division to see the status of each entry." />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-12">
           <Reveal className="sm:col-span-2 xl:col-span-5 xl:row-span-2">
             <Link href={`/products?category=${lead.id}#directory`} className="theme-dark group flex h-full min-h-[240px] flex-col justify-between gap-8 rounded-2xl bg-navy p-5 sm:p-7 text-fg transition motion-safe:hover:-translate-y-0.5">
-              <div className="flex items-start justify-between"><span className="grid h-12 w-12 place-items-center rounded-xl bg-cobalt/20 text-cobalt-300"><LeadIcon size={22} aria-hidden /></span><span className="font-mono text-xs text-cobalt-300">{counts[lead.id]} products</span></div>
+              <div className="flex items-start justify-between"><span className="grid h-12 w-12 place-items-center rounded-xl bg-cobalt/20 text-cobalt-300"><LeadIcon size={22} aria-hidden /></span><span className="font-mono text-xs text-cobalt-300">{counts[lead.id]} catalogue entries</span></div>
               <div>
                 <h3 className="display-md !text-3xl">{lead.label}</h3>
                 <p className="mt-3 max-w-[40ch] text-[15px] leading-relaxed text-slate">{lead.intro}</p>
@@ -59,7 +59,7 @@ export function ProductDivisions() {
                 <Link href={`/products?category=${d.id}#directory`} className="group flex h-full flex-col gap-3 rounded-2xl border border-line bg-white p-5 xl:flex-row xl:gap-4 transition motion-safe:hover:-translate-y-0.5 hover:border-cobalt/40">
                   <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-softblue text-cobalt"><Icon size={20} aria-hidden /></span>
                   <div className="flex w-full min-w-0 flex-1 flex-col">
-                    <div className="flex items-baseline justify-between gap-3"><h3 className="font-display text-lg font-semibold tracking-tight">{d.label}</h3><span className="shrink-0 font-mono text-[11px] text-[#566075]" aria-label={`${counts[d.id]} products`}>{counts[d.id]}</span></div>
+                    <div className="flex flex-wrap items-baseline justify-between gap-x-3 gap-y-1"><h3 className="font-display text-lg font-semibold tracking-tight">{d.label}</h3><span className="shrink-0 font-mono text-[11px] text-[#566075]">{counts[d.id]} entries</span></div>
                     <span className="mt-1 flex-1 text-sm leading-relaxed text-[#566075]">{d.intro}</span>
                     <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-heading">Explore division <ArrowUpRight size={14} aria-hidden /></span>
                   </div>
@@ -101,7 +101,6 @@ export function WhyRagophala() {
 export function ProductsCTA() {
   return (
     <section className="theme-dark relative overflow-hidden bg-navy text-fg">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
       <div className="container-x section relative text-center">
         <Compass size={26} aria-hidden className="mx-auto text-cobalt-300" />
         <h2 className="display-md mx-auto mt-5 max-w-[20ch]">Find the right software for your business.</h2>

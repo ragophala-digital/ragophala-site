@@ -38,7 +38,6 @@ export default function About() {
   return (
     <>
       <section className="relative overflow-hidden pb-16 pt-32 sm:pt-40 lg:pb-24">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
         <div className="container-x relative">
           <Breadcrumb items={[{ label: "About" }]} />
           <div className="grid items-center gap-12 lg:grid-cols-[1.2fr_0.8fr]">

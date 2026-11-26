@@ -53,7 +53,6 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   return (
     <>
       <section className="theme-dark relative overflow-hidden bg-navy pb-16 pt-32 sm:pt-40">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
         <div aria-hidden className="absolute left-1/2 top-24 h-[30rem] w-[50rem] -translate-x-1/2 rounded-full opacity-25 blur-[130px]" style={{ background: c.tint }} />
         <div className="container-x relative">
           <Breadcrumb items={[{ label: "Selected concepts", href: "/portfolio" }, { label: p.title }]} />

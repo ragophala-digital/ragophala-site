@@ -59,7 +59,6 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <section className="relative overflow-hidden pb-14 pt-32 sm:pt-40">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
         <div className="container-x relative">
           <Breadcrumb items={[{ label: "Products", href: "/products" }, { label: p.name }]} />
           <div className="animate-rise grid items-start gap-7 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)] xl:gap-14">

@@ -18,7 +18,6 @@ export function LabConfigurator() {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.25fr_1fr]">
       <div className="theme-dark relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-navy">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
         <div aria-hidden className="absolute -right-10 top-0 h-64 w-64 rounded-full bg-cobalt/25 blur-[90px]" />
         <div className="relative h-full w-full"><LabScene traits={traits} /></div>
         <p className="absolute bottom-3 left-4 font-mono text-[10px] uppercase tracking-[.14em] text-slate">Move your pointer to turn the model</p>

@@ -12,7 +12,7 @@ export const DIVISIONS: readonly Division[] = [
 
 export const DIVISION_BY_ID: Readonly<Record<DivisionId, Division>> = Object.fromEntries(DIVISIONS.map((d) => [d.id, d])) as Record<DivisionId, Division>;
 
-export const isDivisionId = (v: string | null | undefined): v is DivisionId => !!v && v in DIVISION_BY_ID;
+export const isDivisionId = (v: string | null | undefined): v is DivisionId => !!v && Object.hasOwn(DIVISION_BY_ID, v);
 
 export const STATUSES: readonly ProductStatus[] = ["live", "beta", "in-development", "coming-soon", "planned"] as const;
 

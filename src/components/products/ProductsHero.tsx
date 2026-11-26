@@ -41,7 +41,6 @@ function EcosystemIllustration() {
 export function ProductsHero() {
   return (
     <section className="relative overflow-hidden pb-16 pt-32 sm:pt-40 lg:pb-24">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
       <div className="container-x relative grid items-center gap-7 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] xl:gap-14">
         <div className="animate-rise">
           <p className="label mb-6 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />Ragophala Digital / Software ecosystem</p>

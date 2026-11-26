@@ -121,17 +121,16 @@ export function ProcessJourney() {
   useEffect(() => {
     const io = new IntersectionObserver(
       (entries) => entries.forEach((e) => { if (e.isIntersecting) setActive(Number((e.target as HTMLElement).dataset.i)); }),
-      { rootMargin: "-40% 0px -50% 0px" },
+      { rootMargin: "-25% 0px -55% 0px" },
     );
     refs.current.forEach((el) => el && io.observe(el));
     return () => io.disconnect();
   }, []);
 
   return (
-    <div className="grid gap-x-16 lg:grid-cols-[0.9fr_1.1fr]">
-      <div className="sticky top-[76px] z-20 -mx-5 bg-ivory/95 px-5 pb-3 pt-2 backdrop-blur-md sm:-mx-8 sm:px-8 lg:top-28 lg:mx-0 lg:self-start lg:bg-transparent lg:p-0 lg:backdrop-blur-none">
+    <div className="grid gap-x-10 lg:grid-cols-[0.8fr_1.2fr] motion-reduce:!grid-cols-1">
+      <div className="hidden lg:sticky lg:top-28 lg:block lg:self-start motion-reduce:!hidden">
         <div className="theme-dark relative flex h-[250px] items-center justify-center overflow-hidden rounded-2xl bg-navy p-4 lg:h-[540px] lg:p-8">
-          <div aria-hidden className="grid-lines absolute inset-0 opacity-50" />
           <div aria-hidden className="absolute -right-10 top-0 h-56 w-56 rounded-full bg-cobalt/30 blur-[90px]" />
           <div className="absolute left-4 top-4 flex items-center gap-3 font-mono text-[10px] uppercase tracking-[.16em] text-muted lg:left-6 lg:top-6">
             <span className="text-accent">{PROCESS[active].n}</span> / {PROCESS.length < 10 ? `0${PROCESS.length}` : PROCESS.length} · {PROCESS[active].title}
@@ -151,7 +150,7 @@ export function ProcessJourney() {
 
       <ol>
         {PROCESS.map((s, i) => (
-          <li key={s.n} data-i={i} ref={(el) => { refs.current[i] = el; }} className={cn("flex min-h-[62vh] flex-col justify-center border-l-2 py-10 pl-6 transition-colors duration-500 lg:min-h-[78vh]", i === active ? "border-cobalt" : "border-transparent")}>
+          <li id={`stage-${s.n}`} key={s.n} data-i={i} ref={(el) => { refs.current[i] = el; }} className={cn("scroll-mt-28 border-l-2 border-b border-b-line py-6 pl-4 motion-safe:transition-colors sm:py-8 sm:pl-6", i === active ? "lg:border-l-cobalt" : "border-l-transparent")}>
             <p className="font-mono text-xs text-accent">Stage {s.n}</p>
             <h2 className="display-md mt-3">{s.title}</h2>
             <p className="body-lg mt-4">{s.summary}</p>

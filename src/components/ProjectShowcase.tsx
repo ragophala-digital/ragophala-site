@@ -45,7 +45,6 @@ export function ProjectShowcase() {
 
   return (
     <section ref={ref} className="theme-dark relative overflow-hidden bg-navy" aria-roledescription="carousel" aria-label="Selected concept projects" onKeyDown={onKey} onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
       <motion.div aria-hidden className="absolute left-1/2 top-[18%] h-[34rem] w-[min(60rem,120vw)] -translate-x-1/2 rounded-full blur-[130px]" animate={{ backgroundColor: c.tint, opacity: 0.32 }} transition={{ duration: 1.1 }} />
       <div className="container-x relative pt-24 lg:pt-32">
         <div className="mb-12 flex flex-wrap items-end justify-between gap-6">

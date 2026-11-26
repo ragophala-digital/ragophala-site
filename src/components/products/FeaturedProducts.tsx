@@ -19,7 +19,6 @@ function Shot({ p }: { p: Product }) {
 
   return (
     <div aria-hidden className="relative isolate grid min-h-44 place-items-center overflow-hidden rounded-xl border border-white/10 bg-white/[.04]">
-      <div className="grid-lines absolute inset-0 opacity-75" />
       <div className="absolute size-36 rounded-full border border-dashed border-cobalt-300/25" />
       <div className="absolute size-28 rounded-full border border-cobalt-300/20" />
       <div className="relative grid size-[4.5rem] -rotate-6 place-items-center rounded-2xl border border-cobalt-300/50 bg-navy text-cobalt-300 shadow-[5px_7px_0_rgba(49,91,250,0.4)]">

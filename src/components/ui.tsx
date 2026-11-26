@@ -122,7 +122,6 @@ export function Breadcrumb({ items }: { items: { label: string; href?: string }[
 export function PageHero({ crumbs, label, title, text, actions, children, className }: { crumbs?: { label: string; href?: string }[]; label: string; title: ReactNode; text: string; actions?: ReactNode; children?: ReactNode; className?: string }) {
   return (
     <section className={cn("relative overflow-hidden pb-14 pt-32 sm:pt-40 lg:pb-20", className)}>
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
       <HeroAccent />
       <div className="container-x relative">
         {crumbs && <Breadcrumb items={crumbs} />}

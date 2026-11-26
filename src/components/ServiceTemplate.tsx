@@ -122,7 +122,6 @@ export function ServiceTemplate({ service: s, visual, extra }: Props) {
       </section>
 
       <section className="theme-dark relative overflow-hidden bg-navy text-fg">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
         <div className="container-x section relative text-center">
           <h2 className="display-md mx-auto max-w-[22ch]">{s.cta}</h2>
           <p className="mx-auto mt-5 max-w-xl text-muted">{PRICING_STATEMENT}</p>

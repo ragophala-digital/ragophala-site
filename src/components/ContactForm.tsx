@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, TriangleAlert } from "lucide-react";
 import { useRef, useState, type FormEvent, type ReactNode } from "react";
 import { track } from "@/lib/analytics";
 import { contactSchema } from "@/lib/contact";
-import { PACKAGES_PUBLIC } from "@/lib/catalogue-public";
 import { BUDGETS, SERVICE_OPTIONS } from "@/lib/site";
 import { whatsappUrl } from "@/lib/utils";
 
@@ -27,12 +25,8 @@ function Field({ id, label, error, optional, children }: { id: string; label: st
   );
 }
 
-export function ContactForm() {
-  const params = useSearchParams();
-  const pkg = PACKAGES_PUBLIC.find((p) => p.id === params.get("package"));
-  const service = SERVICE_OPTIONS.some((s) => s.value === params.get("service")) ? (params.get("service") as string) : pkg ? "web" : "";
-  const consultation = params.get("intent") === "consultation";
-  const item = (params.get("item") ?? "").slice(0, 80).replace(/\s+/g, " ");
+export function ContactForm({ service = "", message = "" }: { service?: string; message?: string }) {
+  const details = useRef<HTMLDetailsElement>(null);
   const startedAt = useRef(Date.now());
   const [errors, setErrors] = useState<Errors>({});
   const [status, setStatus] = useState<Status>("idle");
@@ -50,7 +44,9 @@ export function ContactForm() {
       for (const issue of parsed.error.issues) next[String(issue.path[0])] ??= issue.message;
       setErrors(next);
       setStatus("idle");
-      form.querySelector<HTMLElement>(`[name="${Object.keys(next)[0]}"]`)?.focus();
+      const invalid = form.querySelector<HTMLElement>(`[name="${Object.keys(next)[0]}"]`);
+      if (invalid && details.current?.contains(invalid)) details.current.open = true;
+      invalid?.focus();
       return;
     }
     setErrors({});
@@ -60,7 +56,12 @@ export function ContactForm() {
       const res = await fetch("/api/contact", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(parsed.data) });
       const data = (await res.json().catch(() => ({}))) as { error?: string; fieldErrors?: Errors; notified?: boolean };
       if (!res.ok) {
-        if (data.fieldErrors) setErrors(data.fieldErrors);
+        if (data.fieldErrors) {
+          setErrors(data.fieldErrors);
+          if (details.current && Object.keys(data.fieldErrors).some((name) => details.current?.querySelector(`[name="${name}"]`))) {
+            details.current.open = true;
+          }
+        }
         setServerMsg(data.error ?? "Something went wrong. Please try again.");
         setStatus("error");
         setWaLink(whatsappUrl(`Hi Ragophala Digital, I tried to send an enquiry on your website. ${parsed.data.message}`));
@@ -98,43 +99,52 @@ export function ContactForm() {
   });
 
   return (
-    <form onSubmit={onSubmit} noValidate className="grid gap-5 rounded-2xl border border-line bg-card p-6 sm:p-9" aria-label="Project enquiry form">
+    <form id="enquiry" onSubmit={onSubmit} noValidate className="grid scroll-mt-28 gap-4 rounded-2xl border border-line bg-white p-5 sm:p-7" aria-labelledby="enquiry-title">
+      <h2 id="enquiry-title" className="font-display text-xl font-semibold">Send an enquiry</h2>
       <div className="grid gap-5 sm:grid-cols-2">
         <Field id="name" label="Full name" error={errors.name}><input id="name" autoComplete="name" {...field("name")} /></Field>
         <Field id="email" label="Email address" error={errors.email}><input id="email" type="email" autoComplete="email" {...field("email")} /></Field>
-        <Field id="business" label="Business name" optional error={errors.business}><input id="business" autoComplete="organization" {...field("business")} /></Field>
-        <Field id="phone" label="Phone number" optional error={errors.phone}><input id="phone" type="tel" autoComplete="tel" {...field("phone")} /></Field>
-        <Field id="service" label="Service required" error={errors.service}>
-          <select id="service" defaultValue={service} {...field("service")}>
-            <option value="" disabled>Select a service</option>
-            {SERVICE_OPTIONS.map((s) => (<option key={s.value} value={s.value}>{s.label}</option>))}
-          </select>
-        </Field>
-        <Field id="budget" label="Estimated budget range" optional error={errors.budget}>
-          <select id="budget" defaultValue="" {...field("budget")}>
-            <option value="">Prefer not to say</option>
-            {BUDGETS.map((b) => (<option key={b} value={b}>{b}</option>))}
-          </select>
-        </Field>
-        <Field id="contactMethod" label="Preferred contact method" error={errors.contactMethod}>
-          <select id="contactMethod" defaultValue="email" {...field("contactMethod")}>
-            <option value="email">Email</option>
-            <option value="phone">Phone call</option>
-            <option value="whatsapp">WhatsApp</option>
-          </select>
-        </Field>
       </div>
-      <Field id="message" label="Project description" error={errors.message}>
-        <textarea id="message" rows={5} defaultValue={pkg ? `I am interested in the ${pkg.name} package.\n` : item ? `I would like a quotation for: ${item}.\n` : consultation ? "I would like to book a consultation.\n" : ""} {...field("message")} />
+      <Field id="service" label="Service required" error={errors.service}>
+        <select id="service" defaultValue={service} {...field("service")}>
+          <option value="" disabled>Select a service</option>
+          {SERVICE_OPTIONS.map((s) => (<option key={s.value} value={s.value}>{s.label}</option>))}
+        </select>
       </Field>
-      <Field id="extra" label="Additional information" optional error={errors.extra}>
-        <textarea id="extra" rows={3} placeholder="Deadlines, existing website, examples you like…" {...field("extra")} />
+      <Field id="message" label="Project details" error={errors.message}>
+        <textarea id="message" rows={4} defaultValue={message} {...field("message")} />
       </Field>
+      <details ref={details} className="rounded-xl border border-line px-4">
+        <summary className="cursor-pointer py-3 text-sm font-medium text-heading">Add optional details</summary>
+        <div className="grid gap-5 pb-4 sm:grid-cols-2">
+          <Field id="business" label="Business name" optional error={errors.business}><input id="business" autoComplete="organization" {...field("business")} /></Field>
+          <Field id="phone" label="Phone number" optional error={errors.phone}><input id="phone" type="tel" autoComplete="tel" {...field("phone")} /></Field>
+          <Field id="budget" label="Estimated budget range" optional error={errors.budget}>
+            <select id="budget" defaultValue="" {...field("budget")}>
+              <option value="">Prefer not to say</option>
+              {BUDGETS.map((b) => (<option key={b} value={b}>{b}</option>))}
+            </select>
+          </Field>
+          <Field id="contactMethod" label="Preferred contact method" error={errors.contactMethod}>
+            <select id="contactMethod" defaultValue="email" {...field("contactMethod")}>
+              <option value="email">Email</option>
+              <option value="phone">Phone call</option>
+              <option value="whatsapp">WhatsApp</option>
+            </select>
+          </Field>
+        </div>
+        <div className="pb-4">
+          <Field id="extra" label="Additional information" optional error={errors.extra}>
+            <textarea id="extra" rows={3} placeholder="Deadlines, existing website, examples you like…" {...field("extra")} />
+          </Field>
+        </div>
+      </details>
       <div>
         <label className="flex cursor-pointer items-start gap-3 text-sm">
           <input type="checkbox" name="consent" className="mt-1 h-4 w-4 accent-[#315BFA]" aria-invalid={errors.consent ? true : undefined} aria-describedby={errors.consent ? "consent-err" : undefined} />
-          <span>I agree that Ragophala Digital may save my details so they can reply to my enquiry. I have read the <Link href="/privacy" target="_blank" className="font-medium text-cobalt underline">privacy information</Link>.</span>
+          <span>I agree that Ragophala Digital may save my details so they can reply to my enquiry.</span>
         </label>
+        <Link href="/privacy" className="ml-7 mt-1 inline-block text-sm font-medium text-cobalt underline">Privacy information</Link>
         {errors.consent && <p id="consent-err" className="mt-1.5 text-xs font-medium text-red-600">{errors.consent}</p>}
       </div>
       <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -151,7 +161,7 @@ export function ContactForm() {
       )}
       <div className="flex flex-wrap items-center gap-4">
         <button type="submit" disabled={status === "sending"} className="btn btn-primary disabled:opacity-70">
-          {status === "sending" ? (<><Loader2 size={16} className="animate-spin" aria-hidden /> Sending…</>) : "Request a quote"}
+          {status === "sending" ? (<><Loader2 size={16} className="motion-safe:animate-spin" aria-hidden /> Sending…</>) : "Send enquiry"}
         </button>
         <p className="text-xs text-muted">We use your details only to respond to your enquiry.</p>
       </div>

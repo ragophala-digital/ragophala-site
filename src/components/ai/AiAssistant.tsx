@@ -80,7 +80,6 @@ export function AiAssistant() {
             className="fixed inset-0 z-[65] flex flex-col overflow-hidden bg-ivory shadow-2xl sm:inset-auto sm:bottom-24 sm:right-5 sm:h-[min(640px,calc(100vh-8rem))] sm:w-[400px] sm:rounded-2xl sm:border sm:border-navy/15"
           >
             <header className="theme-dark relative flex items-center gap-3 overflow-hidden bg-navy px-4 py-3.5">
-              <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
               <Orb />
               <div className="relative min-w-0 flex-1">
                 <h2 className="font-display text-base font-semibold leading-tight">RAGOPHALA AI</h2>

@@ -45,7 +45,6 @@ function Node({ slug, note, optional }: { slug: string; note: string; optional?:
 export function EcosystemDiagram() {
   return (
     <section className="theme-dark relative overflow-hidden bg-navy text-fg">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-30" />
       <div className="container-x section relative">
         <div className="max-w-3xl">
           <p className="label mb-5 flex items-center gap-3"><span aria-hidden className="h-px w-8 bg-current opacity-40" />Connected ecosystem</p>

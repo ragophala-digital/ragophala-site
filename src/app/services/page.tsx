@@ -63,7 +63,6 @@ export default function Services() {
       </section>
 
       <section className="theme-dark relative overflow-hidden bg-navy">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
         <div className="container-x section relative grid items-center gap-14 lg:grid-cols-2">
           <Reveal className="order-2 lg:order-1">
             <ServiceVisual3D kind="apps" fallback={<div><div className="grid gap-4 sm:grid-cols-[1.1fr_1fr] lg:grid-cols-1 xl:grid-cols-[1.1fr_1fr]"><InventoryMock /><CrmMock /></div><MockCaption>Illustrative application screens · sample data</MockCaption></div>} />
@@ -99,7 +98,6 @@ export default function Services() {
       </section>
 
       <section className="theme-dark relative overflow-hidden bg-navy">
-        <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
         <div className="container-x section relative grid items-center gap-14 lg:grid-cols-2">
           <Reveal><ServiceText s={support} /></Reveal>
           <Reveal delay={0.1}><MonitorMock /><MockCaption>Illustrative monitoring view · sample data</MockCaption></Reveal>

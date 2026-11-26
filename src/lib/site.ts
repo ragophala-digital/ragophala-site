@@ -1,9 +1,12 @@
+const configuredSiteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+const productionUrl = "https://ragophala-site.vercel.app";
+
 export const SITE = {
   name: "Ragophala Digital",
   tagline: "Digital solutions. Built for business.",
   description:
     "Ragophala Digital designs and builds websites, web applications, AI agents and business automation for South African businesses.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+  url: configuredSiteUrl && !/^https?:\/\/(?:localhost|127\.0\.0\.1|\[::1\])(?=[:/]|$)/i.test(configuredSiteUrl) ? configuredSiteUrl : productionUrl,
   whatsapp: (process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? "").replace(/\D/g, ""),
   email: process.env.NEXT_PUBLIC_CONTACT_EMAIL ?? "",
   location: "South Africa",

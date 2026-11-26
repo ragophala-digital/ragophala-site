@@ -2,10 +2,10 @@
 
 import { Search, X } from "lucide-react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState, type FormEvent } from "react";
 import { DIVISIONS, STATUSES, STATUS_META } from "@/lib/products/categories";
-import { DEFAULT_FILTERS, filterProducts, filtersFromParams, filtersToQuery, hasActiveFilters } from "@/lib/products/filters";
+import { DEFAULT_FILTERS, filterProducts, filtersToQuery, hasActiveFilters } from "@/lib/products/filters";
 import type { Product, ProductFilters, SortKey } from "@/lib/products/types";
 import { cn } from "@/lib/utils";
 import { ProductCard } from "./ProductCard";
@@ -13,11 +13,9 @@ import { ProductCard } from "./ProductCard";
 const PAGE = 12;
 
 /** Searchable, filterable catalogue. Filters live in the URL so a filtered view can be shared. */
-export function ProductDirectory({ products }: { products: readonly Product[] }) {
+export function ProductDirectory({ products, filters }: { products: readonly Product[]; filters: ProductFilters }) {
   const router = useRouter();
   const pathname = usePathname();
-  const params = useSearchParams();
-  const filters = useMemo(() => filtersFromParams((k) => params.get(k)), [params]);
   const [text, setText] = useState(filters.query);
   const [visible, setVisible] = useState(PAGE);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);

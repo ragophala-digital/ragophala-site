@@ -32,7 +32,6 @@ export function Footer() {
   const mail = mailtoUrl("Enquiry from the Ragophala Digital website");
   return (
     <footer className="theme-dark relative overflow-hidden bg-navy text-fg">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-40" />
       <div aria-hidden className="absolute -left-24 top-10 h-[26rem] w-[26rem] animate-drift rounded-full bg-cobalt/25 blur-[130px]" />
       <div aria-hidden className="absolute -right-24 bottom-24 h-[22rem] w-[22rem] animate-drift rounded-full bg-cobalt-300/15 blur-[120px] [animation-delay:-4s]" />
       <CursorGlow />

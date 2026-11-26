@@ -16,7 +16,6 @@ export function ServiceVisual3D({ kind, fallback }: { kind: ServiceKey; fallback
   if (!Scene) return <>{fallback}</>;
   return (
     <div className="theme-dark relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-navy">
-      <div aria-hidden className="grid-lines absolute inset-0 opacity-60" />
       <div aria-hidden className="absolute -right-10 top-0 h-64 w-64 rounded-full bg-cobalt/25 blur-[90px]" />
       <div className="relative h-full w-full"><Scene /></div>
     </div>
