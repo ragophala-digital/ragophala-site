@@ -2,7 +2,7 @@ import { Marquee } from "@/components/Marquee";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
 import { HeroScene } from "@/components/three/lazy";
-import { CountUp, LinkButton, Reveal, SectionHead, StaggerHeadline } from "@/components/ui";
+import { CountUp, LinkButton, Reveal, SectionHead } from "@/components/ui";
 import { CursorGlow, Magnetic, Parallax } from "@/components/ui-motion";
 import { ProjectShowcase } from "@/components/ProjectShowcase";
 import { PACKAGES_PUBLIC } from "@/lib/catalogue-public";
@@ -14,27 +14,27 @@ export default function Home() {
   return (
     <>
       {/* HERO */}
-      <section className="theme-dark relative overflow-hidden bg-navy">
+      <section className="theme-dark relative overflow-hidden bg-navy text-fg">
         <div aria-hidden className="grid-lines absolute inset-0 opacity-70" />
         <Parallax speed={0.35} className="pointer-events-none absolute -right-24 top-10 h-[32rem] w-[32rem]"><div className="h-full w-full rounded-full bg-cobalt/30 blur-[140px]" /></Parallax>
         <CursorGlow />
-        <div className="container-x grid min-h-[100svh] items-center gap-6 pb-28 pt-32 lg:grid-cols-[1.05fr_1fr] lg:pb-32">
+        <div className="container-x grid items-center gap-4 pb-28 pt-28 sm:pt-32 lg:min-h-[100svh] lg:grid-cols-[1.05fr_1fr] lg:gap-6 lg:pb-32">
           <div className="relative z-10">
-            <p className="label mb-8 flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p className="label mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 lg:mb-8">
               <span className="text-accent">RD / 2026 / Digital</span>
               <span aria-hidden className="h-px w-8 bg-current opacity-40" />
               South Africa
             </p>
-            <StaggerHeadline className="display-xl" parts={[{ text: "Digital solutions." }, { text: "Built for business.", accent: true }]} />
-            <div className="animate-rise [animation-delay:.5s]">
-              <p className="body-lg mt-8 lg:max-w-[38ch]">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter, connect with customers and grow.</p>
-              <div className="mt-10 flex flex-wrap items-center gap-3">
+            <h1 className="display-xl">Digital solutions. <span className="block text-cobalt-300">Built for business.</span></h1>
+            <div className="animate-rise">
+              <p className="body-lg mt-4 lg:mt-8 lg:max-w-[38ch]">We design and develop digital experiences, intelligent applications and AI-powered solutions that help businesses work smarter, connect with customers and grow.</p>
+              <div className="mt-6 flex flex-wrap items-center gap-3 lg:mt-10">
                 <Magnetic><LinkButton href="/contact">Start a project</LinkButton></Magnetic>
                 <LinkButton href="/services" variant="line" arrow={false}>Explore our services</LinkButton>
               </div>
             </div>
           </div>
-          <div className="relative -mx-5 h-[400px] sm:mx-0 sm:h-[500px] lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:h-auto lg:w-[62%]">
+          <div className="relative -mx-5 h-[clamp(15rem,72vw,23rem)] sm:mx-0 sm:h-[420px] lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:h-auto lg:w-[62%]">
             <HeroScene />
           </div>
         </div>

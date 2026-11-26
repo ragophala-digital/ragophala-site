@@ -3,17 +3,24 @@
 import dynamic from "next/dynamic";
 import type { ComponentProps } from "react";
 import { SceneFallback } from "./Fallback";
-import { useCapability } from "./capability";
+import { useCapability, useInView } from "./capability";
 
 const HeroSceneInner = dynamic(() => import("./scenes").then((m) => ({ default: m.HeroScene })), {
   ssr: false,
   loading: () => <SceneFallback />,
 });
 
-/** On phones and without WebGL the 3D bundle is never downloaded; a lightweight static composition is shown instead. */
+const MobileHeroScene = dynamic(() => import("./mobile-hero").then((m) => m.MobileHeroScene), {
+  ssr: false,
+  loading: () => <SceneFallback sculpture />,
+});
+
 export function HeroScene() {
   const { ready, ok, narrow } = useCapability();
-  if (!ready || !ok || narrow) return <SceneFallback />;
+  const { ref, visible } = useInView<HTMLDivElement>("0px");
+  if (!ready || !ok || narrow) {
+    return <div ref={ref} className="h-full">{ready && ok && narrow && visible ? <MobileHeroScene /> : <SceneFallback sculpture />}</div>;
+  }
   return <HeroSceneInner />;
 }
 
