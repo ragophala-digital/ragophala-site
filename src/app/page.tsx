@@ -12,6 +12,7 @@ import { Reveal } from "@/components/ui";
 import { ScaleToFit } from "@/components/ui-motion";
 import { WorkflowDepth } from "@/components/WorkflowDepth";
 import styles from "@/components/home-visuals.module.css";
+import { REAL_PROJECTS } from "@/lib/real-projects";
 import { CASES, PROCESS, PROJECTS, SERVICES } from "@/lib/site";
 import { serviceByKey } from "@/lib/services";
 
@@ -102,15 +103,32 @@ export default function Home() {
         <div className="container-x">
           <div className="flex flex-wrap items-end justify-between gap-5">
             <div>
-              <p className={eyebrow}>Selected concepts</p>
+              <p className={eyebrow}>Selected work</p>
               <h2 className="display-md mt-3">See what these tools can look like.</h2>
-              <p className="mt-3 text-sm leading-relaxed text-muted">These illustrative concepts are fictional projects created by Ragophala Digital.</p>
+              <p className="mt-3 text-sm leading-relaxed text-muted">Stay Radiant is a real project. The other cards are illustrative concepts: fictional projects created by Ragophala Digital.</p>
             </div>
             <span data-scene-slot="0" aria-hidden className="pointer-events-none block h-40 w-full lg:hidden" />
             <span data-scene-slot="0" aria-hidden className="pointer-events-none hidden h-44 min-w-72 flex-1 lg:block" />
-            <Link href="/portfolio" className={secondary}>View all concepts <ArrowUpRight size={16} aria-hidden /></Link>
+            <Link href="/portfolio" className={secondary}>View all work <ArrowUpRight size={16} aria-hidden /></Link>
           </div>
-          <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <ul className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {REAL_PROJECTS.map((project) => (
+              <li key={project.slug} className="min-w-0">
+                <Link href={`/portfolio/${project.slug}`} className="group block h-full overflow-hidden rounded-2xl border border-cobalt/40 bg-white transition-colors hover:border-[#315BFA]">
+                  <div className="overflow-hidden border-b border-line bg-ivory p-2 sm:p-3">
+                    <div className="aspect-[760/470] overflow-hidden rounded-lg bg-softblue">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={project.site.shots.desktop.src} width={project.site.shots.desktop.width} height={project.site.shots.desktop.height} alt={`${project.title} website, home page`} loading="lazy" decoding="async" className="h-full w-full object-cover object-top" />
+                    </div>
+                  </div>
+                  <div className="p-5">
+                    <p className={eyebrow}>Real project · {project.category}</p>
+                    <h3 className="mt-2 flex items-start justify-between gap-2 font-display text-lg font-semibold tracking-tight group-hover:underline">{project.title} <ArrowUpRight size={17} className="mt-1 shrink-0 text-[#2447D6]" aria-hidden /></h3>
+                    <p className="mt-2 text-sm leading-relaxed text-muted">{project.summary}</p>
+                  </div>
+                </Link>
+              </li>
+            ))}
             {["karoo-stays-booking", "fleet-dashboard", "whatsapp-lead-automation"].map((slug) => {
               const project = PROJECTS.find((project) => project.slug === slug)!;
               return (
