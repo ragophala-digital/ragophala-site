@@ -8,15 +8,19 @@ import { DeviceShowcase } from "@/components/demos-web";
 import { CrmMock, InventoryMock, PortalMock, ReportMock } from "@/components/mockups-app";
 import { ChatMock, WhatsAppMock } from "@/components/mockups-ai";
 import { BrowserFrame, SiteMock } from "@/components/mockups-web";
+import { RealProjectPage } from "@/components/RealProjectPage";
+import { REAL_PROJECTS, realProject } from "@/lib/real-projects";
 import { CASES, PROJECTS, type MockKind } from "@/lib/site";
 import { pageMeta } from "@/lib/utils";
 
 export function generateStaticParams() {
-  return PROJECTS.map((p) => ({ slug: p.slug }));
+  return [...REAL_PROJECTS, ...PROJECTS].map((p) => ({ slug: p.slug }));
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const real = realProject(slug);
+  if (real) return pageMeta(`${real.title}: real project`, real.summary, `/portfolio/${real.slug}`);
   const p = PROJECTS.find((x) => x.slug === slug);
   if (!p) return {};
   return pageMeta(`${p.title} (concept case study)`, p.summary, `/portfolio/${p.slug}`);
@@ -41,6 +45,8 @@ function ListBlock({ title, items }: { title: string; items: string[] }) {
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
+  const real = realProject(slug);
+  if (real) return <RealProjectPage project={real} />;
   const idx = PROJECTS.findIndex((x) => x.slug === slug);
   if (idx < 0) notFound();
   const p = PROJECTS[idx];
@@ -55,7 +61,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
       <section className="theme-dark relative overflow-hidden bg-navy pb-16 pt-32 sm:pt-40">
         <div aria-hidden className="absolute left-1/2 top-24 h-[30rem] w-[50rem] -translate-x-1/2 rounded-full opacity-25 blur-[130px]" style={{ background: c.tint }} />
         <div className="container-x relative">
-          <Breadcrumb items={[{ label: "Selected concepts", href: "/portfolio" }, { label: p.title }]} />
+          <Breadcrumb items={[{ label: "Selected work", href: "/portfolio" }, { label: p.title }]} />
           <Reveal>
             <p className="label mb-5">{p.category} · Concept case study</p>
             <h1 className="display-lg max-w-[20ch]">{p.title}</h1>

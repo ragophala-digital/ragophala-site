@@ -1,28 +1,23 @@
 import { LinkButton, Reveal, SectionHead } from "@/components/ui";
 import { ServiceTemplate } from "@/components/ServiceTemplate";
-import { BeforeAfter, DeviceShowcase, type ShowcaseSite } from "@/components/demos-web";
+import { BeforeAfter, DeviceShowcase } from "@/components/demos-web";
+import { isEmbeddable } from "@/lib/embeddable";
+import { REAL_PROJECTS } from "@/lib/real-projects";
 import { serviceByKey } from "@/lib/services";
 import { pageMeta } from "@/lib/utils";
 
 const service = serviceByKey("web");
 
-/** A real project, shown with screenshots taken at each screen width (see public/projects/stayradiant). */
-const STAY_RADIANT: ShowcaseSite = {
-  name: "Stay Radiant",
-  url: "https://www.stayradiant.co.za/",
-  shots: {
-    desktop: { src: "/projects/stayradiant/desktop.webp", width: 1440, height: 3400 },
-    tablet: { src: "/projects/stayradiant/tablet.webp", width: 1230, height: 4500 },
-    mobile: { src: "/projects/stayradiant/mobile.webp", width: 780, height: 7200 },
-  },
-};
+/** The real project shown in the device demo (screenshots live in public/projects). */
+const STAY_RADIANT = REAL_PROJECTS[0].site;
 export const metadata = pageMeta(service.metaTitle, service.metaDescription, service.href);
 
-export default function WebDevelopment() {
+export default async function WebDevelopment() {
+  const live = await isEmbeddable(STAY_RADIANT.url);
   return (
     <ServiceTemplate
       service={service}
-      visual={<div id="devices" className="scroll-mt-28"><DeviceShowcase site={STAY_RADIANT} className="mx-auto max-w-4xl" /></div>}
+      visual={<div id="devices" className="scroll-mt-28"><DeviceShowcase site={STAY_RADIANT} live={live} className="mx-auto max-w-4xl" /></div>}
       extra={
         <section className="theme-soft section bg-softblue">
           <div className="container-x grid items-center gap-12 lg:grid-cols-[0.8fr_1.2fr]">

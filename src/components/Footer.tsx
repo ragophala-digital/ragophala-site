@@ -12,7 +12,7 @@ const STUDIO = [
   ["/about", "About"],
   ["/process", "Our process"],
   ["/quote", "Request a quote"],
-  ["/portfolio", "Selected concepts"],
+  ["/portfolio", "Selected work"],
   ["/faq", "FAQ"],
   ["/smart-intake", "Smart Intake"],
   ["/insights", "Insights"],

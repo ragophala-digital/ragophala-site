@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowUpRight, Monitor, Smartphone, Tablet } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { BrowserFrame, SiteMock } from "./mockups-web";
 
@@ -20,6 +20,37 @@ const DEVICES: Record<Device, { label: string; icon: typeof Monitor; w: string; 
   tablet: { label: "Tablet", icon: Tablet, w: "58%", h: "96%", r: 24, border: 8 },
   mobile: { label: "Mobile", icon: Smartphone, w: "27%", h: "98%", r: 26, border: 7 },
 };
+
+/** Logical screen widths a live site is rendered at before being scaled into the frame. */
+const LIVE_WIDTH: Record<Device, number> = { desktop: 1440, tablet: 820, mobile: 390 };
+
+/** The real site, running, at true device width and scaled to fit. It can be scrolled, tapped and clicked. */
+function LiveFrame({ url, name, width }: { url: string; name: string; width: number }) {
+  const box = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
+  useEffect(() => {
+    const el = box.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setSize({ w: e.contentRect.width, h: e.contentRect.height }));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const scale = size.w / width;
+  return (
+    <div ref={box} className="h-full w-full overflow-hidden bg-white">
+      {scale > 0 && (
+        <iframe
+          src={url}
+          title={`${name} live website`}
+          loading="lazy"
+          referrerPolicy="no-referrer"
+          sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+          style={{ width, height: size.h / scale, transform: `scale(${scale})`, transformOrigin: "0 0", border: 0 }}
+        />
+      )}
+    </div>
+  );
+}
 
 /** Real screenshots need more room than the sketch, especially on a phone. */
 const SITE_FRAMES: Record<"wide" | "narrow", Record<Device, { w: string; h: string }>> = {
@@ -68,7 +99,7 @@ function ResponsiveSite({ device }: { device: Device }) {
 }
 
 /** Switch between desktop, tablet and mobile and watch one website adapt. Pass `site` to show a real project. */
-export function DeviceShowcase({ className, site }: { className?: string; site?: ShowcaseSite }) {
+export function DeviceShowcase({ className, site, live }: { className?: string; site?: ShowcaseSite; live?: boolean }) {
   const [device, setDevice] = useState<Device>("desktop");
   const [narrow, setNarrow] = useState(false);
   const d = DEVICES[device];
@@ -98,7 +129,9 @@ export function DeviceShowcase({ className, site }: { className?: string; site?:
       </div>
       <div className={cn("relative flex w-full items-center justify-center rounded-2xl bg-gradient-to-br from-softblue to-ivory-200 p-4 sm:p-7", site ? "h-[520px] sm:aspect-[16/10] sm:h-auto" : "aspect-[16/10]")}>
         <motion.div layout animate={{ width: frame.w, height: frame.h, borderRadius: d.r, borderWidth: d.border }} transition={{ type: "spring", stiffness: 140, damping: 22 }} className="overflow-hidden border-solid border-navy bg-white shadow-[0_40px_70px_-35px_rgba(16,24,39,.6)]" role="img" aria-label={site ? `${site.name} website on ${d.label.toLowerCase()}` : `Website preview on ${d.label.toLowerCase()}`}>
-          {site && shot ? (
+          {site && live ? (
+            <LiveFrame key={device} url={site.url} name={site.name} width={LIVE_WIDTH[device]} />
+          ) : site && shot ? (
             <div key={device} className="h-full overflow-y-auto overscroll-contain" tabIndex={0} aria-label={`Scrollable ${site.name} preview, ${d.label.toLowerCase()} layout`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={shot.src} width={shot.width} height={shot.height} alt="" loading="lazy" decoding="async" className="block h-auto w-full" />
@@ -110,7 +143,7 @@ export function DeviceShowcase({ className, site }: { className?: string; site?:
       </div>
       {site ? (
         <p className="mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 font-mono text-[10px] uppercase tracking-[.16em] text-muted">
-          <span>Real project · {site.name} · {d.label} layout. Scroll inside the frame.</span>
+          <span>{live ? `Live site · ${site.name} · ${d.label} layout. Tap, click and scroll inside the frame.` : `Real project · ${site.name} · ${d.label} layout. Scroll inside the frame.`}</span>
           <a href={site.url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[#2447D6] underline underline-offset-2">Visit the live site <ArrowUpRight size={11} aria-hidden /></a>
         </p>
       ) : (
